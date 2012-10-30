@@ -1,13 +1,27 @@
 STEP 0
-* Sync with Github
-* Read and understand CUDA code for Ray Tracing
+* Sync with Github -- done
+* Read and understand CUDA code for Ray Tracing -- done
 * Initial Design
 
 
 STEP 1
+* Divide Up Work
+* Basic code
+* Objects in space
+* Minor test runs
+* Basic Output
+* 
 
 STEP 2
+* Multiple images
+* loadBalancing
+* saveData for after the fact animation
+* multiple objects in space
+* mobile objects
 
 STEP 3
+* optimization
+* polishing
+* yet more objects
 
 
