@@ -24,18 +24,10 @@ Pixel chares
  - 2dArray
  - interal array of rgbapixels
  - serial work for pixel
- - need ray calss, generate a ray for each pixel
  - calling refrence functions in relation to shapes
  - returning either through a liveviz painging, or returing our final image data 
  - (thought: if actually compling images greate a seperate image compilation 
   chare on it's own lonely processor to deal with that)
-- function takes ray, returns ray after intersection with objects
-
-
-Ray class
-- changeable vector 
-- saved path
-- current color
 
 Shapes
 - C++ class constructs
@@ -57,7 +49,7 @@ Work Details:
 2: basic shape creation, the super class triangles, making larger shapes 
 from triangles, or other shapes from the superclass
 
-3: Ray class, basic vector math, bouncing function 
+3:  
 
 STEP 1
 * Divide Up Work
