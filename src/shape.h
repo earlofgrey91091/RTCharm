@@ -2,11 +2,20 @@
 #include <math.h>
 #define rnd(x) (x*rand() / RAND_MAX)
 #define BOX_DIM 1000
-struct xyz
+class  xyz
 {
+public:
 	float x;
 	float y;
 	float z;
+
+	xyz(){}
+
+	void pup(PUP::er &p){
+	  p | x;
+	  p | y;
+	  p | z;
+	}
 	
 };
 
@@ -34,12 +43,13 @@ public:
 		g = rnd(1.0f);
 		b = rnd(1.0f);
 	};
-	struct xyz origin; 
+
+	xyz origin; 
 	float radius;
 	float hit(float ox, float oy, float *n) {
-	float dx = ox - origin.x; // distance on x-axis
-        float dy = oy - origin.y; // distance on y-axis
-        //if (dx*dx + dy*dy > radius*radius), ray will not hit sphere
+		float dx = ox - origin.x; // distance on x-axis
+        	float dy = oy - origin.y; // distance on y-axis
+        	//if (dx*dx + dy*dy > radius*radius), ray will not hit sphere
         	if (dx*dx + dy*dy < radius*radius) {
            		float dz = sqrtf( radius*radius - dx*dx - dy*dy );
            		*n = dz / sqrtf( radius * radius );
@@ -48,12 +58,20 @@ public:
              return -999999;
 	}
 
+	void pup(PUP::er &p) {
+	  p | origin;
+	  p | radius;
+	  p | r;
+	  p | g;
+	  p | b;
+	}
+
 };
 
 class Triangle : public Shape {
 private:
 
-struct xyz randomize(void) {
+	xyz randomize(void) {
                 struct xyz temp;
                 srand(time(NULL));
                 temp.x = rnd(1000.0f) - 500;
@@ -64,9 +82,9 @@ struct xyz randomize(void) {
 
 public:
 
-	struct xyz vert1;
-	struct xyz vert2;
-	struct xyz vert3;
+	xyz vert1;
+	xyz vert2;
+	xyz vert3;
 	Triangle(){
 		srand(time(NULL));
 		vert1 = randomize();
@@ -77,5 +95,15 @@ public:
                 b = rnd(1.0f);
 	}
 	float hit(float ox, float oy, float *n);
+
+	void pup(PUP::er &p){
+	  p | vert1;
+	  p | vert2;
+	  p | vert3;
+	  p | r;
+	  p | g;
+	  p | b;
+	}
+	
 
 };
