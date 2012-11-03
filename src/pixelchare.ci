@@ -1,21 +1,4 @@
-mainmodule RTCharm {
-
-    readonly CProxy_Main mainProxy;
-    readonly int Total_iterations;
-    readonly int chareDimension;
-
-    mainchare Main 
-    {
-        entry Main(CkArgMsg *m);
-        entry void run()
-        {
-            atomic  
-            {
-                //Run things!!
-                CkExit();
-            }	
-        }; 
-    };
+module pixelchare {
 
     array [2D] PixelChare 
     {
@@ -37,5 +20,5 @@ mainmodule RTCharm {
         }; 
 
         entry void liveVizDump(liveVizRequestMsg* m);      
-    };  	
+    };
 };

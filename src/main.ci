@@ -1,0 +1,19 @@
+mainmodule main {
+
+    readonly CProxy_Main mainProxy;
+    readonly int Total_iterations;
+    readonly int chareDimension;
+    extern module pixelchare;
+    mainchare Main 
+    {
+        entry Main(CkArgMsg *m);
+        entry void run()
+        {
+            atomic  
+            {
+                //Run things!!
+                CkExit();
+            }	
+        }; 
+    };
+};

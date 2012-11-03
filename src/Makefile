@@ -1,21 +1,30 @@
-CHARMC=/home/nikhil/charm/net-linux-x86_64/bin/charmc $(OPTS)
+CHARMDIR = /home/kahn/gitRepos/charm
+#[put Charm++ install directory here] ^  
+CHARMC = $(CHARMDIR)/bin/charmc $(OPTS)
 
-OBJS = RTCharm.o
+default: all
+all: pixelchare
 
-all: RTCharm
+pixelchare : main.o pixelchare.o
+	$(CHARMC) -language charm++ -module liveViz -o pixelchare main.o pixelchare.o #-module CommonLBs -balancer GreedyCommLB -balancer RefineLB -tracemode projections
 
-RTCharm: $(OBJS)
-	$(CHARMC) -language charm++ -o RTCharm $(OBJS)
+main.o : main.C main.h main.decl.h main.def.h pixelchare.decl.h
+	$(CHARMC) -g -o main.o main.C
 
-RTCharm.decl.h: RTCharm.ci
-	$(CHARMC)  RTCharm.ci
+main.decl.h main.def.h : main.ci
+	$(CHARMC) main.ci
+
+pixelchare.o : pixelchare.C pixelchare.h pixelchare.decl.h pixelchare.def.h main.decl.h shape.h
+	$(CHARMC) -g -o pixelchare.o pixelchare.C
+
+pixelchare.decl.h pixelchare.def.h : pixelchare.ci
+	$(CHARMC) pixelchare.ci
 
 clean:
-	rm -f *.decl.h *.def.h conv-host *.o RTCharm charmrun
-
-RTCharm.o: RTCharm.C RTCharm.decl.h
-	$(CHARMC) -c RTCharm.C
-
-test: all
-	./charmrun RTCharm +p4 ++local $(TESTOPTS)
+	rm -f main.decl.h main.def.h main.o
+	rm -f pixelchare.decl.h pixelchare.def.h pixelchare.o
+	rm -f pixelchare.*.log.gz
+	rm -f pixelchare.projrc pixelchare.sts pixelchare.topo
+	rm -f myvalg_txt.*****
+	rm -f pixelchare charmrun 
 
