@@ -12,6 +12,7 @@ class Main : public CBase_Main {
     public:
         CProxy_PixelChare pixel;
         CkOpts myOpts
+    void run();
         Main(CkArgMsg* arg) 
         {
             __sdag_init();
@@ -55,7 +56,7 @@ class Main : public CBase_Main {
 
         };
 
-    void Main::startVis()
+    void startVis()
     {
 	    int funcIndex = CkIndex_Skittish::liveVizDump(NULL);
 	    CkCallback cb0(funcIndex, skitArray);
@@ -73,6 +74,8 @@ class Main : public CBase_Main {
 	    while(CmiWallTimer() < resumeTime) j++;*/
 	
     }
+    
+
 };
 
 /*array [2D]*/
