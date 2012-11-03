@@ -84,7 +84,7 @@ class PixelChare : public CBase_PixelChare
     public:
     PixelChare_SDAG_CODE    
     typedef struct { byte r, g, b; } rgb;
-    vector<xyz> pixels;
+    vector<rgb> pixels;
     int x, y, w, h;
     int iteration;
 
