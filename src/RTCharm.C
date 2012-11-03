@@ -84,7 +84,7 @@ class PixelChare : public CBase_PixelChare
     public:
     PixelChare_SDAG_CODE    
     typedef struct { byte r, g, b; } rgb;
-
+    vector<xyz> pixels;
     int x, y, w, h;
     int iteration;
 
@@ -135,17 +135,17 @@ class PixelChare : public CBase_PixelChare
             imageBuff[i].b=0;
         }
         
-        for (int index = 0; index < particles.size();index++) 
+        for (int index = 0; index < pixels.size();index++) 
         {
-            xCar =(int) ((float) xValue(particles[index].x) * (float)arrayDim) ;
-            yCar = (int) ((float) yValue(particles[index].y) * (float)arrayDim) ;
+            xCar =(int) ((float) xValue(pixels[index].x) * (float)arrayDim) ;
+            yCar = (int) ((float) yValue(pixels[index].y) * (float)arrayDim) ;
 
             Cal = ((yCar * arrayDim) + xCar);
-            if(particles[index].color == 'R')
+            if(pixels[index].color == 'R')
                 imageBuff[Cal%(arrayDim*arrayDim)].r = 255 ;
-            else if(particles[index].color == 'G')
+            else if(pixels[index].color == 'G')
                 imageBuff[Cal%(arrayDim*arrayDim)].g = 255;
-            else if(particles[index].color == 'B')
+            else if(pixels[index].color == 'B')
                 imageBuff[Cal%(arrayDim*arrayDim)].b = 255;
         }
 
