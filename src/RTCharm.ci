@@ -1,25 +1,41 @@
 mainmodule RTCharm {
-  readonly CProxy_Main mainProxy;
-  readonly int Total_iterations;
-  mainchare Main {
-    entry Main(CkArgMsg *m);
-  };
 
-  array [2D] PixelChare {
-    entry PixelChare(void);
-    entry void run(void){
+    readonly CProxy_Main mainProxy;
+    readonly int Total_iterations;
+    readonly int cellDimension;
+    readonly int pixelsPerCell;
 
-	atomic "Interation block" {
-	iteration++;
-	CkPrintf("\n Iteration %d", iteration);
-	if(iteration < Total_iterations) {
-		//do stuff
+    mainchare Main 
+    {
+        entry Main(CkArgMsg *m);
+        entry void run(void)
+        {
+            atomic "doWork" 
+            {
+                //Run things!!
+                CkExit();
+            }	
+        }; 
+    };
 
+    array [2D] PixelChare 
+    {
+        entry PixelChare(void);
+        entry void run(void)
+        {
+            atomic "Interation block" 
+            {
+                iteration++;
+                CkPrintf("\n Iteration %d", iteration);
+                if(iteration < Total_iterations)
+                {
+                    doWork();
 
-	run();
-	}
-
-	}	
-    }; 
-  };        	
+                    run();
+                }
+                
+            }	
+        }; 
+    };
+    entry void liveVizDump(liveVizRequestMsg* m);        	
 };
