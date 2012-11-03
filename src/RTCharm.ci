@@ -8,9 +8,9 @@ mainmodule RTCharm {
     mainchare Main 
     {
         entry Main(CkArgMsg *m);
-        entry void run(void)
+        entry void run()
         {
-            atomic "doWork" 
+            atomic  
             {
                 //Run things!!
                 CkExit();
@@ -20,8 +20,8 @@ mainmodule RTCharm {
 
     array [2D] PixelChare 
     {
-        entry PixelChare(void);
-        entry void run(void)
+        entry PixelChare(int width, int height);
+        entry void run()
         {
             atomic "Interation block" 
             {
@@ -36,6 +36,7 @@ mainmodule RTCharm {
                 
             }	
         }; 
-    };
-    entry void liveVizDump(liveVizRequestMsg* m);        	
+
+        entry void liveVizDump(liveVizRequestMsg* m);      
+    };  	
 };
