@@ -2,8 +2,7 @@ mainmodule RTCharm {
 
     readonly CProxy_Main mainProxy;
     readonly int Total_iterations;
-    readonly int cellDimension;
-    readonly int pixelsPerCell;
+    readonly int chareDimension;
 
     mainchare Main 
     {
