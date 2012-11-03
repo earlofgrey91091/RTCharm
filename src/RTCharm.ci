@@ -1,14 +1,11 @@
 mainmodule RTCharm {
   readonly CProxy_Main mainProxy;
   readonly int Total_iterations;
-  readonly int cellDimension;
-  readonly int pixelsPerCell;
   mainchare Main {
     entry Main(CkArgMsg *m);
   };
 
   array [2D] PixelChare {
-    entry void liveVizDump(liveVizRequestMsg* m); 
     entry PixelChare(void);
     entry void run(void){
 
