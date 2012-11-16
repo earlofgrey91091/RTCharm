@@ -20,7 +20,7 @@ Main::Main(CkArgMsg* arg)
     string filename = "objects.txt";
 
     //Process command-line arguments
-    if( arg->argc > 0 )
+    if( arg->argc > 2 )
     { 
         image_w = atoi(arg->argv[0]);
         image_h = atoi(arg->argv[1]);
