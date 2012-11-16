@@ -26,8 +26,8 @@ Main::Main(CkArgMsg* arg)
         image_h = atoi(arg->argv[1]);
         
         //force fit inputs
-        if(image_w % 8 != 0) image_w += image_w % 8;
-        if(image_h % 8 != 0) image_h += image_h % 8;
+        if(image_w % 8 != 0) image_w -= image_w % 8;
+        if(image_h % 8 != 0) image_h -= image_h % 8;
 
         chareDimension = 8;
         pixel_w = image_w/8;
