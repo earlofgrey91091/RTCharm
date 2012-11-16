@@ -22,18 +22,20 @@ Main::Main(CkArgMsg* arg)
     //Process command-line arguments
     if( arg->argc > 2 )
     { 
-        image_w = atoi(arg->argv[0]);
-        image_h = atoi(arg->argv[1]);
+        image_w = atoi(arg->argv[1]);
+        image_h = atoi(arg->argv[2]);
         
         //force fit inputs
         if(image_w % 8 != 0) image_w -= image_w % 8;
         if(image_h % 8 != 0) image_h -= image_h % 8;
 
+
         chareDimension = 8;
         pixel_w = image_w/8;
         pixel_h = image_h/8;
 
-        CkPrintf("\n [l]: cells will be %d pixels in height,\ncells will be %d pixels in width,\nthere will be %d cells\n", 
+        //CkPrintf(" w is %d h is %d pw is %d ph is %d", image_w, image_h, pixel_w, pixel_h); 
+        CkPrintf("\ncells will be %d pixels in height,\ncells will be %d pixels in width,\nthere will be %d cells\n", 
                     pixel_h, pixel_w, chareDimension * chareDimension);
     }
     else
