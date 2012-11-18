@@ -3,18 +3,29 @@ module pixelchare {
     array [2D] PixelChare 
     {
         entry PixelChare(int width, int height);
+	entry void getShape(int size, Shape s[size]);
         entry void run()
         {
             atomic "Interation block" 
             {
                 iteration++;
                 CkPrintf("\n Iteration %d", iteration);
+		
+		
+
                 if(iteration < Total_iterations)
                 {
-                    doWork();
+                    //doWork();
 
                     run();
                 }
+		else
+		{
+			//atomic
+			//{
+				mainProxy.done();
+			//}
+		}
                 
             }	
         }; 

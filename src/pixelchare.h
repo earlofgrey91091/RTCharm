@@ -1,6 +1,11 @@
 #ifndef PIXELCHARE_H
 #define PIXELCHARE_H
 #include <pup_stl.h>
+#include "main.decl.h"
+//#include "shape.h"
+//#include "ShapeMsg.h"
+
+extern /*readonly*/ int size;
 
 class PixelChare : public CBase_PixelChare 
 {
@@ -8,6 +13,8 @@ class PixelChare : public CBase_PixelChare
     typedef struct { byte r, g, b; } rgb;
     vector<rgb> pixelArray;
     double *tmpBuffer;
+    //Shape *shapes;
+    vector<Shape> shapes;
     int x, y, w, h;
     int iteration;
 
@@ -17,6 +24,7 @@ class PixelChare : public CBase_PixelChare
     PixelChare(CkMigrateMessage *m);
     ~PixelChare(); 
     void doWork();
+    void getShape(int size, Shape *s);
     void liveVizDump(liveVizRequestMsg *m); 
 
 

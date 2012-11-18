@@ -1,23 +1,46 @@
 #include <liveViz.h>
 #include "pup_stl.h"
 #include <stdio.h>
+#include "shape.h"
 using namespace std;
 #include "main.h"
+//#include "ShapeMsg.h"
 
 
 
 #define ITERATIONS 1000
+#define SHAPES 20
 #define loc(x,y, width)  (x + (y*width))
+
+/*class ShapeMsg : public CMessage_ShapeMsg {
+public:
+  Shape *s;
+  int size;
+
+  ShapeMsg(int z)
+  {
+    size = z;
+  }
+};*/
+
+
+
+
 
 
 /*readonly*/ CProxy_Main mainProxy;
 /*readonly*/ int Total_iterations;
 /*readonly*/ int chareDimension;
+/*readonly*/ int size;
+
 Main::Main(CkArgMsg* arg) 
 {
-    __sdag_init();
+    //__sdag_init();
     int image_w, image_h, pixel_w, pixel_h; 
     string filename = "objects.txt";
+    size = SHAPES;
+
+    //s = new Sphere[SHAPES];
 
     //Process command-line arguments
     if( arg->argc > 2 )
@@ -48,15 +71,28 @@ Main::Main(CkArgMsg* arg)
     CkArrayOptions opts(chareDimension, chareDimension);
     myOpts = opts;
     //TODO: Read file and create shape objects
+    
+
+    Sphere s[size];
+
+    //Shape *s = new Sphere[20];
+    
 
     //Create the image pixel chares based on image size
     pixel = CProxy_PixelChare::ckNew(pixel_w, pixel_h, opts);
     startVis();
-    mainProxy.run();
+    pixel.getShape(size, s);
+    pixel.run();
+    //mainProxy.run();
 
 }
 
-Main::Main(CkMigrateMessage *msg){__sdag_init(); }
+Main::Main(CkMigrateMessage *msg){ }
+
+void Main::done()
+{
+	CkExit();
+}
 
 void Main::startVis()
 {

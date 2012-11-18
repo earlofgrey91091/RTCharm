@@ -1,5 +1,7 @@
 #include <time.h>
 #include <math.h>
+#include "pup.h"
+#include "pup_stl.h"
 #define rnd(x) (x*rand() / RAND_MAX)
 #define BOX_DIM 1000
 class  xyz
@@ -22,30 +24,43 @@ public:
 
 class Shape {
 public:
-	Shape();
 	float r,b,g;
-	virtual float hit(float ox, float oy, float *n);
+        virtual float hit(float ox, float oy, float *n) = 0;
+
+	Shape()
+	{
+		srand(time(NULL));
+
+		r = rnd(1.0f);
+                g = rnd(1.0f);
+                b = rnd(1.0f);		
+	};
+	
+	virtual void pup(PUP::er &p) = 0;
+
 };
 
 class Sphere : public Shape {
 
 public:
+	xyz origin;
+        float radius;
+
+
 	Sphere()
 	{
-		srand(time(NULL));
+		//srand(time(NULL));
 		radius = rnd(100.0f) + 20;
 
 		origin.x = rnd(1000.0f) - 500;
 		origin.y = rnd(1000.0f) - 500;
 		origin.z = rnd(1000.0f) - 500;
 
-		r = rnd(1.0f);
-		g = rnd(1.0f);
-		b = rnd(1.0f);
+		//r = rnd(1.0f);
+		//g = rnd(1.0f);
+		//b = rnd(1.0f);
 	};
 
-	xyz origin; 
-	float radius;
 	float hit(float ox, float oy, float *n) {
 		float dx = ox - origin.x; // distance on x-axis
         	float dy = oy - origin.y; // distance on y-axis
@@ -67,6 +82,8 @@ public:
 	}
 
 };
+
+/*
 
 class Triangle : public Shape {
 private:
@@ -106,4 +123,4 @@ public:
 	}
 	
 
-};
+};*/ 

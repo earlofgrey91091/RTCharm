@@ -6,7 +6,8 @@
 using namespace std;
 #include "pixelchare.decl.h"
 #include "pixelchare.h"
-#include "main.decl.h"
+//#include "main.decl.h"
+//#include "ShapeMsg.h"
 
 
 
@@ -17,6 +18,7 @@ using namespace std;
 extern /*readonly*/ CProxy_Main mainProxy;
 extern /*readonly*/ int Total_iterations;
 extern /*readonly*/ int chareDimension;
+//extern /*readonly*/ int size;
 
 PixelChare::PixelChare(int width, int height) 
 {
@@ -27,12 +29,18 @@ PixelChare::PixelChare(int width, int height)
     for(int i = 0; i < width * height; i++)
     {
         rgb p;
-        p.r = 255;
+        p.r = 0;
         p.g = 0;
         p.b = 0;
         pixelArray.push_back(p);
     }
     tmpBuffer =  new double[w*h];
+
+
+    //Shape temp[size];
+
+    //shapes = temp;
+
 };
 
 PixelChare::PixelChare(CkMigrateMessage *m)
@@ -51,6 +59,20 @@ void PixelChare::doWork()
     
     
 }
+
+
+void PixelChare::getShape(int s, Shape *sh)
+{
+	//Need to find a way to copy the incoming shapes to internal memory
+	//
+	//NOT WORKING
+	/*for (int i = 0; i< s; i++ )
+	{
+		shapes.push_back(sh[i]);
+	}*/
+
+}
+
 
 
 void PixelChare::liveVizDump(liveVizRequestMsg *m) 

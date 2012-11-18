@@ -6,10 +6,11 @@
 
 class Main : public CBase_Main {
     public:
-        Main_SDAG_CODE;
-		Main(CkArgMsg* msg);
-		Main(CkMigrateMessage *msg);
-        void startVis();
+        //Main_SDAG_CODE;
+	Main(CkArgMsg* msg);
+	Main(CkMigrateMessage *msg);
+        void done();
+	void startVis();
     private:
         CProxy_PixelChare pixel;
         CkArrayOptions myOpts;
