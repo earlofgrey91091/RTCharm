@@ -1,9 +1,9 @@
 #include <time.h>
 #include <math.h>
+#include "common.h"
 #include "pup.h"
 #include "pup_stl.h"
-#define rnd(x) (x*rand() / RAND_MAX)
-#define BOX_DIM 1000
+
 class  xyz
 {
 public:
@@ -22,10 +22,10 @@ public:
 };
 
 
-class Shape {
+class Shape  : public PUP::able {
 public:
 	float r,b,g;
-        virtual float hit(float ox, float oy, float *n) = 0;
+    virtual float hit(float ox, float oy, float *n) = 0;
 
 	Shape()
 	{
@@ -35,8 +35,15 @@ public:
                 g = rnd(1.0f);
                 b = rnd(1.0f);		
 	};
-	
-	virtual void pup(PUP::er &p) = 0;
+	PUPable_decl(Shape);
+    Shape(CkMigrateMessage *m) : PUP::able(m) {}
+	virtual void pup(PUP::er &p)
+    { 
+        PUP::able::pup(p); 
+        p | r;
+	    p | g;
+	    p | b;
+    };
 
 };
 
@@ -72,13 +79,12 @@ public:
         	}
              return -999999;
 	}
-
+	PUPable_decl(Sphere);
+    Sphere(CkMigrateMessage *m) : Shape(m) {}
 	void pup(PUP::er &p) {
-	  p | origin;
-	  p | radius;
-	  p | r;
-	  p | g;
-	  p | b;
+	    Shape::pup(p);
+        p | origin;
+	    p | radius;
 	}
 
 };
@@ -113,13 +119,13 @@ public:
 	}
 	float hit(float ox, float oy, float *n);
 
-	void pup(PUP::er &p){
-	  p | vert1;
-	  p | vert2;
-	  p | vert3;
-	  p | r;
-	  p | g;
-	  p | b;
+	PUPable_decl(Triangle);
+    Sphere(CkMigrateMessage *m) : Shape(m) {}
+	void pup(PUP::er &p) {
+	    Shape::pup(p);
+	    p | vert1;
+	    p | vert2;
+	    p | vert3;
 	}
 	
 

@@ -1,5 +1,6 @@
 #include <liveViz.h>
 #include "pup_stl.h"
+#include "common.h"
 #include <stdio.h>
 #include "shape.h"
 using namespace std;
@@ -8,9 +9,7 @@ using namespace std;
 
 
 
-#define ITERATIONS 1000
-#define SHAPES 20
-#define loc(x,y, width)  (x + (y*width))
+
 
 /*class ShapeMsg : public CMessage_ShapeMsg {
 public:

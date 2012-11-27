@@ -3,7 +3,7 @@ module pixelchare {
     array [2D] PixelChare 
     {
         entry PixelChare(int width, int height);
-	entry void getShape(int size, Shape s[size]);
+	    entry void getShape(int size, Shape s[size]);
         entry void run()
         {
             atomic "Interation block" 

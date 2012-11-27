@@ -3,16 +3,13 @@
 #include "shape.h"
 #include "pup_stl.h"
 #include <stdio.h>
+#include "common.h"
 using namespace std;
 #include "pixelchare.decl.h"
 #include "pixelchare.h"
 //#include "main.decl.h"
 //#include "ShapeMsg.h"
 
-
-
-#define ITERATIONS 1000
-#define loc(x,y, width)  (x + (y*width))
 
 
 extern /*readonly*/ CProxy_Main mainProxy;
@@ -66,10 +63,10 @@ void PixelChare::getShape(int s, Shape *sh)
 	//Need to find a way to copy the incoming shapes to internal memory
 	//
 	//NOT WORKING
-	/*for (int i = 0; i< s; i++ )
+	for (int i = 0; i< s; i++ )
 	{
 		shapes.push_back(sh[i]);
-	}*/
+	}
 
 }
 

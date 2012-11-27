@@ -1,6 +1,7 @@
 #ifndef PIXELCHARE_H
 #define PIXELCHARE_H
 #include <pup_stl.h>
+#include "common.h"
 #include "main.decl.h"
 //#include "shape.h"
 //#include "ShapeMsg.h"
