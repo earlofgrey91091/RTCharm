@@ -25,15 +25,15 @@ public:
 class Shape  : public PUP::able {
 public:
 	float r,b,g;
-    virtual float hit(float ox, float oy, float *n) = 0;
+    float hit(float ox, float oy, float *n) {return 0;};
 
 	Shape()
 	{
 		srand(time(NULL));
 
 		r = rnd(1.0f);
-                g = rnd(1.0f);
-                b = rnd(1.0f);		
+        g = rnd(1.0f);
+        b = rnd(1.0f);		
 	};
 	PUPable_decl(Shape);
     Shape(CkMigrateMessage *m) : PUP::able(m) {}
@@ -68,20 +68,24 @@ public:
 		//b = rnd(1.0f);
 	};
 
-	float hit(float ox, float oy, float *n) {
+	float hit(float ox, float oy, float *n) 
+    {
 		float dx = ox - origin.x; // distance on x-axis
-        	float dy = oy - origin.y; // distance on y-axis
-        	//if (dx*dx + dy*dy > radius*radius), ray will not hit sphere
-        	if (dx*dx + dy*dy < radius*radius) {
-           		float dz = sqrtf( radius*radius - dx*dx - dy*dy );
-           		*n = dz / sqrtf( radius * radius );
-           		return dz + origin.z;
-        	}
-             return -999999;
+    	float dy = oy - origin.y; // distance on y-axis
+        
+    	//if (dx*dx + dy*dy > radius*radius), ray will not hit sphere
+    	if (dx*dx + dy*dy < radius*radius) {
+       		float dz = sqrtf( radius*radius - dx*dx - dy*dy );
+       		*n = dz / sqrtf( radius * radius );
+       		return dz + origin.z;
+    	}
+        return NEGINF;
 	}
+
 	PUPable_decl(Sphere);
     Sphere(CkMigrateMessage *m) : Shape(m) {}
-	void pup(PUP::er &p) {
+	void pup(PUP::er &p) 
+    {
 	    Shape::pup(p);
         p | origin;
 	    p | radius;

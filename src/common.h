@@ -6,6 +6,6 @@
 #define loc(x,y, width)  (x + (y*width))
 #define rnd(x) (x*rand() / RAND_MAX)
 #define BOX_DIM 1000
-
+#define NEGINF -999999
 
 #endif //__COMMON_H__

@@ -4,6 +4,8 @@ mainmodule main {
     readonly int Total_iterations;
     readonly int chareDimension;
     readonly int size;
+    PUPable Shape; 
+    PUPable Sphere; 
 
     //message ShapeMsg {
     //	Shape s[];
