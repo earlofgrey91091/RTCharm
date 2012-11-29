@@ -58,7 +58,7 @@ void PixelChare::doWork()
 }
 
 
-void PixelChare::getShape(int s, Shape *sh)
+void PixelChare::runStep(int s, Shape *sh)
 {
 	//Need to find a way to copy the incoming shapes to internal memory
 	//
@@ -67,6 +67,7 @@ void PixelChare::getShape(int s, Shape *sh)
 	{
 		shapes.push_back(sh[i]);
 	}
+    run();
 
 }
 

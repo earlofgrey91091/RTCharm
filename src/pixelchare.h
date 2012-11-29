@@ -25,7 +25,7 @@ class PixelChare : public CBase_PixelChare
     PixelChare(CkMigrateMessage *m);
     ~PixelChare(); 
     void doWork();
-    void getShape(int size, Shape *s);
+    void runStep(int size, Shape *s);
     void liveVizDump(liveVizRequestMsg *m); 
 
 

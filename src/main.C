@@ -80,9 +80,7 @@ Main::Main(CkArgMsg* arg)
     //Create the image pixel chares based on image size
     pixel = CProxy_PixelChare::ckNew(pixel_w, pixel_h, opts);
     startVis();
-    pixel.getShape(size, s);
-    pixel.run();
-    //mainProxy.run();
+    pixel.runStep(size, s);
 
 }
 
