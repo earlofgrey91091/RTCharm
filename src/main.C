@@ -36,7 +36,7 @@ Main::Main(CkArgMsg* arg)
 {
     //__sdag_init();
     int image_w, image_h, pixel_w, pixel_h; 
-    string filename = "objects.txt";
+    //string filename = "objects.txt";
     size = SHAPES;
     chareDimension = 8;
 
@@ -76,8 +76,6 @@ Main::Main(CkArgMsg* arg)
     //TODO: Read file and create shape objects
     
 	//Shape s;
-    
-   	
 	CkPrintf("\n*************");
 	for(int i = 0; i<size; i++)
 	{

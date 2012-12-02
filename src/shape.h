@@ -6,6 +6,20 @@
 #include "ray.h"
 
 
+
+/*class Shape {
+public:
+
+	coord3D pos;
+	float size;
+
+	
+}*/
+
+
+
+
+/*
 class Shape  : public PUP::able {
 public:
 	float r,b,g;
@@ -35,6 +49,7 @@ public:
 	};
 
 };
+
 
 class Sphere : public Shape {
 
@@ -91,7 +106,7 @@ public:
 	}
 
 };
-
+*/
 /*
 
 class Triangle : public Shape {
