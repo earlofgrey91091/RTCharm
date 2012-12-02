@@ -1,11 +1,13 @@
-#ifndef __COMMON_H__
-#define __COMMON_H__
+#ifndef COMMON_H
+#define COMMON_H
 
 #define ITERATIONS 10
 #define SHAPES 2
 #define loc(x,y, width)  (x + (y*width))
 #define rnd(x) (x*rand() / RAND_MAX)
 #define BOX_DIM 1000
+#define INF 999999
 #define NEGINF -999999
+#define SPHERE 0
 
-#endif //__COMMON_H__
+#endif //COMMON_H

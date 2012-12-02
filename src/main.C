@@ -38,8 +38,7 @@ Main::Main(CkArgMsg* arg)
     int image_w, image_h, pixel_w, pixel_h; 
     string filename = "objects.txt";
     size = SHAPES;
-
-    //s = new Sphere[SHAPES];
+    chareDimension = 8;
 
     //Process command-line arguments
     if( arg->argc > 2 )
@@ -48,12 +47,14 @@ Main::Main(CkArgMsg* arg)
         image_h = atoi(arg->argv[2]);
         
         //force fit inputs
-        //if(image_w % 8 != 0) image_w -= image_w % 8;
-        //if(image_h % 8 != 0) image_h -= image_h % 8;
+        image_w -= image_w % chareDimension;
+        image_h -= image_h % chareDimension;
+        if(image_w == 0 || image_h == 0)
+        {
+            CkPrintf("Invalid image size\n");
+            CkExit();
+        }
 
-
-        chareDimension = 8;
-	//Making this change from image_*/8 to image_* to make the image size same as bounding box size 
         pixel_w = image_w;
         pixel_h = image_h;
 
@@ -70,26 +71,28 @@ Main::Main(CkArgMsg* arg)
     Total_iterations = ITERATIONS;
     CkArrayOptions opts(chareDimension, chareDimension);
     myOpts = opts;
+
+
     //TODO: Read file and create shape objects
     
-	Shape *s;
+	//Shape s;
     
-   	Sphere sp[size];
+   	
 	CkPrintf("\n*************");
 	for(int i = 0; i<size; i++)
 	{
-		//sp[i].printShape();
+		//myShapes
+        //sp[i].printShape();
 		//s[i] = new Sphere(); 
 	}
 	CkPrintf("\n*************");
     
 
     //Create the image pixel chares based on image size
-    pixel = CProxy_PixelChare::ckNew(pixel_w/8, pixel_h/8, opts);
-	CkPrintf("\nEach chare will have (%d * %d) pixels ", pixel_w/8, pixel_h/8);
-    startVis();
-      pixel.recvSphere(size, sp);
-    //pixel.runStep(size, sp);
+    pixel = CProxy_PixelChare::ckNew(pixel_w/chareDimension, pixel_h/chareDimension, opts);
+	CkPrintf("\nEach chare will have (%d * %d) pixels ", pixel_w/chareDimension, pixel_h/chareDimension);
+    //startVis();
+    //pixel.runStep(myShapes, myLights);
 
 }
 

@@ -11,26 +11,28 @@ extern /*readonly*/ int size;
 class PixelChare : public CBase_PixelChare 
 {
     private:
-    typedef struct { byte r, g, b; } rgb;
-    vector<rgb> pixelArray;
-    double *tmpBuffer;
-    //Shape *shapes;
-    vector<Shape> shapes;
-    Sphere *spheres;
-    int x, y, w, h;
-    int iteration;
+        typedef struct { byte r, g, b; } rgb;
+        vector<rgb> pixelArray;
+        vector<Shape> myShapes;
+        vector<lightSrc> myLights;
+        double *tmpBuffer;
+        Scene theScene;
+        int x, y, w, h;
+        int iteration;
 
     public:
-    PixelChare_SDAG_CODE;    
-    PixelChare(int width, int height); 
-    PixelChare(CkMigrateMessage *m);
-    ~PixelChare(); 
-    void doWork();
-    void runStep(int size, Shape *s);
-    void recvSphere(int size, Sphere *s);
-    void liveVizDump(liveVizRequestMsg *m); 
-
-
+        PixelChare_SDAG_CODE;    
+        PixelChare(int width, int height); 
+        PixelChare(CkMigrateMessage *m);
+        ~PixelChare(); 
+        void doWork();
+        void runStep(vector<Shape> shapes, vector<lightSrc> lights);
+        int shoot(ray viewRay);
+        
+        bool hit(int index, ray theRay, float *n);
+        bool sphereHit(int index, ray theRay, float *n);
+        //rgb* draw();
+        void liveVizDump(liveVizRequestMsg *m); 
 };
 
 #endif //PIXELCHARE_H 

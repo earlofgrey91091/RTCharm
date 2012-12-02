@@ -7,10 +7,12 @@
 class Main : public CBase_Main {
     public:
         //Main_SDAG_CODE;
-	Main(CkArgMsg* msg);
-	Main(CkMigrateMessage *msg);
+        vector<Shape> myShapes;
+        vector<lightSrc> myLights;
+        Main(CkArgMsg* msg);
+        Main(CkMigrateMessage *msg);
         void done();
-	void startVis();
+        void startVis();
     private:
         CProxy_PixelChare pixel;
         CkArrayOptions myOpts;
