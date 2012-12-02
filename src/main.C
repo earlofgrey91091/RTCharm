@@ -75,20 +75,20 @@ Main::Main(CkArgMsg* arg)
 
     //TODO: Read file and create shape objects
     
-	//Shape s;
-	CkPrintf("\n*************");
-	for(int i = 0; i<size; i++)
-	{
-		//myShapes
+    //Shape s;
+    CkPrintf("\n*************");
+    for(int i = 0; i<size; i++)
+    {
+        //myShapes
         //sp[i].printShape();
-		//s[i] = new Sphere(); 
-	}
-	CkPrintf("\n*************");
+        //s[i] = new Sphere(); 
+    }
+    CkPrintf("\n*************");
     
 
     //Create the image pixel chares based on image size
     pixel = CProxy_PixelChare::ckNew(pixel_w/chareDimension, pixel_h/chareDimension, opts);
-	CkPrintf("\nEach chare will have (%d * %d) pixels ", pixel_w/chareDimension, pixel_h/chareDimension);
+    CkPrintf("\nEach chare will have (%d * %d) pixels ", pixel_w/chareDimension, pixel_h/chareDimension);
     //startVis();
     //pixel.runStep(myShapes, myLights);
 
@@ -98,7 +98,7 @@ Main::Main(CkMigrateMessage *msg){ }
 
 void Main::done()
 {
-	CkExit();
+    CkExit();
 }
 
 void Main::startVis()
