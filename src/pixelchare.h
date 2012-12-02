@@ -16,7 +16,6 @@ class PixelChare : public CBase_PixelChare
         vector<Shape> myShapes;
         vector<lightSrc> myLights;
         double *tmpBuffer;
-        Scene theScene;
         int x, y, w, h;
         int iteration;
 

@@ -131,14 +131,14 @@ void PixelChare::recvSphere(int s, Sphere *sh)
 }*/
 
 //returns index of closest hit, NEGINF otherwise
-int shoot(ray viewRay)
+int PixelChare::shoot(ray theRay)
 {
     int minIndex = NEGINF;
     float minVal = INF;
     float n = INF;    
     for(int i = 0; i < myShapes.size(); i++)
     {
-        hit(index, theRay, &n);
+        hit(i, theRay, &n);
         if(n < minVal)
         {
             minVal = n;
@@ -148,7 +148,7 @@ int shoot(ray viewRay)
     return minIndex;
 }
 
-bool hit(int index, ray theRay, float *n)
+bool PixelChare::hit(int index, ray theRay, float *n)
 {
     bool result = false;
     switch(myShapes[index].type)
@@ -159,7 +159,7 @@ bool hit(int index, ray theRay, float *n)
     return result;
 }
 
-bool sphereHit(int index, ray theRay, float *n)
+bool PixelChare::sphereHit(int index, ray theRay, float *n)
 {
     //TODO sphere hit function
     *n = NEGINF;

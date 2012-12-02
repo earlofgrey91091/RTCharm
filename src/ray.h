@@ -4,17 +4,17 @@
 
 class  coord3D
 {
-public:
+    public:
         float x;
         float y;
         float z;
 
         coord3D()
-	{
-		this->x = 0;
-		this->y = 0;
-		this->z = 0;
-	}
+        {
+            this->x = 0;
+            this->y = 0;
+            this->z = 0;
+        }
         coord3D(float x, float y, float z) 
         {
             this->x = x;
@@ -32,35 +32,35 @@ public:
 
 class  vec3D 
 {
-public:
-    float x, y, z;
+    public:
+        float x, y, z;
 
-    vec3D()
-    {
-	 this->x = 0;
-         this->y = 0;
-         this->z = 0;
-    }
- 
-    vec3D(float x, float y, float z)
-    {
-	this->x = x;
-        this->y = y;
-        this->z = z;
-    }
-    vec3D& operator += (const vec3D &v2)
-    {
-        this->x += v2.x;
-        this->y += v2.y;
-        this->z += v2.z;
-        return *this;
-    }
-    void pup(PUP::er &p)
-    {
-    	p | x;
-	p | y;
-	p | z;
-    }
+        vec3D()
+        {
+            this->x = 0;
+            this->y = 0;
+            this->z = 0;
+        }
+     
+        vec3D(float x, float y, float z)
+        {
+            this->x = x;
+            this->y = y;
+            this->z = z;
+        }
+        vec3D& operator += (const vec3D &v2)
+        {
+            this->x += v2.x;
+            this->y += v2.y;
+            this->z += v2.z;
+            return *this;
+        }
+        void pup(PUP::er &p)
+        {
+            p | x;
+            p | y;
+            p | z;
+        }
 };
 
 inline coord3D operator + (const coord3D &p, const vec3D &v)
@@ -105,87 +105,89 @@ inline vec3D operator - (const vec3D &v1, const vec3D &v2)
     return v;
 }
 
-inline float operator * (const vec3D &v1, const vec3D &v2 ) {
+inline float operator * (const vec3D &v1, const vec3D &v2 ) 
+{
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
 class ray 
 {
-public:
-    
-    coord3D start;
-    vec3D dir;
- 
-    ray()
-    {
-	//do nothing defult constructur for start and dir will run	
-    }
+    public:
+        
+        coord3D start;
+        vec3D dir;
+     
+        ray()
+        {
+        //do nothing defult constructur for start and dir will run    
+        }
 
-    ray(float x, float y, float z)
-    {
-	this->start.x = x;
-	this->start.y = y;
-	this->start.z = z;
-    }
+        ray(float x, float y, float z)
+        {
+            this->start.x = x;
+            this->start.y = y;
+            this->start.z = z;
+        }
 
-    ray(float cx, float cy, float cz, float vx, float vy, float vz)
-    {
-	this->start.x = cx;
-        this->start.y = cy;
-        this->start.z = cz;
+        ray(float cx, float cy, float cz, float vx, float vy, float vz)
+        {
+            this->start.x = cx;
+            this->start.y = cy;
+            this->start.z = cz;
 
-	this->dir.x = vx;
-	this->dir.y = vy;
-	this->dir.z = vz;
-    }
+            this->dir.x = vx;
+            this->dir.y = vy;
+            this->dir.z = vz;
+        }
     
 };
 
 class lightSrc 
 {
-public:
+    public:
 
-    coord3D loc;
-    float r, g, b;
+        coord3D loc;
+        float r, g, b;
 
-    lightSrc()
-    {
-	this->r = 0;
-	this->g = 0;
-	this->b = 0;
-    }
- 
-    lightSrc(float r, float g, float b)
-    {
-	this->r = r;
-	this->g = g;
-	this->b = b;
-    }
+        lightSrc()
+        {
+            this->r = 0;
+            this->g = 0;
+            this->b = 0;
+        }
+     
+        lightSrc(float r, float g, float b)
+        {
+            this->r = r;
+            this->g = g;
+            this->b = b;
+        }
 
-    lightSrc(float r, float g, float b, float x, float y, float z)
-    {
-	this->r = r;
-        this->g = g;
-        this->b = b;
-	this->loc.x = x;
-        this->loc.y = y;
-        this->loc.z = z;
+        lightSrc(float r, float g, float b, float x, float y, float z)
+        {
+            this->r = r;
+            this->g = g;
+            this->b = b;
+            
+            this->loc.x = x;
+            this->loc.y = y;
+            this->loc.z = z;
 
-    }
-	
+        }
+        
 
-    void print()
-    {
-	printf("location(x, y, z) = (%f, %f, %f)\n", loc.x, loc.y, loc.z);
-	printf("red = %f, green = %f, blue = %f \n", r, g, b);
-    }
+        void print()
+        {
+            printf("location(x, y, z) = (%f, %f, %f)\n", loc.x, loc.y, loc.z);
+            printf("red = %f, green = %f, blue = %f \n", r, g, b);
+        }
 
-    void pup(PUP::er &p)
-    {
-        p | r;
-        p | g;
-        p | b;
-    }
+        void pup(PUP::er &p)
+        {
+            p | r;
+            p | g;
+            p | b;
+        }
     
 
 
@@ -193,50 +195,50 @@ public:
 
 class Shape
 {
-public:
-   
-    coord3D loc;
-    float size;
-    int type;
+    public:
+       
+        coord3D loc;
+        float size;
+        int type;
 
-    Shape()
-    {
-       this->size = 1;
-       this->type = 0;
-    }
+        Shape()
+        {
+           this->size = 1;
+           this->type = 0;
+        }
 
-    Shape(float size)
-    {
-	this->size = size;
-    }
+        Shape(float size)
+        {
+            this->size = size;
+        }
 
-    Shape(float size, int type)
-    {
-	this->size = size;
-	this->type = type;
-    }
+        Shape(float size, int type)
+        {
+            this->size = size;
+            this->type = type;
+        }
 
-    Shape(float size, int type, float x, float y, float z)
-    {
-	this->size = size;
-	this->type = type;
-	this->loc.x = x;
-	this->loc.y = y;
-	this->loc.z = z;
-    }
+        Shape(float size, int type, float x, float y, float z)
+        {
+            this->size = size;
+            this->type = type;
+            this->loc.x = x;
+            this->loc.y = y;
+            this->loc.z = z;
+        }
 
-    void print()
-    {
-	printf("location(x,y,z) = (%f, %f, %f)\n", loc.x, loc.y, loc.z);
-	printf("size = %f \n", size);
-	printf("type = %d \n", type);
-    }
-    void pup(PUP::er &p)
-    {
-        p | size;
-        p | type;
-    }
+        void print()
+        {
+            printf("location(x,y,z) = (%f, %f, %f)\n", loc.x, loc.y, loc.z);
+            printf("size = %f \n", size);
+            printf("type = %d \n", type);
+        }
+        void pup(PUP::er &p)
+        {
+            p | size;
+            p | type;
+        }
     
-}
+};
 
 #endif //RAY_H
