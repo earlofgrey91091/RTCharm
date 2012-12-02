@@ -9,7 +9,7 @@
 class Shape  : public PUP::able {
 public:
 	float r,b,g;
-        virtual float hit(float ox, float oy, float *n) {CkPrintf("000");return 0;};
+    virtual float hit(float ox, float oy, float *n) {CkPrintf("000");return 0;};
 
 	Shape()
 	{
@@ -22,24 +22,25 @@ public:
 		g = 3.0;
 		b = 9.0;	
 	};
+
 	PUPable_decl(Shape);
     Shape(CkMigrateMessage *m) : PUP::able(m) {}
 	virtual void printShape(void) {CkPrintf("l");};
 	virtual void pup(PUP::er &p)
-    	{ 
-            PUP::able::pup(p); 
-            p | r;
-	    p | g;
-	    p | b;
-    	};
+	{ 
+        PUP::able::pup(p); 
+        p | r;
+        p | g;
+        p | b;
+	};
 
 };
 
 class Sphere : public Shape {
 
 public:
-	xyz origin;
-        float radius;
+	coord3D origin;
+    float radius;
 
 
 	Sphere()
@@ -96,8 +97,8 @@ public:
 class Triangle : public Shape {
 private:
 
-	xyz randomize(void) {
-                struct xyz temp;
+	coord3D randomize(void) {
+                struct coord3D temp;
                 srand(time(NULL));
                 temp.x = rnd(1000.0f) - 500;
                 temp.y = rnd(1000.0f) - 500;
@@ -107,9 +108,9 @@ private:
 
 public:
 
-	xyz vert1;
-	xyz vert2;
-	xyz vert3;
+	coord3D vert1;
+	coord3D vert2;
+	coord3D vert3;
 	Triangle(){
 		srand(time(NULL));
 		vert1 = randomize();

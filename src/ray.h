@@ -1,79 +1,94 @@
 //Ray header file
-class  xyz
+class  coord3D
 {
-public:
-    float x;
-    float y;
-    float z;
+    public:
+        float x;
+        float y;
+        float z;
 
-    xyz(){}
-    xyz(float x, float y, float z) {
-        this->x = x;
-        this->y = y;
-        this->z = z;    
-    }
-    void pup(PUP::er &p){
-      p | x;
-      p | y;
-      p | z;
-    }
+        coord3D(){}
+        coord3D(float x, float y, float z) 
+        {
+            this->x = x;
+            this->y = y;
+            this->z = z;    
+        }
+        void pup(PUP::er &p)
+        {
+            p | x;
+            p | y;
+            p | z;
+        }
     
 };
 
-struct vecteur {
+struct vec3D 
+{
     float x, y, z;
 
-    vecteur& operator += (const vecteur &v2){
-            this->x += v2.x;
-            this->y += v2.y;
-            this->z += v2.z;
+    vec3D& operator += (const vec3D &v2)
+    {
+        this->x += v2.x;
+        this->y += v2.y;
+        this->z += v2.z;
         return *this;
     }
 };
 
-inline xyz operator + (const xyz &p, const vecteur &v){
-    xyz p2;
-    p2.x = p.x + v.x, p2.y = p.y + v.y, p2.z = p.z + v.z;
-    return p2;
-}
-
-inline xyz operator - (const xyz &p, const vecteur &v){
-    xyz p2;
-    p2.x = p.x - v.x, p2.y = p.y - v.y, p2.z = p.z - v.z;
-    return p2;
-}
-
-inline vecteur operator + (const vecteur &v1, const vecteur &v2){
-    vecteur v={v1.x + v2.x, v1.y + v2.y, v1.z + v2.z };
-    return v;
-}
-
-inline vecteur operator - (const xyz &p1, const xyz &p2){
-    vecteur v={p1.x - p2.x, p1.y - p2.y, p1.z - p2.z };
-    return v;
-}
-
-inline vecteur operator * (float c, const vecteur &v)
+inline coord3D operator + (const coord3D &p, const vec3D &v)
 {
-    vecteur v2={v.x *c, v.y * c, v.z * c };
+    coord3D p2;
+    p2.x = p.x + v.x;
+    p2.y = p.y + v.y;
+    p2.z = p.z + v.z;
+    return p2;
+}
+
+inline coord3D operator - (const coord3D &p, const vec3D &v)
+{
+    coord3D p2;
+    p2.x = p.x - v.x;
+    p2.y = p.y - v.y;
+    p2.z = p.z - v.z;
+    return p2;
+}
+
+inline vec3D operator + (const vec3D &v1, const vec3D &v2)
+{
+    vec3D v={v1.x + v2.x, v1.y + v2.y, v1.z + v2.z };
+    return v;
+}
+
+inline vec3D operator - (const coord3D &p1, const coord3D &p2)
+{
+    vec3D v = { p1.x - p2.x, p1.y - p2.y, p1.z - p2.z };
+    return v;
+}
+
+inline vec3D operator * (float c, const vec3D &v)
+{
+    vec3D v2 = {v.x *c, v.y * c, v.z * c };
     return v2;
 }
 
-inline vecteur operator - (const vecteur &v1, const vecteur &v2){
-    vecteur v={v1.x - v2.x, v1.y - v2.y, v1.z - v2.z };
+inline vec3D operator - (const vec3D &v1, const vec3D &v2)
+{
+    vec3D v = { v1.x - v2.x, v1.y - v2.y, v1.z - v2.z };
     return v;
 }
 
-inline float operator * (const vecteur &v1, const vecteur &v2 ) {
+inline float operator * (const vec3D &v1, const vec3D &v2 ) {
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
-struct ray {
-    xyz start;
-    vecteur dir;
+struct ray 
+{
+    coord3D start;
+    vec3D dir;
 };
 
-struct light {
-    xyz origin;
+struct lightSrc 
+{
+    coord3D loc;
     float r, g, b;
 };
