@@ -139,6 +139,12 @@ class ray
             this->dir.y = vy;
             this->dir.z = vz;
         }
+
+	void pup(PUP::er &p)
+        {
+            p | start;
+            p | dir;
+        }
     
 };
 
@@ -187,6 +193,7 @@ class lightSrc
             p | r;
             p | g;
             p | b;
+	    p | loc;
         }
     
 
@@ -237,6 +244,7 @@ class Shape
         {
             p | size;
             p | type;
+            p | loc;
         }
     
 };
