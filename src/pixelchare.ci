@@ -3,21 +3,20 @@ module pixelchare {
     array [2D] PixelChare 
     {
         entry PixelChare(int width, int height);
-	    entry void runStep(int size, Shape s[size]);
+	 entry void runStep(int size, Shape s[size]);
+	 entry void recvSphere(int size, Sphere s[size]);
         entry void run()
         {
             atomic "Interation block" 
             {
-                iteration++;
-                CkPrintf("\n Iteration %d", iteration);
-		
-		
-
-                if(iteration < Total_iterations)
+		CkPrintf("\n Iteration %d", iteration);
+		if(iteration < Total_iterations)
                 {
-                    //doWork();
-
+                    doWork();
+		    iteration++;
+                
                     run();
+			
                 }
 		else
 		{

@@ -16,6 +16,7 @@ class PixelChare : public CBase_PixelChare
     double *tmpBuffer;
     //Shape *shapes;
     vector<Shape> shapes;
+    Sphere *spheres;
     int x, y, w, h;
     int iteration;
 
@@ -26,6 +27,7 @@ class PixelChare : public CBase_PixelChare
     ~PixelChare(); 
     void doWork();
     void runStep(int size, Shape *s);
+    void recvSphere(int size, Sphere *s);
     void liveVizDump(liveVizRequestMsg *m); 
 
 

@@ -48,13 +48,14 @@ Main::Main(CkArgMsg* arg)
         image_h = atoi(arg->argv[2]);
         
         //force fit inputs
-        if(image_w % 8 != 0) image_w -= image_w % 8;
-        if(image_h % 8 != 0) image_h -= image_h % 8;
+        //if(image_w % 8 != 0) image_w -= image_w % 8;
+        //if(image_h % 8 != 0) image_h -= image_h % 8;
 
 
         chareDimension = 8;
-        pixel_w = image_w/8;
-        pixel_h = image_h/8;
+	//Making this change from image_*/8 to image_* to make the image size same as bounding box size 
+        pixel_w = image_w;
+        pixel_h = image_h;
 
         //CkPrintf(" w is %d h is %d pw is %d ph is %d", image_w, image_h, pixel_w, pixel_h); 
         CkPrintf("\ncells will be %d pixels in height,\ncells will be %d pixels in width,\nthere will be %d cells\n", 
@@ -71,16 +72,24 @@ Main::Main(CkArgMsg* arg)
     myOpts = opts;
     //TODO: Read file and create shape objects
     
-
-    Sphere s[size];
-
-    //Shape *s = new Sphere[20];
+	Shape *s;
+    
+   	Sphere sp[size];
+	CkPrintf("\n*************");
+	for(int i = 0; i<size; i++)
+	{
+		//sp[i].printShape();
+		//s[i] = new Sphere(); 
+	}
+	CkPrintf("\n*************");
     
 
     //Create the image pixel chares based on image size
-    pixel = CProxy_PixelChare::ckNew(pixel_w, pixel_h, opts);
+    pixel = CProxy_PixelChare::ckNew(pixel_w/8, pixel_h/8, opts);
+	CkPrintf("\nEach chare will have (%d * %d) pixels ", pixel_w/8, pixel_h/8);
     startVis();
-    pixel.runStep(size, s);
+      pixel.recvSphere(size, sp);
+    //pixel.runStep(size, sp);
 
 }
 

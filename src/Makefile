@@ -8,7 +8,7 @@ default: all
 all: pixelchare
 
 pixelchare : main.o pixelchare.o
-	$(CHARMC) -language charm++ -module liveViz -o pixelchare main.o pixelchare.o #-module CommonLBs -balancer GreedyCommLB -balancer RefineLB -tracemode projections
+	$(CHARMC) -language charm++ -module liveViz -o pixelchare main.o pixelchare.o -memory paranoid #-module CommonLBs -balancer GreedyCommLB -balancer RefineLB -tracemode projections
 
 main.o : main.C main.h main.decl.h main.def.h pixelchare.decl.h
 	$(CHARMC) -g -o main.o main.C
@@ -29,4 +29,5 @@ clean:
 	rm -f pixelchare.projrc pixelchare.sts pixelchare.topo
 	rm -f myvalg_txt.*****
 	rm -f pixelchare charmrun 
-
+test:
+	./charmrun pixelchare 256 256 +p4 ++local
