@@ -36,7 +36,7 @@ Main::Main(CkArgMsg* arg)
 {
     //__sdag_init();
     int image_w, image_h, pixel_w, pixel_h; 
-    string filename = "objects.txt";
+    //string filename = "objects.txt";
     size = SHAPES;
 
     //s = new Sphere[SHAPES];
@@ -74,7 +74,7 @@ Main::Main(CkArgMsg* arg)
     
 	Shape *s;
     
-   	Sphere sp[size];
+   	//Sphere sp[size];
 	CkPrintf("\n*************");
 	for(int i = 0; i<size; i++)
 	{
