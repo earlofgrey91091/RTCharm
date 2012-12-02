@@ -19,7 +19,7 @@ extern /*readonly*/ int chareDimension;
 
 PixelChare::PixelChare(int width, int height) 
 {
-    CkPrintf("\nPixelChare [%d][%d]", thisIndex.x, thisIndex.y);
+    //CkPrintf("\nPixelChare [%d][%d]", thisIndex.x, thisIndex.y);
     __sdag_init();
     iteration = 0;
     w = width;
@@ -90,7 +90,7 @@ void PixelChare::runStep(vector<Shape> shapes, vector<lightSrc> lights)
     CkPrintf("\n runStep::Pixelchare [%d][%d]", thisIndex.x, thisIndex.y);
     myShapes.insert(myShapes.end(), shapes.begin(), shapes.end());
     myLights.insert(myLights.end(), lights.begin(), lights.end());
-    /*
+    
     //Test shape insert
     CkPrintf("All shapes recieved at index (%d,%d) \n", thisIndex.x, thisIndex.y);
     for (int i = 0; i< myShapes.size(); i++ )
@@ -104,7 +104,7 @@ void PixelChare::runStep(vector<Shape> shapes, vector<lightSrc> lights)
         myLights[i].print();
         CkPrintf("\n ");
     }
-    */
+    
     //run();
 
 }
