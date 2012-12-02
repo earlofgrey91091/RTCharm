@@ -22,11 +22,6 @@ public:
   }
 };*/
 
-
-
-
-
-
 /*readonly*/ CProxy_Main mainProxy;
 /*readonly*/ int Total_iterations;
 /*readonly*/ int chareDimension;
