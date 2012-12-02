@@ -61,27 +61,31 @@ void PixelChare::doWork()
     // pixels will go from position_x -> position_x + w -1
     // pixels will go from position_y -> position_x + h -1
 	//CkPrintf("\nDoing work [%d][%d] [%d][%d]-[%d][%d]", thisIndex.x, thisIndex.y, position_x,position_y, position_x+w-1, position_y+h-1);
-    	for(int i = 0; i < w-1 ; i++) {
-		for(int j = 0; j < h-1; j++) {
-			//CkPrintf("\n[%d][%d]", position_x + i, position_y + j);
-			//Creating ray passing through each pixel in this chare
-			int pixel_x = position_x + i, pixel_y = position_y + j;
-			ray viewRay;
-			viewRay.start.x = float(pixel_x), viewRay.start.y = float(pixel_y), viewRay.start.z = -1000.0f, viewRay.dir.x = 0.0f, viewRay.dir.y = 0.0f, viewRay.dir.z = 1.0f;		       
-			float *n;
-			//spheres[0].printShape();
-			spheres[0].hit(viewRay.start.x,viewRay.start.y,n);
-		}
-    	}
+    for(int i = 0; i < w-1 ; i++) 
+    {
+        for(int j = 0; j < h-1; j++) 
+    {
+	        //CkPrintf("\n[%d][%d]", position_x + i, position_y + j);
+	        //Creating ray passing through each pixel in this chare
+	        int pixel_x = position_x + i, pixel_y = position_y + j;
+	        ray viewRay;
+	        viewRay.start.x = float(pixel_x);
+            viewRay.start.y = float(pixel_y);
+            viewRay.start.z = -1000.0f; 
+            viewRay.dir.x = 0.0f;
+            viewRay.dir.y = 0.0f;
+            viewRay.dir.z = 1.0f;		       
+	        float *n;
+	        //spheres[0].printShape();
+	        spheres[0].hit(viewRay.start.x,viewRay.start.y,n);
+        }
+    }
         
 }
 
 
 void PixelChare::runStep(int s, Shape *sh)
 {
-	//Need to find a way to copy the incoming shapes to internal memory
-	//
-	//NOT WORKING
 	CkPrintf("\n runStep::Pixelchare [%d][%d]", thisIndex.x, thisIndex.y);
 	for (int i = 0; i< s; i++ )
 	{
@@ -96,9 +100,7 @@ void PixelChare::runStep(int s, Shape *sh)
 
 void PixelChare::recvSphere(int s, Sphere *sh)
 {
-	//Need to find a way to copy the incoming shapes to internal memory
-	//
-	//NOT WORKING
+
 	//CkPrintf("\n runStep::Pixelchare [%d][%d]", thisIndex.x, thisIndex.y);
 	spheres = sh;
 	for (int i = 0; i< s; i++ )
