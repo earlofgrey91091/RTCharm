@@ -113,13 +113,13 @@ void Main::done()
 void Main::startVis()
 {
     int funcIndex = CkIndex_PixelChare::liveVizDump(NULL);
-    CkCallback cb0(funcIndex, pixel);
+    CkCallback* cb = new CkCallback(funcIndex, pixel);
 
     // Create a liveViz configuration object
     liveVizConfig lvConfig(liveVizConfig::pix_color, true);
 
     // Initialize the liveViz library
-    liveVizInit(lvConfig, pixel, cb0, myOpts);
+    liveVizInit(lvConfig, pixel, *cb, myOpts);
 
     double resumeTime = CmiWallTimer() + PAUSE_TIME + PAUSE_TIME;     // Pause for PAUSE_TIME seconds
      
