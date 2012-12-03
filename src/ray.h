@@ -119,7 +119,7 @@ class ray
      
         ray()
         {
-        //do nothing defult constructur for start and dir will run    
+        //do nothing defult constructor for start and dir will run    
         }
 
         ray(float x, float y, float z)
@@ -138,6 +138,12 @@ class ray
             this->dir.x = vx;
             this->dir.y = vy;
             this->dir.z = vz;
+        }
+
+        void pup(PUP::er &p)
+        {
+            p | start;
+            p | dir;
         }
     
 };
@@ -187,6 +193,7 @@ class lightSrc
             p | r;
             p | g;
             p | b;
+        p | loc;
         }
     
 
@@ -237,6 +244,7 @@ class Shape
         {
             p | size;
             p | type;
+            p | loc;
         }
     
 };

@@ -19,7 +19,7 @@ extern /*readonly*/ int chareDimension;
 
 PixelChare::PixelChare(int width, int height) 
 {
-    CkPrintf("\nPixelChare [%d][%d]", thisIndex.x, thisIndex.y);
+    //CkPrintf("\nPixelChare [%d][%d]", thisIndex.x, thisIndex.y);
     __sdag_init();
     iteration = 0;
     w = width;
@@ -60,7 +60,7 @@ void PixelChare::doWork()
     // pixels will go from position_x -> position_x + w -1
     // pixels will go from position_y -> position_x + h -1
     //CkPrintf("\nDoing work [%d][%d] [%d][%d]-[%d][%d]", thisIndex.x, thisIndex.y, position_x,position_y, position_x+w-1, position_y+h-1);
-    for(int i = 0; i < w-1 ; i++) 
+    for(int i = 0; i < w-1; i++) 
     {
         for(int j = 0; j < h-1; j++) 
         {
@@ -77,7 +77,7 @@ void PixelChare::doWork()
             //see what the closest hit is             
             hitIndex = shoot(viewRay);
             //DRAW!
-            //draw(i,j, viewRay, hitIndex);
+            draw((j * w) + i, viewRay, hitIndex);
             
         }
     }
@@ -107,27 +107,6 @@ void PixelChare::runStep(vector<Shape> shapes, vector<lightSrc> lights)
     //run();
 
 }
-/*
-void PixelChare::recvSphere(int s, Sphere *sh)
-{
-
-    //CkPrintf("\n runStep::Pixelchare [%d][%d]", thisIndex.x, thisIndex.y);
-    spheres = sh;
-    for (int i = 0; i< s; i++ )
-    {
-    //    CkPrintf("\n size = %d %f,%f,%f", i, sh[i].r,sh[i].g,sh[i].b);
-        shapes.push_back(sh[i]);
-    //    CkPrintf("\n ");
-    //    sh[i].printShape();
-    }
-    for(int i = 0 ; i<shapes.size(); i++)
-    {
-        shapes[i].printShape();
-    }
-    //CkPrintf("-%d,%d-", s, shapes.size());
-    run();
-
-}*/
 
 //returns index of closest hit, NEGINF otherwise
 int PixelChare::shoot(ray theRay)
@@ -165,11 +144,23 @@ bool PixelChare::sphereHit(int index, ray theRay, float *n)
     return false;
 }
 
+
+void PixelChare::draw(int index, ray theRay, int hitIndex)
+{
+    if(hitIndex != NEGINF)
+    {
+        pixelArray[index].r = 255;
+        pixelArray[index].g = 255;
+        pixelArray[index].b = 255;
+    }
+
+}
+
 void PixelChare::liveVizDump(liveVizRequestMsg *m) 
 {        
     rgb* imageBuff = (rgb*)tmpBuffer;
     
-    register int imgIndex;
+    int imgIndex;
     rgb* c;
     for (int x = 0; x < w; x++) 
     {

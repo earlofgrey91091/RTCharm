@@ -6,21 +6,21 @@ mainmodule main {
     readonly int size;
 
     //message ShapeMsg {
-    //	Shape s[];
+    //    Shape s[];
     //};
 
     extern module pixelchare;
     mainchare Main 
     {
         entry Main(CkArgMsg *m);
-	entry void done();
+        entry void done();
         /*entry void run()
         {
             atomic  
             {
                 //Run things!!
                 CkExit();
-            }	
+            }    
         };*/ 
     };
 };
