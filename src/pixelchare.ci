@@ -9,18 +9,20 @@ module pixelchare {
             atomic "Interation block" 
             {
                 //CkPrintf("\n Iteration %d", iteration);
-                if(iteration < Total_iterations)
-                {
+                //if(iteration < Total_iterations)
+                //{
                     doWork();
                     iteration++;
-                    run();
+                    //CkPrintf("calling done in Iteration %d \n", iteration);
+                    mainProxy.done();
+                   /* run();
                 }
                 else
                 {
                         mainProxy.done();
-                }
+                }*/
             }    
         }; 
-        entry void liveVizDump(liveVizRequestMsg* m);      
+        entry void liveVizFunc(liveVizRequestMsg* m);      
     };
 };

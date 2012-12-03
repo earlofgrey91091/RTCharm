@@ -32,7 +32,7 @@ class PixelChare : public CBase_PixelChare
         bool hit(int index, ray theRay, float *n);
         bool sphereHit(int index, ray theRay, float *n);
         //rgb* draw();
-        void liveVizDump(liveVizRequestMsg *m); 
+        void liveVizFunc(liveVizRequestMsg *m); 
 };
 
 #endif //PIXELCHARE_H 

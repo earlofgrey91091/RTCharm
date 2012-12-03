@@ -183,10 +183,10 @@ void PixelChare::draw(int index, ray theRay, int hitIndex)
 
 }
 
-void PixelChare::liveVizDump(liveVizRequestMsg *m) 
+void PixelChare::liveVizFunc(liveVizRequestMsg *m) 
 {        
     rgb* imageBuff = (rgb*)tmpBuffer;
-    CkPrintf("in liveViz");
+    //CkPrintf("in liveViz\n");
     int imgIndex;
     rgb* c;
     for (int x = 0; x < w; x++) 

@@ -1,5 +1,5 @@
-CHARMDIR = /home/nikhil/charm/net-linux-x86_64-smp
-# /home/kahn/gitRepos/charm
+CHARMDIR = /home/kahn/gitRepos/charm
+# /home/nikhil/charm/net-linux-x86_64-smp
 
 #[put Charm++ install directory here] ^  
 CHARMC = $(CHARMDIR)/bin/charmc $(OPTS)
