@@ -8,7 +8,7 @@ module pixelchare {
         {
             atomic "Interation block" 
             {
-                CkPrintf("\n Iteration %d", iteration);
+                //CkPrintf("\n Iteration %d", iteration);
                 if(iteration < Total_iterations)
                 {
                     doWork();

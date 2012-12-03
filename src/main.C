@@ -98,7 +98,7 @@ Main::Main(CkArgMsg* arg)
     //Create the image pixel chares based on image size
     pixel = CProxy_PixelChare::ckNew(pixel_w/chareDimension, pixel_h/chareDimension, opts);
     CkPrintf("\nEach chare will have (%d * %d) pixels ", pixel_w/chareDimension, pixel_h/chareDimension);
-    //startVis();
+    startVis();
     pixel.runStep(myShapes, myLights);
 
 }
@@ -121,11 +121,12 @@ void Main::startVis()
     // Initialize the liveViz library
     liveVizInit(lvConfig, pixel, cb0, myOpts);
 
-    /*double resumeTime = CmiWallTimer() + PAUSE_TIME + PAUSE_TIME;     // Pause for PAUSE_TIME seconds
+    double resumeTime = CmiWallTimer() + PAUSE_TIME + PAUSE_TIME;     // Pause for PAUSE_TIME seconds
      
     CkPrintf("Stalling after setup for %f s\n", PAUSE_TIME + PAUSE_TIME);
     int j = 0;
-    while(CmiWallTimer() < resumeTime) j++;*/
+    while(CmiWallTimer() < resumeTime) j++;
+    CkPrintf("Starting\n");
 
 }
     

@@ -87,24 +87,24 @@ void PixelChare::doWork()
 
 void PixelChare::runStep(vector<Shape> shapes, vector<lightSrc> lights)
 {
-    CkPrintf("\n runStep::Pixelchare [%d][%d]", thisIndex.x, thisIndex.y);
+    //CkPrintf("\n runStep::Pixelchare [%d][%d]", thisIndex.x, thisIndex.y);
     myShapes.insert(myShapes.end(), shapes.begin(), shapes.end());
     myLights.insert(myLights.end(), lights.begin(), lights.end());
 
-    //Test shape insert
-    CkPrintf("All shapes recieved at index (%d,%d) \n", thisIndex.x, thisIndex.y);
+    /*//Test shape insert
+    //CkPrintf("All shapes recieved at index (%d,%d) \n", thisIndex.x, thisIndex.y);
     for (int i = 0; i< myShapes.size(); i++ )
     {
         myShapes[i].print();
-        CkPrintf("\n ");
+       // CkPrintf("\n ");
     }
-    CkPrintf("All lightsources recieved at index (%d,%d) \n", thisIndex.x, thisIndex.y);
+    //CkPrintf("All lightsources recieved at index (%d,%d) \n", thisIndex.x, thisIndex.y);
     for (int i = 0; i< myLights.size(); i++ )
     {
         myLights[i].print();
-        CkPrintf("\n ");
-    }
-    //run();
+        //CkPrintf("\n ");
+    }*/
+    run();
 
 }
 
@@ -140,10 +140,10 @@ bool PixelChare::hit(int index, ray theRay, float *n)
 bool PixelChare::sphereHit(int index, ray r, float *t)
 {
     // sphere hit function
-    vec3D dist = myShape[index].loc - r.start;
+    vec3D dist = myShapes[index].loc - r.start;
 
     float B = r.dir * dist;
-    float D = B*B - dist * dist + myShape[index].size * myShape[index].size;
+    float D = B*B - dist * dist + myShapes[index].size * myShapes[index].size;
 
     if (D < 0.0f) 
     {
@@ -154,14 +154,14 @@ bool PixelChare::sphereHit(int index, ray r, float *t)
     float t1 = B + sqrtf(D);
     bool retvalue = false;
 
-    if ((t0 > 0.1f) && (t0 < t)) 
+    if ((t0 > 0.1f) && (t0 < *t)) 
     {
-        t = t0;
+        *t = t0;
         retvalue = true; 
     } 
-    if ((t1 > 0.1f) && (t1 < t)) 
+    if ((t1 > 0.1f) && (t1 < *t)) 
     {
-        t = t1; 
+        *t = t1; 
         retvalue = true; 
     }
     return retvalue; 
@@ -186,7 +186,7 @@ void PixelChare::draw(int index, ray theRay, int hitIndex)
 void PixelChare::liveVizDump(liveVizRequestMsg *m) 
 {        
     rgb* imageBuff = (rgb*)tmpBuffer;
-    
+    CkPrintf("in liveViz");
     int imgIndex;
     rgb* c;
     for (int x = 0; x < w; x++) 

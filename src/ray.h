@@ -184,8 +184,8 @@ class lightSrc
 
         void print()
         {
-            printf("location(x, y, z) = (%f, %f, %f)\n", loc.x, loc.y, loc.z);
-            printf("red = %f, green = %f, blue = %f \n", r, g, b);
+            CkPrintf("location(x, y, z) = (%f, %f, %f)\n", loc.x, loc.y, loc.z);
+            CkPrintf("red = %f, green = %f, blue = %f \n", r, g, b);
         }
 
         void pup(PUP::er &p)
@@ -236,10 +236,11 @@ class Shape
 
         void print()
         {
-            printf("location(x,y,z) = (%f, %f, %f)\n", loc.x, loc.y, loc.z);
-            printf("size = %f \n", size);
-            printf("type = %d \n", type);
+            CkPrintf("location(x,y,z) = (%f, %f, %f)\n", loc.x, loc.y, loc.z);
+            CkPrintf("size = %f \n", size);
+            CkPrintf("type = %d \n", type);
         }
+
         void pup(PUP::er &p)
         {
             p | size;
