@@ -29,7 +29,8 @@ public:
 
 Main::Main(CkArgMsg* arg) 
 {
-    //__sdag_init();
+    __sdag_init();
+    iterations = 0;
     int image_w, image_h, pixel_w, pixel_h; 
     //string filename = "objects.txt";
     size = SHAPES;
@@ -72,7 +73,7 @@ Main::Main(CkArgMsg* arg)
     
     lightSrc l(1.0, 1.0, 1.0, 0.0, 240.0, -100.0);
     l.print();
-    CkPrintf("\n*************");
+    CkPrintf("\n*************\n");
     for(int i = 0; i<size; i++)
     {
         //myShapes
@@ -92,28 +93,29 @@ Main::Main(CkArgMsg* arg)
     myShapes.push_back(s2);
     myShapes.push_back(s3);
     myLights.push_back(l);
-    CkPrintf("\n*************");
+    CkPrintf("\n*************\n");
     
 
     //Create the image pixel chares based on image size
     pixel = CProxy_PixelChare::ckNew(pixel_w/chareDimension, pixel_h/chareDimension, opts);
-    CkPrintf("\nEach chare will have (%d * %d) pixels ", pixel_w/chareDimension, pixel_h/chareDimension);
+    CkPrintf("\nEach chare will have (%d * %d) pixels \n", pixel_w/chareDimension, pixel_h/chareDimension);
     startVis();
     pixel.runStep(myShapes, myLights);
+    mainProxy.run();
 
 }
 
 Main::Main(CkMigrateMessage *msg){ }
 
-void Main::done()
+/*void Main::done()
 {
     CkExit();
-}
+}*/
 
 void Main::startVis()
 {
-    int funcIndex = CkIndex_PixelChare::liveVizDump(NULL);
-    CkCallback* cb = new CkCallback(funcIndex, pixel);
+    int funcIndex = CkIndex_PixelChare::liveVizFunc(NULL);
+    CkCallback cb0(funcIndex, pixel);
 
     // Create a liveViz configuration object
     liveVizConfig lvConfig(liveVizConfig::pix_color, true);

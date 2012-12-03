@@ -54,28 +54,23 @@ void PixelChare::doWork()
     int pixel_y;
     int position_x = thisIndex.x * w;
     int position_y = thisIndex.y * h;
-    ray viewRay;
+    int dist;
     int hitIndex;
 
     // pixels will go from position_x -> position_x + w -1
     // pixels will go from position_y -> position_x + h -1
     //CkPrintf("\nDoing work [%d][%d] [%d][%d]-[%d][%d]", thisIndex.x, thisIndex.y, position_x,position_y, position_x+w-1, position_y+h-1);
-    for(int i = 0; i < w-1; i++) 
+    for(int i = 0; i < w; i++) 
     {
-        for(int j = 0; j < h-1; j++) 
+        for(int j = 0; j < h; j++) 
         {
             //CkPrintf("\n[%d][%d]", position_x + i, position_y + j);
             //Creating ray passing through each pixel in this chare
             pixel_x = position_x + i;
             pixel_y = position_y + j;
-            viewRay.start.x = float(pixel_x);
-            viewRay.start.y = float(pixel_y);
-            viewRay.start.z = -1000.0f; 
-            viewRay.dir.x = 0.0f;
-            viewRay.dir.y = 0.0f;
-            viewRay.dir.z = 1.0f;  
+            ray viewRay(float(pixel_x), float(pixel_y), -1000.0f, 0.0f, 0.0f, 1.0f);
             //see what the closest hit is             
-            hitIndex = shoot(viewRay);
+            hitIndex = shoot(viewRay, &dist);
             //DRAW!
             draw((j * w) + i, viewRay, hitIndex);
             
@@ -109,7 +104,7 @@ void PixelChare::runStep(vector<Shape> shapes, vector<lightSrc> lights)
 }
 
 //returns index of closest hit, NEGINF otherwise
-int PixelChare::shoot(ray theRay)
+int PixelChare::shoot(ray theRay, float *dist)
 {
     int minIndex = NEGINF;
     float minVal = INF;
@@ -123,6 +118,7 @@ int PixelChare::shoot(ray theRay)
             minIndex = i;
         }
     }
+    *dist = minVal;
     return minIndex;
 }
 
@@ -183,10 +179,10 @@ void PixelChare::draw(int index, ray theRay, int hitIndex)
 
 }
 
-void PixelChare::liveVizDump(liveVizRequestMsg *m) 
+void PixelChare::liveVizFunc(liveVizRequestMsg *m) 
 {        
     rgb* imageBuff = (rgb*)tmpBuffer;
-    CkPrintf("in liveViz");
+    //CkPrintf("in liveViz\n");
     int imgIndex;
     rgb* c;
     for (int x = 0; x < w; x++) 
