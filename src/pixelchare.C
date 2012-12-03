@@ -60,9 +60,9 @@ void PixelChare::doWork()
     // pixels will go from position_x -> position_x + w -1
     // pixels will go from position_y -> position_x + h -1
     //CkPrintf("\nDoing work [%d][%d] [%d][%d]-[%d][%d]", thisIndex.x, thisIndex.y, position_x,position_y, position_x+w-1, position_y+h-1);
-    for(int i = 0; i < w-1; i++) 
+    for(int i = 0; i < w; i++) 
     {
-        for(int j = 0; j < h-1; j++) 
+        for(int j = 0; j < h; j++) 
         {
             //CkPrintf("\n[%d][%d]", position_x + i, position_y + j);
             //Creating ray passing through each pixel in this chare
