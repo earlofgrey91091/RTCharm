@@ -54,7 +54,7 @@ void PixelChare::doWork()
     int pixel_y;
     int position_x = thisIndex.x * w;
     int position_y = thisIndex.y * h;
-    int dist;
+    float dist;
     int hitIndex;
 
     // pixels will go from position_x -> position_x + w -1
