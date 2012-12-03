@@ -26,7 +26,7 @@ class PixelChare : public CBase_PixelChare
         ~PixelChare(); 
         void doWork();
         void runStep(vector<Shape> shapes, vector<lightSrc> lights);
-        int shoot(ray viewRay);
+        int shoot(ray viewRay, float *n);
         void draw(int index, ray theRay, int hitIndex);
         
         bool hit(int index, ray theRay, float *n);

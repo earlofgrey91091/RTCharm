@@ -121,7 +121,7 @@ void Main::startVis()
     liveVizConfig lvConfig(liveVizConfig::pix_color, true);
 
     // Initialize the liveViz library
-    liveVizInit(lvConfig, pixel, *cb, myOpts);
+    liveVizInit(lvConfig, pixel, cb0, myOpts);
 
     double resumeTime = CmiWallTimer() + PAUSE_TIME + PAUSE_TIME;     // Pause for PAUSE_TIME seconds
      
