@@ -54,7 +54,7 @@ void PixelChare::doWork()
     int pixel_y;
     int position_x = thisIndex.x * w;
     int position_y = thisIndex.y * h;
-    ray viewRay;
+    int dist;
     int hitIndex;
 
     // pixels will go from position_x -> position_x + w -1
@@ -68,14 +68,9 @@ void PixelChare::doWork()
             //Creating ray passing through each pixel in this chare
             pixel_x = position_x + i;
             pixel_y = position_y + j;
-            viewRay.start.x = float(pixel_x);
-            viewRay.start.y = float(pixel_y);
-            viewRay.start.z = -1000.0f; 
-            viewRay.dir.x = 0.0f;
-            viewRay.dir.y = 0.0f;
-            viewRay.dir.z = 1.0f;  
+            ray viewRay(float(pixel_x), float(pixel_y), -1000.0f, 0.0f, 0.0f, 1.0f);
             //see what the closest hit is             
-            hitIndex = shoot(viewRay);
+            hitIndex = shoot(viewRay, &dist);
             //DRAW!
             draw((j * w) + i, viewRay, hitIndex);
             
@@ -109,7 +104,7 @@ void PixelChare::runStep(vector<Shape> shapes, vector<lightSrc> lights)
 }
 
 //returns index of closest hit, NEGINF otherwise
-int PixelChare::shoot(ray theRay)
+int PixelChare::shoot(ray theRay, float *dist)
 {
     int minIndex = NEGINF;
     float minVal = INF;
@@ -123,6 +118,7 @@ int PixelChare::shoot(ray theRay)
             minIndex = i;
         }
     }
+    *dist = minVal;
     return minIndex;
 }
 
