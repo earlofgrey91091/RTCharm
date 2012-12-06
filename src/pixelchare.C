@@ -56,6 +56,8 @@ void PixelChare::doWork()
     int position_y = thisIndex.y * h;
     float dist;
     int hitIndex;
+    float coef = 1.0f;
+    int level = 0;
 
     // pixels will go from position_x -> position_x + w -1
     // pixels will go from position_y -> position_x + h -1
@@ -70,8 +72,8 @@ void PixelChare::doWork()
             pixel_y = position_y + j;
             ray viewRay(float(pixel_x), float(pixel_y), -1000.0f, 0.0f, 0.0f, 1.0f);
             //see what the closest hit is             
-            float coef = 1.0f;
-            int level = 0;
+            coef = 1.0f;
+            level = 0;
             do
             {
                 hitIndex = shoot(viewRay, &dist);
@@ -80,12 +82,13 @@ void PixelChare::doWork()
                 {
                     break;
                 }
-	    
+        
                 draw((j * w) + i, viewRay, hitIndex, dist, &coef, &level);
             }
-            while((coef > 0.0f) && (level < 10));
+            while((coef > 0.0f) && (level < 3));
         }
     }
+    //CkPrintf("\nDone work [%d][%d]", thisIndex.x, thisIndex.y);
         
 }
 
@@ -191,7 +194,7 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float *coef,
 
         if (temp == 0.0f)
         {
-	    //it could fail here!!!!
+        //it could fail here!!!!
             //break;
             return;
         }
@@ -222,8 +225,8 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float *coef,
             {
                 if(shoot(lightRay, &dummy) != NEGINF)
                 {
-			inShadow = true;
-			break;
+                    inShadow = true;
+                    break;
                 }
             }
 
@@ -231,8 +234,8 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float *coef,
             {
                 float lambert = (lightRay.dir * n) * (*coef);
                 pixelArray[index].r += lambert * current.r * myShapes[hitIndex].red;
-        	pixelArray[index].g += lambert * current.g * myShapes[hitIndex].green;
-        	pixelArray[index].b += lambert * current.b * myShapes[hitIndex].blue;
+                pixelArray[index].g += lambert * current.g * myShapes[hitIndex].green;
+                pixelArray[index].b += lambert * current.b * myShapes[hitIndex].blue;
             }
 
         }        
@@ -243,9 +246,9 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float *coef,
         theRay.dir = theRay.dir - reflect * n;
         
         *level++; 
-        //pixelArray[index].r = 255;
-        //pixelArray[index].g = 255;
-        //pixelArray[index].b = 255;
+        /*pixelArray[index].r = 255;
+        pixelArray[index].g = 255;
+        pixelArray[index].b = 255;*/
    // }
 
 }

@@ -71,7 +71,7 @@ Main::Main(CkArgMsg* arg)
 
     //TODO: Read file and create shape objects
     
-    lightSrc l(1.0, 1.0, 1.0, 0.0, 240.0, -100.0);
+    lightSrc l(255.0, 255.0, 255.0, 0.0, 240.0, -100.0);
     l.print();
     CkPrintf("\n*************\n");
     for(int i = 0; i<size; i++)
@@ -81,9 +81,9 @@ Main::Main(CkArgMsg* arg)
         //sp[i].printShape();
         //s[i] = new Sphere(); 
     }
-    Shape s(100.0, 0, 233.0, 290.0, 0.0, 0.5, 1.0, 1.0, 0.0);
-    Shape s2(100.0, 0, 407.0, 290.0, 0.0, 0.5, 0.0, 1.0, 1.0);
-    Shape s3(100.0, 0, 320.0, 140.0, 0.0, 0.5, 1.0, 0.0, 1.0);
+    Shape s(100.0, 0, 233.0, 290.0, 0.0, 0.5, 0.0, 0.0, 250.0);
+    Shape s2(100.0, 0, 407.0, 290.0, 0.0, 0.5, 250.0, 0.0, 0.0);
+    Shape s3(100.0, 0, 320.0, 140.0, 0.0, 0.5, 0.0, 250.0, 0.0);
 
     s.print();
     s2.print();
