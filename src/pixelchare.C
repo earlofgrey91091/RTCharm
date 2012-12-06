@@ -70,10 +70,20 @@ void PixelChare::doWork()
             pixel_y = position_y + j;
             ray viewRay(float(pixel_x), float(pixel_y), -1000.0f, 0.0f, 0.0f, 1.0f);
             //see what the closest hit is             
-            hitIndex = shoot(viewRay, &dist);
-            //DRAW!
-            draw((j * w) + i, viewRay, hitIndex);
-            
+            float coef = 1.0f;
+            int level = 0;
+            do
+            {
+                hitIndex = shoot(viewRay, &dist);
+                //DRAW!
+                if(hitIndex == NEGINF)
+                {
+                    break;
+                }
+	    
+                draw((j * w) + i, viewRay, hitIndex, dist, &coef, &level);
+            }
+            while((coef > 0.0f) && (level < 10));
         }
     }
         
@@ -168,14 +178,75 @@ bool PixelChare::sphereHit(int index, ray r, float *t)
 }
 
 
-void PixelChare::draw(int index, ray theRay, int hitIndex)
+void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float *coef, int *level)
 {
-    if(hitIndex != NEGINF)
-    {
-        pixelArray[index].r = 255;
-        pixelArray[index].g = 255;
-        pixelArray[index].b = 255;
-    }
+   // if(hitIndex != NEGINF)
+    //{
+        coord3D newStart = theRay.start + t * theRay.dir;
+
+        //figuring out the normal vector at the point of intersection
+        vec3D n = newStart - myShapes[hitIndex].loc;
+
+        float temp = n * n;
+
+        if (temp == 0.0f)
+        {
+	    //it could fail here!!!!
+            //break;
+            return;
+        }
+
+        temp = 1.0f / sqrtf(temp);
+        n = temp * n;
+   
+
+        for(int j = 0; j < myLights.size(); ++j)
+        {
+            lightSrc current = myLights[j];
+
+            vec3D dist = current.loc - newStart;
+
+            if(n * dist <= 0.0f)
+            {
+                continue;
+            }
+
+            ray lightRay;
+            lightRay.start = newStart;
+            lightRay.dir = (1/t)*dist;
+
+            //computation to fuigure out the shadows
+            bool inShadow = false;
+            float dummy;
+            for(int i = 0; i < myShapes.size(); ++i)
+            {
+                if(shoot(lightRay, &dummy) != NEGINF)
+                {
+			inShadow = true;
+			break;
+                }
+            }
+
+            if(!inShadow)
+            {
+                float lambert = (lightRay.dir * n) * (*coef);
+                pixelArray[index].r += lambert * current.r * myShapes[hitIndex].red;
+        	pixelArray[index].g += lambert * current.g * myShapes[hitIndex].green;
+        	pixelArray[index].b += lambert * current.b * myShapes[hitIndex].blue;
+            }
+
+        }        
+    
+        *coef *= myShapes[hitIndex].reflection;
+        float reflect = 2.0f * (theRay.dir * n);
+        theRay.start = newStart;
+        theRay.dir = theRay.dir - reflect * n;
+        
+        *level++; 
+        //pixelArray[index].r = 255;
+        //pixelArray[index].g = 255;
+        //pixelArray[index].b = 255;
+   // }
 
 }
 

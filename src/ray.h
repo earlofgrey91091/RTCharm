@@ -206,23 +206,38 @@ class Shape
        
         coord3D loc;
         float size;
+        float reflection;
+        float red, green, blue;
         int type;
 
         Shape()
         {
            this->size = 1;
            this->type = 0;
+           this->reflection = 0.0;
+           this->red = 0.0;
+           this->green = 0.0;
+           this->blue = 0.0;
         }
 
         Shape(float size)
         {
             this->size = size;
+            this->type = 0;
+            this->reflection = 0.0;
+            this->red = 0.0;
+            this->green = 0.0;
+            this->blue = 0.0;
         }
 
         Shape(float size, int type)
         {
             this->size = size;
             this->type = type;
+            this->reflection = 0.0;
+            this->red = 0.0;
+            this->green = 0.0;
+            this->blue = 0.0;
         }
 
         Shape(float size, int type, float x, float y, float z)
@@ -232,6 +247,24 @@ class Shape
             this->loc.x = x;
             this->loc.y = y;
             this->loc.z = z;
+            this->reflection = 0.0;
+            this->red = 0.0;
+            this->green = 0.0;
+            this->blue = 0.0;
+        }
+
+        Shape(float size, int type, float x, float y, float z, float reflection, float r, float g, float b)
+        {
+            this->size = size;
+            this->type = type;
+            this->loc.x = x;
+            this->loc.y = y;
+            this->loc.z = z;
+            this->reflection = reflection;
+            this->red = r;
+            this->green = g;
+            this->blue = b;
+
         }
 
         void print()
@@ -246,6 +279,10 @@ class Shape
             p | size;
             p | type;
             p | loc;
+            p | reflection;
+            p | red;
+            p | green;
+            p | blue;
         }
     
 };
