@@ -21,7 +21,6 @@ PixelChare::PixelChare(int width, int height)
 {
     //CkPrintf("\nPixelChare [%d][%d]", thisIndex.x, thisIndex.y);
     __sdag_init();
-    DEBUG_CODE = false;
     iteration = 0;
     w = width;
     h = height;
@@ -34,7 +33,7 @@ PixelChare::PixelChare(int width, int height)
         pixelArray.push_back(p);
     }
     tmpBuffer =  new double[w*h];
-   if(DEBUG_CODE) CkPrintf("\n Chare created!");
+   if(DEBUG_CODE) CkPrintf("Chare created!\n");
 };
 
 PixelChare::PixelChare(CkMigrateMessage *m)
@@ -88,12 +87,12 @@ void PixelChare::doWork()
                 {
                     break;
                 }
-             if(DEBUG_CODE)   CkPrintf("\n******************************************");
-             if(DEBUG_CODE)   CkPrintf("\n Lucky pixel = [%d, %d] hitindex = %d", pixel_x, pixel_y, hitIndex);
+             if(DEBUG_CODE)   CkPrintf("******************************************\n");
+             if(DEBUG_CODE)   CkPrintf(" Lucky pixel = [%d, %d] hitindex = %d\n", pixel_x, pixel_y, hitIndex);
                 draw(index, viewRay, hitIndex, dist, coef, level);
 
                 //CkPrintf("\n level = %d", level);
-              if(DEBUG_CODE)  CkPrintf("\n******************************************");
+              if(DEBUG_CODE)  CkPrintf("******************************************\n");
                 
             }
             while((coef > 0.0f) && (level < 1));
@@ -138,7 +137,7 @@ bool PixelChare::hit(int index, ray theRay, float &n)
     switch(myShapes[index].type)
     {
         case SPHERE: result = sphereHit( index, theRay, n); break;
-        default: CkPrintf("Attempted to compute hit for unrecognised shape with type id %d", myShapes[index].type);
+        default: CkPrintf("Attempted to compute hit for unrecognised shape with type id %d\n", myShapes[index].type);
     }
     return result;
 }
@@ -220,14 +219,17 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef,
         {
             lambert = (lightRay.dir * n) * (coef);
             
-            if(DEBUG_CODE) CkPrintf("\n lambert = %f   current(%f,%f,%f)", lambert, current.r, current.g, current.b);
-            if(DEBUG_CODE) CkPrintf("\n hitindex = %d shape.color(%f,%f,%f)", hitIndex, myShapes[hitIndex].red, myShapes[hitIndex].green, myShapes[hitIndex].blue);
-            if(DEBUG_CODE) CkPrintf("\n Mul = %f", lambert * current.r * myShapes[hitIndex].red);
             pixelArray[index].r += lambert * current.r * myShapes[hitIndex].red;
             pixelArray[index].g += lambert * current.g * myShapes[hitIndex].green;
             pixelArray[index].b += lambert * current.b * myShapes[hitIndex].blue;
-            if(DEBUG_CODE) CkPrintf("\n pixelarray(%f,%f,%f)",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
-            myShapes[hitIndex].print();
+            if(DEBUG_CODE) 
+            {
+                CkPrintf("current lightray.dir = %f, n = %f coef = %f", lightRay.dir, n, coef);
+                CkPrintf("lambert = %f   current(%f,%f,%f)\n", lambert, current.r, current.g, current.b);
+                CkPrintf("hitindex = %d shape.color(%f,%f,%f)\n", hitIndex, myShapes[hitIndex].red, myShapes[hitIndex].green, myShapes[hitIndex].blue);
+                CkPrintf("pixelarray(%f,%f,%f\n",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
+                myShapes[hitIndex].print();
+            }
             CkAssert(lambert <= 1);
         }
 

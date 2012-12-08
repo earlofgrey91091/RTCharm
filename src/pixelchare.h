@@ -19,7 +19,6 @@ class PixelChare : public CBase_PixelChare
         double *tmpBuffer;
         int x, y, w, h;
         int iteration;
-        bool DEBUG_CODE;
     public:
         PixelChare_SDAG_CODE;    
         PixelChare(int width, int height); 
