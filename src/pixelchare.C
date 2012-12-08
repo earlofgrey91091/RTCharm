@@ -209,7 +209,9 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef,
         {
             continue;
         }
-
+        float t = sqrtf(dist * dist);
+        if ( t <= 0.0f )
+            continue;
         ray lightRay;
         lightRay.start = newStart;
         lightRay.dir = (1/t)*dist;
@@ -227,10 +229,9 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef,
             pixelArray[index].g += lambert * current.g * myShapes[hitIndex].green;
             pixelArray[index].b += lambert * current.b * myShapes[hitIndex].blue;
             if(DEBUG_CODE) CkPrintf("\n pixelarray(%f,%f,%f)",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
-            myShapes[hitIndex].print();
-            CkAssert(lambert <= 1);
+            //myShapes[hitIndex].print();
+            //CkAssert(lambert <= 1);
         }
-
     }        
 
     coef *= myShapes[hitIndex].reflection;
