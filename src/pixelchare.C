@@ -21,6 +21,8 @@ PixelChare::PixelChare(int width, int height)
 {
     //CkPrintf("\nPixelChare [%d][%d]", thisIndex.x, thisIndex.y);
     __sdag_init();
+    //usesAtSync = CmiTrue;
+	//setMigratable(CmiTrue);
     iteration = 0;
     w = width;
     h = height;
@@ -83,30 +85,41 @@ void PixelChare::doWork()
             {
                 hitIndex = shoot(viewRay, dist);
                 //DRAW!
-                if(hitIndex == NEGINF)
+                if(hitIndex == NEGINF) break;
+                if(DEBUG_CODE)
                 {
-                    break;
+                    CkPrintf("******************************************\n");
+                    CkPrintf(" Lucky pixel = [%d, %d] hitindex = %d\n", pixel_x, pixel_y, hitIndex);
+                    CkPrintf("\n level = %d", level);
+                    CkPrintf("******************************************\n");
                 }
-             if(DEBUG_CODE)   CkPrintf("******************************************\n");
-             if(DEBUG_CODE)   CkPrintf(" Lucky pixel = [%d, %d] hitindex = %d\n", pixel_x, pixel_y, hitIndex);
                 draw(index, viewRay, hitIndex, dist, coef, level);
-
-                //CkPrintf("\n level = %d", level);
-              if(DEBUG_CODE)  CkPrintf("******************************************\n");
-                
             }
-            while((coef > 0.0f) && (level < 10));
+            while((coef > 0.0f) && (level < 5));
         }
     }
         
 }
 
+void PixelChare::ResumeFromSync()
+{
+    mainProxy.done();
+}
 
-void PixelChare::runStep(vector<Shape> shapes, vector<lightSrc> lights)
+void PixelChare::startStep(vector<Shape> shapes, vector<lightSrc> lights)
 {
     //CkPrintf("\n runStep::Pixelchare [%d][%d]", thisIndex.x, thisIndex.y);
     myShapes.insert(myShapes.end(), shapes.begin(), shapes.end());
     myLights.insert(myLights.end(), lights.begin(), lights.end());
+
+    run();
+
+}
+
+
+void PixelChare::runStep(vector<Shape> shapes, vector<lightSrc> lights)
+{
+    
 
     run();
 
@@ -170,10 +183,6 @@ bool PixelChare::sphereHit(int index, ray r, float &t)
         retvalue = true; 
     }
     return retvalue; 
-
-
-    //*n = NEGINF;
-    //return false;
 }
 
 
@@ -201,7 +210,6 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef,
     for(int j = 0; j < myLights.size(); ++j)
     {
         lightSrc current = myLights[j];
-        //current.print();
         vec3D dist = current.loc - newStart;
 
         if(n * dist <= 0.0f)
@@ -226,7 +234,7 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef,
             pixelArray[index].b += lambert * current.b * myShapes[hitIndex].blue;
             if(DEBUG_CODE) 
             {
-                CkPrintf("current lightray.dir = %f, n = %f coef = %f", lightRay.dir, n, coef);
+                //CkPrintf("current lightray.dir = %f, n = %f coef = %f", lightRay.dir, n, coef);
                 CkPrintf("lambert = %f   current(%f,%f,%f)\n", lambert, current.r, current.g, current.b);
                 CkPrintf("hitindex = %d shape.color(%f,%f,%f)\n", hitIndex, myShapes[hitIndex].red, myShapes[hitIndex].green, myShapes[hitIndex].blue);
                 CkPrintf("pixelarray(%f,%f,%f\n",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);

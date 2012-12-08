@@ -25,6 +25,7 @@ class PixelChare : public CBase_PixelChare
         PixelChare(CkMigrateMessage *m);
         ~PixelChare(); 
         void doWork();
+        void startStep(vector<Shape> shapes, vector<lightSrc> lights);
         void runStep(vector<Shape> shapes, vector<lightSrc> lights);
         int shoot(ray viewRay, float &dist);
         void draw(int index, ray theRay, int hitIndex, float dist, float &coef, int &level);
@@ -33,6 +34,7 @@ class PixelChare : public CBase_PixelChare
         bool sphereHit(int index, ray theRay, float &n);
         //rgb* draw();
         void liveVizFunc(liveVizRequestMsg *m); 
+        void ResumeFromSync();
 };
 
 #endif //PIXELCHARE_H 

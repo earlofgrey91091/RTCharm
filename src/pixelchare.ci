@@ -3,24 +3,23 @@ module pixelchare {
     array [2D] PixelChare 
     {
         entry PixelChare(int width, int height);
+        entry void startStep(vector<Shape> shapes, vector<lightSrc> lights);
         entry void runStep(vector<Shape> shapes, vector<lightSrc> lights);
         entry void run()
         {
             atomic "Interation block" 
             {
-                //CkPrintf("\n Iteration %d", iteration);
-                //if(iteration < Total_iterations)
-                //{
-                    doWork();
-                    iteration++;
-                    //CkPrintf("calling done in Iteration %d \n", iteration);
-                    mainProxy.done();
-                   /* run();
-                }
-                else
+                if(thisIndex.x == thisIndex.y && thisIndex.x == 0) 
                 {
-                        mainProxy.done();
-                }*/
+                    CkPrintf("Iteration %d\n", iteration);
+                }
+                doWork();
+                iteration++;
+                if(false)//true)//iterations%LBCONSTANT == 0)
+                {
+                    AtSync();
+                }
+                else mainProxy.done();
             }    
         }; 
         entry void liveVizFunc(liveVizRequestMsg* m);      
