@@ -11,7 +11,8 @@ extern /*readonly*/ int size;
 class PixelChare : public CBase_PixelChare 
 {
     private:
-        typedef struct { byte r, g, b; } rgb;
+        typedef struct { float r, g, b; } rgb;
+        typedef struct { byte r, g, b; } rgb_byte;
         vector<rgb> pixelArray;
         vector<Shape> myShapes;
         vector<lightSrc> myLights;
@@ -26,11 +27,11 @@ class PixelChare : public CBase_PixelChare
         ~PixelChare(); 
         void doWork();
         void runStep(vector<Shape> shapes, vector<lightSrc> lights);
-        int shoot(ray viewRay, float *dist);
+        int shoot(ray viewRay, float &dist);
         void draw(int index, ray theRay, int hitIndex, float dist, float &coef, int &level);
         
-        bool hit(int index, ray theRay, float *n);
-        bool sphereHit(int index, ray theRay, float *n);
+        bool hit(int index, ray theRay, float &n);
+        bool sphereHit(int index, ray theRay, float &n);
         //rgb* draw();
         void liveVizFunc(liveVizRequestMsg *m); 
 };
