@@ -76,7 +76,7 @@ void PixelChare::doWork()
             level = 0;
             do
             {
-                hitIndex = shoot(viewRay, &dist);
+                hitIndex = shoot(viewRay, dist);
                 //DRAW!
                 if(hitIndex == NEGINF)
                 {
@@ -108,25 +108,25 @@ void PixelChare::runStep(vector<Shape> shapes, vector<lightSrc> lights)
 }
 
 //returns index of closest hit, NEGINF otherwise
-int PixelChare::shoot(ray theRay, float *dist)
+int PixelChare::shoot(ray theRay, float &dist)
 {
     int minIndex = NEGINF;
     float minVal = INF;
     float n = INF;    
     for(int i = 0; i < myShapes.size(); i++)
     {
-        hit(i, theRay, &n);
+        hit(i, theRay, n);
         if(n < minVal)
         {
             minVal = n;
             minIndex = i;
         }
     }
-    *dist = minVal;
+    dist = minVal;
     return minIndex;
 }
 
-bool PixelChare::hit(int index, ray theRay, float *n)
+bool PixelChare::hit(int index, ray theRay, float &n)
 {
     bool result = false;
     switch(myShapes[index].type)
@@ -137,7 +137,7 @@ bool PixelChare::hit(int index, ray theRay, float *n)
     return result;
 }
 
-bool PixelChare::sphereHit(int index, ray r, float *t)
+bool PixelChare::sphereHit(int index, ray r, float &t)
 {
     // sphere hit function
     vec3D dist = myShapes[index].loc - r.start;
@@ -154,14 +154,14 @@ bool PixelChare::sphereHit(int index, ray r, float *t)
     float t1 = B + sqrtf(D);
     bool retvalue = false;
 
-    if ((t0 > 0.1f) && (t0 < *t)) 
+    if ((t0 > 0.1f) && (t0 < t)) 
     {
-        *t = t0;
+        t = t0;
         retvalue = true; 
     } 
-    if ((t1 > 0.1f) && (t1 < *t)) 
+    if ((t1 > 0.1f) && (t1 < t)) 
     {
-        *t = t1; 
+        t = t1; 
         retvalue = true; 
     }
     return retvalue; 
@@ -217,7 +217,7 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef,
             float dummy;
             for(int i = 0; i < myShapes.size(); ++i)
             {
-                if(shoot(lightRay, &dummy) != NEGINF)
+                if(shoot(lightRay, dummy) != NEGINF)
                 {
                     inShadow = true;
                     break;
@@ -232,12 +232,12 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef,
             {
                 float lambert = (lightRay.dir * n) * (coef);
                 
-       //      CkPrintf("\n pixelarray(%d,%d,%d)",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
+       //         CkPrintf("\n pixelarray(%d,%d,%d)",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
        //         CkPrintf("\n lambert = %f   current(%d,%d,%d)", lambert, (int)current.r, (int)current.g, (int)current.b);
        //         CkPrintf("\n hitindex = %d shape.color(%d,%d,%d)", hitIndex, myShapes[hitIndex].red, myShapes[hitIndex].green), myShapes[hitIndex].blue;
-                pixelArray[index].r += lambert * (int)((int)current.r + myShapes[hitIndex].red)/2;
-                pixelArray[index].g += lambert * (int)((int)current.g + myShapes[hitIndex].green)/2;
-                pixelArray[index].b += lambert * (int)((int)current.b + myShapes[hitIndex].blue)/2;
+                pixelArray[index].r += lambert * current.r * myShapes[hitIndex].red;
+                pixelArray[index].g += lambert * current.g * myShapes[hitIndex].green;
+                pixelArray[index].b += lambert * current.b * myShapes[hitIndex].blue;
            //    CkPrintf("\n pixelarray(%d,%d,%d)",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
                 //pixelArray[index].r = myShapes[hitIndex].red;
                 //pixelArray[index].g = myShapes[hitIndex].green;
@@ -261,19 +261,19 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef,
 
 void PixelChare::liveVizFunc(liveVizRequestMsg *m) 
 {        
-    rgb* imageBuff = (rgb*)tmpBuffer;
+    rgb_byte* imageBuff = (rgb_byte*)tmpBuffer;
    // CkPrintf("\nliveViz[%d][%d]", thisIndex.x, thisIndex.y);
     int imgIndex;
-    rgb* c;
+    rgb_byte* c;
     for (int x = 0; x < w; x++) 
     {
         for (int y = 0; y < h; y++) 
         {
             imgIndex = (y * w) + x;
             c = &(imageBuff[imgIndex]);
-            c->r = pixelArray[imgIndex].r;
-            c->g = pixelArray[imgIndex].g;
-            c->b = pixelArray[imgIndex].b;
+            c->r = (byte)pixelArray[imgIndex].r;
+            c->g = (byte)pixelArray[imgIndex].g;
+            c->b = (byte)pixelArray[imgIndex].b;
             
         }
     }

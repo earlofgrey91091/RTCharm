@@ -193,7 +193,7 @@ class lightSrc
             p | r;
             p | g;
             p | b;
-        p | loc;
+            p | loc;
         }
     
 
@@ -207,7 +207,7 @@ class Shape
         coord3D loc;
         float size;
         float reflection;
-        byte red, green, blue;
+        float red, green, blue;
         int type;
 
         Shape()
@@ -253,7 +253,7 @@ class Shape
             this->blue = 0;
         }
 
-        Shape(float size, int type, float x, float y, float z, float reflection, byte r, byte g, byte b)
+        Shape(float size, int type, float x, float y, float z, float reflection, float r, float g, float b)
         {
             this->size = size;
             this->type = type;
@@ -272,7 +272,7 @@ class Shape
             CkPrintf("location(x,y,z) = (%f, %f, %f)\n", loc.x, loc.y, loc.z);
             CkPrintf("size = %f \n", size);
             CkPrintf("type = %d \n", type);
-            CkPrintf("color = (%d,%d,%d)\n", this->red, this->green, this->blue);
+            CkPrintf("color = (%f,%f,%f)\n", this->red, this->green, this->blue);
         }
 
         void pup(PUP::er &p)
