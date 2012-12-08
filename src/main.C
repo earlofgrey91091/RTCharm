@@ -18,7 +18,7 @@ Main::Main(CkArgMsg* arg)
     int image_w, image_h, pixel_w, pixel_h; 
     //string filename = "objects.txt";
     size = SHAPES;
-    chareDimension = 1;
+    chareDimension = 8;
     //Process command-line arguments
     if( arg->argc > 2 )
     { 
