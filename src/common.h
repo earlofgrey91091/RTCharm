@@ -1,7 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define ITERATIONS 1
+#define ITERATIONS 50
 #define SHAPES 2
 #define loc(x,y, width)  (x + (y*width))
 #define rnd(x) (x*rand() / RAND_MAX)
@@ -10,6 +10,6 @@
 #define NEGINF -999999
 #define SPHERE 0
 #define PAUSE_TIME 5.0
-#define DEBUG_CODE true
+#define DEBUG_CODE false
 
 #endif //COMMON_H

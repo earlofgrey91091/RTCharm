@@ -95,7 +95,7 @@ void PixelChare::doWork()
               if(DEBUG_CODE)  CkPrintf("******************************************\n");
                 
             }
-            while((coef > 0.0f) && (level < 1));
+            while((coef > 0.0f) && (level < 10));
         }
     }
         
@@ -208,7 +208,9 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef,
         {
             continue;
         }
-
+        float t = sqrtf(dist * dist);
+        if ( t <= 0.0f )
+            continue;
         ray lightRay;
         lightRay.start = newStart;
         lightRay.dir = (1/t)*dist;
@@ -228,11 +230,10 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef,
                 CkPrintf("lambert = %f   current(%f,%f,%f)\n", lambert, current.r, current.g, current.b);
                 CkPrintf("hitindex = %d shape.color(%f,%f,%f)\n", hitIndex, myShapes[hitIndex].red, myShapes[hitIndex].green, myShapes[hitIndex].blue);
                 CkPrintf("pixelarray(%f,%f,%f\n",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
-                myShapes[hitIndex].print();
+                //myShapes[hitIndex].print();
             }
-            CkAssert(lambert <= 1);
+            //CkAssert(lambert <= 1);
         }
-
     }        
 
     coef *= myShapes[hitIndex].reflection;
