@@ -28,7 +28,14 @@ mainmodule main {
                 iterations++;
                 CkPrintf("Start iteration %d\n", iterations);
                 if(iterations < ITERATIONS)
-                    pixel.run();
+                {
+                    if(iterations%ROTATE_LIGHT == 0) {
+                        
+                    }
+                    else {
+                        pixel.run();
+                    }
+                }
                 else CkExit();
                 mainProxy.run();
             }    

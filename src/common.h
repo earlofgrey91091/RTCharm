@@ -11,5 +11,6 @@
 #define SPHERE 0
 #define PAUSE_TIME 5.0
 #define DEBUG_CODE false
+#define ROTATE_LIGHT 10
 
 #endif //COMMON_H

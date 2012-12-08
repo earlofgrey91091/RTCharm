@@ -135,6 +135,18 @@ void PixelChare::startStep(vector<Shape> shapes, vector<lightSrc> lights)
 
 void PixelChare::runStep(vector<Shape> shapes, vector<lightSrc> lights)
 {
+    if(shapes.size() > 0)
+    {
+        myShapes.clear();
+        myShapes.insert(myShapes.end(), shapes.begin(), shapes.end());
+        
+    }
+    if(lights.size() > 0)
+    {
+        myLights.clear();
+        myLights.insert(myLights.end(), lights.begin(), lights.end());
+
+    }
     run();
 }
 
