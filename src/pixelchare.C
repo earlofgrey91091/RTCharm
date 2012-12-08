@@ -232,16 +232,19 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef,
             {
                 float lambert = (lightRay.dir * n) * (coef);
                 
-              CkPrintf("\n pixelarray(%f,%f,%f)",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
-                CkPrintf("\n lambert = %f   current(%f,%f,%f)", lambert, (int)current.r, (int)current.g, (int)current.b);
-                CkPrintf("\n hitindex = %d shape.color(%f,%f,%f)", hitIndex, myShapes[hitIndex].red, myShapes[hitIndex].green), myShapes[hitIndex].blue;
+                CkPrintf("\n pixelarray(%f,%f,%f)",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
+                CkPrintf("\n lambert = %f   current(%f,%f,%f)", lambert, current.r, current.g, current.b);
+                CkPrintf("\n hitindex = %d shape.color(%f,%f,%f)", hitIndex, myShapes[hitIndex].red, myShapes[hitIndex].green, myShapes[hitIndex].blue);
+                CkPrintf("\n Mul = %f", lambert * current.r * myShapes[hitIndex].red);
                 pixelArray[index].r += lambert * current.r * myShapes[hitIndex].red;
                 pixelArray[index].g += lambert * current.g * myShapes[hitIndex].green;
                 pixelArray[index].b += lambert * current.b * myShapes[hitIndex].blue;
-               CkPrintf("\n pixelarray(%d,%d,%d)",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
+               CkPrintf("\n pixelarray(%f,%f,%f)",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
                 //pixelArray[index].r = myShapes[hitIndex].red;
                 //pixelArray[index].g = myShapes[hitIndex].green;
                 //pixelArray[index].b = myShapes[hitIndex].blue;
+                myShapes[hitIndex].print();
+                
             }
 
         }        

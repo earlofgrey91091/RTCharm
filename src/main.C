@@ -71,9 +71,9 @@ Main::Main(CkArgMsg* arg)
         //s[i] = new Sphere();
         
     }
-    Shape s(100.0, 0, 233.0, 290.0, 0.0, 0.0, 0, 0, 1.0);
-    Shape s2(100.0, 0, 407.0, 290.0, 0.0, 0.0, 1.0, 0, 0);
-    Shape s3(100.0, 0, 320.0, 140.0, 0.0, 0.0, 0, 1.0, 0);
+    Shape s(100.0, 0, 233.0, 290.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+    Shape s2(100.0, 0, 407.0, 290.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+    Shape s3(100.0, 0, 320.0, 140.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
     s.print();
     s2.print();
@@ -84,10 +84,11 @@ Main::Main(CkArgMsg* arg)
     myShapes.push_back(s3);
     myLights.push_back(l);
     myLights.push_back(l1);
+    l.print();
+    l1.print();
     //myLights.push_back(l2);
     //myLights.push_back(l3);
     CkPrintf("\n*************\n");
-    
     //Create the image pixel chares based on image size
     pixel = CProxy_PixelChare::ckNew(pixel_w/chareDimension, pixel_h/chareDimension, opts);
     CkPrintf("\nEach chare will have (%d * %d) pixels \n", pixel_w/chareDimension, pixel_h/chareDimension);
