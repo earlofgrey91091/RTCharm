@@ -21,6 +21,7 @@ PixelChare::PixelChare(int width, int height)
 {
     //CkPrintf("\nPixelChare [%d][%d]", thisIndex.x, thisIndex.y);
     __sdag_init();
+    DEBUG_CODE = false;
     iteration = 0;
     w = width;
     h = height;
@@ -33,7 +34,7 @@ PixelChare::PixelChare(int width, int height)
         pixelArray.push_back(p);
     }
     tmpBuffer =  new double[w*h];
-    CkPrintf("\n Chare created!");
+   if(DEBUG_CODE) CkPrintf("\n Chare created!");
 };
 
 PixelChare::PixelChare(CkMigrateMessage *m)
@@ -82,14 +83,14 @@ void PixelChare::doWork()
                 {
                     break;
                 }
-                CkPrintf("\n******************************************");
-                CkPrintf("\n Lucky pixel = [%d, %d] hitindex = %d", pixel_x, pixel_y, hitIndex);
+             if(DEBUG_CODE)   CkPrintf("\n******************************************");
+             if(DEBUG_CODE)   CkPrintf("\n Lucky pixel = [%d, %d] hitindex = %d", pixel_x, pixel_y, hitIndex);
                 draw((j * w) + i, viewRay, hitIndex, dist, coef, level);
                 //CkPrintf("\n level = %d", level);
-                CkPrintf("\n******************************************");
+              if(DEBUG_CODE)  CkPrintf("\n******************************************");
                 
             }
-            while((coef > 0.0f) && (level < 10));
+            while((coef > 0.0f) && (level < 1));
         }
     }
     //CkPrintf("\nDone work [%d][%d]", thisIndex.x, thisIndex.y);
@@ -180,7 +181,7 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef,
     pixelArray[index].g = 0;
     pixelArray[index].b = 0;
         coord3D newStart = theRay.start + t * theRay.dir;
-
+        
         //figuring out the normal vector at the point of intersection
         vec3D n = newStart - myShapes[hitIndex].loc;
 
@@ -231,19 +232,19 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef,
             if(!inShadow)
             {
                 float lambert = (lightRay.dir * n) * (coef);
+             if(DEBUG_CODE)   CkPrintf("\n pixelarray(%f,%f,%f)",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
+             if(DEBUG_CODE)   CkPrintf("\n lambert = %f   current(%f,%f,%f)", lambert, current.r, current.g, current.b);
+             if(DEBUG_CODE)   CkPrintf("\n hitindex = %d shape.color(%f,%f,%f)", hitIndex, myShapes[hitIndex].red, myShapes[hitIndex].green, myShapes[hitIndex].blue);
+             if(DEBUG_CODE)   CkPrintf("\n Mul = %f", lambert * current.r * myShapes[hitIndex].red);
                 
-                CkPrintf("\n pixelarray(%f,%f,%f)",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
-                CkPrintf("\n lambert = %f   current(%f,%f,%f)", lambert, current.r, current.g, current.b);
-                CkPrintf("\n hitindex = %d shape.color(%f,%f,%f)", hitIndex, myShapes[hitIndex].red, myShapes[hitIndex].green, myShapes[hitIndex].blue);
-                CkPrintf("\n Mul = %f", lambert * current.r * myShapes[hitIndex].red);
                 pixelArray[index].r += lambert * current.r * myShapes[hitIndex].red;
                 pixelArray[index].g += lambert * current.g * myShapes[hitIndex].green;
                 pixelArray[index].b += lambert * current.b * myShapes[hitIndex].blue;
-               CkPrintf("\n pixelarray(%f,%f,%f)",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
+             
+             if(DEBUG_CODE)  CkPrintf("\n pixelarray(%f,%f,%f)",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
                 //pixelArray[index].r = myShapes[hitIndex].red;
                 //pixelArray[index].g = myShapes[hitIndex].green;
                 //pixelArray[index].b = myShapes[hitIndex].blue;
-                myShapes[hitIndex].print();
                 
             }
 
@@ -277,28 +278,17 @@ void PixelChare::liveVizFunc(liveVizRequestMsg *m)
             byte red, blue, green;
             if (pixelArray[imgIndex].r * 255.0 < 255.0) {
                 c->r = (byte)(pixelArray[imgIndex].r * 255.0);
-                CkPrintf("\nnot Set");
-
             } else {
-                CkPrintf("\nSet");
                 c->r = (byte)255.0;
             }
             if (pixelArray[imgIndex].g * 255.0 < 255.0) {
                 c->g = (byte)(pixelArray[imgIndex].g * 255.0);
-                CkPrintf("\nnot Set");
-
             } else {
-                
-                CkPrintf("\nSet");
                 c->g = (byte)255.0;
             }
             if (pixelArray[imgIndex].b * 255.0 < 255.0) {
                 c->b = (byte)(pixelArray[imgIndex].b * 255.0);
-                CkPrintf("\nnot Set");
-
             } else {
-                
-                CkPrintf("\nSet");
                 c->b = (byte)255.0;
             }
         }

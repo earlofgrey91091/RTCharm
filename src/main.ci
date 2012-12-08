@@ -4,7 +4,6 @@ mainmodule main {
     readonly int Total_iterations;
     readonly int chareDimension;
     readonly int size;
-
     //message ShapeMsg {
     //    Shape s[];
     //};

@@ -11,7 +11,6 @@ using namespace std;
 /*readonly*/ int Total_iterations;
 /*readonly*/ int chareDimension;
 /*readonly*/ int size;
-
 Main::Main(CkArgMsg* arg) 
 {
     __sdag_init();
@@ -20,7 +19,6 @@ Main::Main(CkArgMsg* arg)
     //string filename = "objects.txt";
     size = SHAPES;
     chareDimension = 1;
-
     //Process command-line arguments
     if( arg->argc > 2 )
     { 
@@ -56,8 +54,8 @@ Main::Main(CkArgMsg* arg)
 
     //TODO: Read file and create shape objects
     
-    lightSrc l(1.0, 1.0, 1.0, 0.0, 40.0, -100.0);
-    lightSrc l1(0.6, 0.7, 1.0, 640.0, 240.0, -10000.0);
+    lightSrc l(1.0, 1.0, 1.0, 0.0, 240.0, -100.0);
+    lightSrc l1(1.0, 1.0, 1.0, 640.0, 0.0, -10000.0);
     //lightSrc l2(1.0, 1.0, 1.0, -100.0, 0.0, -100.0);
     //lightSrc l3(1.0, 1.0, 1.0, 100.0, 100.0, -100.0);
     
