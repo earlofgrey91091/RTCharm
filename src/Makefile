@@ -16,7 +16,7 @@ main.o : main.C main.h main.decl.h main.def.h pixelchare.decl.h
 main.decl.h main.def.h : main.ci
 	$(CHARMC) main.ci
 
-pixelchare.o : pixelchare.C pixelchare.h pixelchare.decl.h pixelchare.def.h main.decl.h
+pixelchare.o : pixelchare.C pixelchare.h pixelchare.decl.h pixelchare.def.h main.decl.h ray.h
 	$(CHARMC) -g -o pixelchare.o pixelchare.C
 
 pixelchare.decl.h pixelchare.def.h : pixelchare.ci
