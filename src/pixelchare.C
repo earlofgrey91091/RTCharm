@@ -1,6 +1,6 @@
 #include <pup_stl.h>
 #include <liveViz.h>
-#include "shape.h"
+#include "ray.h"
 #include "pup_stl.h"
 #include <stdio.h>
 #include "common.h"
@@ -89,7 +89,7 @@ void PixelChare::doWork()
                 //CkPrintf("\n******************************************");
                 
             }
-            while((coef > 0.0f) && (level < 1));
+            while((coef > 0.0f) && (level < 10));
         }
     }
     //CkPrintf("\nDone work [%d][%d]", thisIndex.x, thisIndex.y);
@@ -103,19 +103,6 @@ void PixelChare::runStep(vector<Shape> shapes, vector<lightSrc> lights)
     myShapes.insert(myShapes.end(), shapes.begin(), shapes.end());
     myLights.insert(myLights.end(), lights.begin(), lights.end());
 
-    /*//Test shape insert
-    //CkPrintf("All shapes recieved at index (%d,%d) \n", thisIndex.x, thisIndex.y);
-    for (int i = 0; i< myShapes.size(); i++ )
-    {
-        myShapes[i].print();
-       // CkPrintf("\n ");
-    }
-    //CkPrintf("All lightsources recieved at index (%d,%d) \n", thisIndex.x, thisIndex.y);
-    for (int i = 0; i< myLights.size(); i++ )
-    {
-        myLights[i].print();
-        //CkPrintf("\n ");
-    }*/
     run();
 
 }

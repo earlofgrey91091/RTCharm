@@ -2,25 +2,10 @@
 #include "pup_stl.h"
 #include "common.h"
 #include <stdio.h>
-#include "shape.h"
+#include "ray.h"
 using namespace std;
 #include "main.h"
 //#include "ShapeMsg.h"
-
-
-
-
-
-/*class ShapeMsg : public CMessage_ShapeMsg {
-public:
-  Shape *s;
-  int size;
-
-  ShapeMsg(int z)
-  {
-    size = z;
-  }
-};*/
 
 /*readonly*/ CProxy_Main mainProxy;
 /*readonly*/ int Total_iterations;
@@ -34,7 +19,7 @@ Main::Main(CkArgMsg* arg)
     int image_w, image_h, pixel_w, pixel_h; 
     //string filename = "objects.txt";
     size = SHAPES;
-    chareDimension = 1;
+    chareDimension = 8;
 
     //Process command-line arguments
     if( arg->argc > 2 )
@@ -71,10 +56,10 @@ Main::Main(CkArgMsg* arg)
 
     //TODO: Read file and create shape objects
     
-    lightSrc l(255.0, 255.0, 255.0, 0.0, 240.0, -100.0);
-    lightSrc l1(255.0, 255.0, 255.0, 640.0, 0.0, -100.0);
-    lightSrc l2(255.0, 255.0, 255.0, -100.0, 0.0, -100.0);
-    lightSrc l3(255.0, 255.0, 255.0, 100.0, 100.0, -100.0);
+    lightSrc l(1.0, 1.0, 1.0, 0.0, 40.0, -100.0);
+    lightSrc l1(1.0, 1.0, 1.0, 240.0, 0.0, -100.0);
+    lightSrc l2(1.0, 1.0, 1.0, -100.0, 0.0, -100.0);
+    lightSrc l3(1.0, 1.0, 1.0, 100.0, 100.0, -100.0);
     
     l.print();
     CkPrintf("\n*************\n");
@@ -85,9 +70,9 @@ Main::Main(CkArgMsg* arg)
         //sp[i].printShape();
         //s[i] = new Sphere(); 
     }
-    Shape s(100.0, 0, 233.0, 290.0, 0.0, 0.0, 0, 0, 250);
-    Shape s2(100.0, 0, 407.0, 290.0, 0.0, 0.5, 250, 0, 0);
-    Shape s3(100.0, 0, 320.0, 140.0, 0.0, 0.5, 0, 250, 0);
+    Shape s(100.0, 0, 233.0, 290.0, 0.0, 0.0, 0, 0, 1.0);
+    Shape s2(100.0, 0, 407.0, 290.0, 0.0, 0.5, 1.0, 0, 0);
+    Shape s3(100.0, 0, 320.0, 140.0, 0.0, 0.5, 0, 1.0, 0);
 
     s.print();
     s2.print();
