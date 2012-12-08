@@ -114,9 +114,9 @@ void Main::startVis()
     // Initialize the liveViz library
     liveVizInit(lvConfig, pixel, cb0, myOpts);
 
-    double resumeTime = CmiWallTimer() + PAUSE_TIME + PAUSE_TIME;     // Pause for PAUSE_TIME seconds
+    double resumeTime = CmiWallTimer() + PAUSE_TIME;     // Pause for PAUSE_TIME seconds
      
-    CkPrintf("Stalling after setup for %f s\n", PAUSE_TIME + PAUSE_TIME);
+    CkPrintf("Stalling after setup for %f s\n", PAUSE_TIME);
     int j = 0;
     while(CmiWallTimer() < resumeTime) j++;
     CkPrintf("Starting\n");
