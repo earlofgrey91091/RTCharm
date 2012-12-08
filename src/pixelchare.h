@@ -11,7 +11,20 @@ extern /*readonly*/ int size;
 class PixelChare : public CBase_PixelChare 
 {
     private:
-        typedef struct { float r, g, b; } rgb;
+        class rgb
+        {
+            public: 
+            float r, g, b;
+            rgb(){};
+            void pup(PUP::er &p)
+            {
+                p|r;
+                p|g;
+                p|b;
+            };
+            ~rgb(){};
+        };
+
         typedef struct { byte r, g, b; } rgb_byte;
         vector<rgb> pixelArray;
         vector<Shape> myShapes;
@@ -25,14 +38,16 @@ class PixelChare : public CBase_PixelChare
         PixelChare(CkMigrateMessage *m);
         ~PixelChare(); 
         void doWork();
+        void startStep(vector<Shape> shapes, vector<lightSrc> lights);
         void runStep(vector<Shape> shapes, vector<lightSrc> lights);
         int shoot(ray viewRay, float &dist);
         void draw(int index, ray theRay, int hitIndex, float dist, float &coef, int &level);
         
         bool hit(int index, ray theRay, float &n);
         bool sphereHit(int index, ray theRay, float &n);
-        //rgb* draw();
         void liveVizFunc(liveVizRequestMsg *m); 
+        void pup(PUP::er &p);
+        void ResumeFromSync();
 };
 
 #endif //PIXELCHARE_H 

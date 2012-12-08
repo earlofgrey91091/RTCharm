@@ -26,7 +26,7 @@ mainmodule main {
             atomic  
             {
                 iterations++;
-                CkPrintf("\nStart iteration %d", iterations);
+                CkPrintf("Start iteration %d\n", iterations);
                 if(iterations < ITERATIONS)
                     pixel.run();
                 else CkExit();

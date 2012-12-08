@@ -55,7 +55,7 @@ Main::Main(CkArgMsg* arg)
     //TODO: Read file and create shape objects
     
     lightSrc l(1.0, 1.0, 1.0, 0.0, 240.0, -100.0);
-    lightSrc l1(1.0, 1.0, 1.0, 640.0, 0.0, -10000.0);
+    lightSrc l1(1.0, .5, 0.5, 640.0, 0.0, -10000.0);
     //lightSrc l2(1.0, 1.0, 1.0, -100.0, 0.0, -100.0);
     //lightSrc l3(1.0, 1.0, 1.0, 100.0, 100.0, -100.0);
     
@@ -70,8 +70,8 @@ Main::Main(CkArgMsg* arg)
         
     }
     Shape s(100.0, 0, 233.0, 290.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-    Shape s2(100.0, 0, 407.0, 290.0, 0.0, 0.0, 1.0, 0.0, 0.0);
-    Shape s3(100.0, 0, 320.0, 140.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    Shape s2(100.0, 0, 407.0, 290.0, 0.0, 0.5, 1.0, 0.0, 0.0);
+    Shape s3(100.0, 0, 320.0, 140.0, 0.0, 0.5, 0.0, 1.0, 0.0);
 
     s.print();
     s2.print();
@@ -91,17 +91,12 @@ Main::Main(CkArgMsg* arg)
     pixel = CProxy_PixelChare::ckNew(pixel_w/chareDimension, pixel_h/chareDimension, opts);
     CkPrintf("\nEach chare will have (%d * %d) pixels \n", pixel_w/chareDimension, pixel_h/chareDimension);
     startVis();
-    pixel.runStep(myShapes, myLights);
+    pixel.startStep(myShapes, myLights);
     mainProxy.run();
-
 }
 
 Main::Main(CkMigrateMessage *msg){ }
 
-/*void Main::done()
-{
-    CkExit();
-}*/
 
 void Main::startVis()
 {
