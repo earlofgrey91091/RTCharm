@@ -21,8 +21,8 @@ PixelChare::PixelChare(int width, int height)
 {
     //CkPrintf("\nPixelChare [%d][%d]", thisIndex.x, thisIndex.y);
     __sdag_init();
-    //usesAtSync = CmiTrue;
-	//setMigratable(CmiTrue);
+    usesAtSync = CmiTrue;
+	setMigratable(CmiTrue);
     iteration = 0;
     w = width;
     h = height;
@@ -43,6 +43,23 @@ PixelChare::PixelChare(CkMigrateMessage *m)
     __sdag_init();
 };
 
+
+void PixelChare::pup(PUP::er &p)
+{
+    CBase_PixelChare::pup(p);
+	__sdag_pup(p);
+	p|myShapes;
+	p|myLights;
+	p|pixelArray;
+	p|iteration;
+	p|x;
+	p|y;
+	p|w;
+	p|h;
+	if (p.isUnpacking()) tmpBuffer = new double[w*h];
+	p(tmpBuffer,w*h); 
+}
+
 PixelChare::~PixelChare() 
 {
     if(tmpBuffer != NULL) delete [] tmpBuffer;
@@ -61,7 +78,6 @@ void PixelChare::doWork()
     float coef = 1.0f;
     int level = 0;
     int index;
-
     // pixels will go from position_x -> position_x + w -1
     // pixels will go from position_y -> position_x + h -1
     //CkPrintf("\nDoing work [%d][%d] [%d][%d]-[%d][%d]", thisIndex.x, thisIndex.y, position_x,position_y, position_x+w-1, position_y+h-1);
@@ -90,7 +106,7 @@ void PixelChare::doWork()
                 {
                     CkPrintf("******************************************\n");
                     CkPrintf(" Lucky pixel = [%d, %d] hitindex = %d\n", pixel_x, pixel_y, hitIndex);
-                    CkPrintf("\n level = %d", level);
+                    CkPrintf("level = %d\n", level);
                     CkPrintf("******************************************\n");
                 }
                 draw(index, viewRay, hitIndex, dist, coef, level);
@@ -119,10 +135,7 @@ void PixelChare::startStep(vector<Shape> shapes, vector<lightSrc> lights)
 
 void PixelChare::runStep(vector<Shape> shapes, vector<lightSrc> lights)
 {
-    
-
     run();
-
 }
 
 //returns index of closest hit, NEGINF otherwise

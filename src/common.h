@@ -10,6 +10,6 @@
 #define NEGINF -999999
 #define SPHERE 0
 #define PAUSE_TIME 5.0
-#define DEBUG_CODE true
+#define DEBUG_CODE false
 
 #endif //COMMON_H

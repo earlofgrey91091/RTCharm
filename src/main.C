@@ -91,17 +91,12 @@ Main::Main(CkArgMsg* arg)
     pixel = CProxy_PixelChare::ckNew(pixel_w/chareDimension, pixel_h/chareDimension, opts);
     CkPrintf("\nEach chare will have (%d * %d) pixels \n", pixel_w/chareDimension, pixel_h/chareDimension);
     startVis();
-    pixel.runStep(myShapes, myLights);
+    pixel.startStep(myShapes, myLights);
     mainProxy.run();
-
 }
 
 Main::Main(CkMigrateMessage *msg){ }
 
-/*void Main::done()
-{
-    CkExit();
-}*/
 
 void Main::startVis()
 {
