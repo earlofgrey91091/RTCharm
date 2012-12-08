@@ -1,7 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define ITERATIONS 30
+#define ITERATIONS 100
 #define SHAPES 2
 #define loc(x,y, width)  (x + (y*width))
 #define rnd(x) (x*rand() / RAND_MAX)

@@ -207,7 +207,7 @@ class Shape
         coord3D loc;
         float size;
         float reflection;
-        float red, green, blue;
+        byte red, green, blue;
         int type;
 
         Shape()
@@ -215,9 +215,9 @@ class Shape
            this->size = 1;
            this->type = 0;
            this->reflection = 0.0;
-           this->red = 0.0;
-           this->green = 0.0;
-           this->blue = 0.0;
+           this->red = 0;
+           this->green = 0;
+           this->blue = 0;
         }
 
         Shape(float size)
@@ -225,9 +225,9 @@ class Shape
             this->size = size;
             this->type = 0;
             this->reflection = 0.0;
-            this->red = 0.0;
-            this->green = 0.0;
-            this->blue = 0.0;
+            this->red = 0;
+            this->green = 0;
+            this->blue = 0;
         }
 
         Shape(float size, int type)
@@ -235,9 +235,9 @@ class Shape
             this->size = size;
             this->type = type;
             this->reflection = 0.0;
-            this->red = 0.0;
-            this->green = 0.0;
-            this->blue = 0.0;
+            this->red = 0;
+            this->green = 0;
+            this->blue = 0;
         }
 
         Shape(float size, int type, float x, float y, float z)
@@ -248,12 +248,12 @@ class Shape
             this->loc.y = y;
             this->loc.z = z;
             this->reflection = 0.0;
-            this->red = 0.0;
-            this->green = 0.0;
-            this->blue = 0.0;
+            this->red = 0;
+            this->green = 0;
+            this->blue = 0;
         }
 
-        Shape(float size, int type, float x, float y, float z, float reflection, float r, float g, float b)
+        Shape(float size, int type, float x, float y, float z, float reflection, byte r, byte g, byte b)
         {
             this->size = size;
             this->type = type;
@@ -272,6 +272,7 @@ class Shape
             CkPrintf("location(x,y,z) = (%f, %f, %f)\n", loc.x, loc.y, loc.z);
             CkPrintf("size = %f \n", size);
             CkPrintf("type = %d \n", type);
+            CkPrintf("color = (%d,%d,%d)\n", this->red, this->green, this->blue);
         }
 
         void pup(PUP::er &p)

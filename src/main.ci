@@ -16,7 +16,7 @@ mainmodule main {
         entry void done();
         entry void run()
         {
-            for(count = 0; count < 64; count++) 
+            for(count = 0; count < chareDimension*chareDimension; count++) 
             {
                 when done()
                 atomic 
@@ -27,7 +27,7 @@ mainmodule main {
             atomic  
             {
                 iterations++;
-                //CkPrintf("start iteration %d\n", iterations);
+                CkPrintf("\nStart iteration %d", iterations);
                 if(iterations < ITERATIONS)
                     pixel.run();
                 else CkExit();

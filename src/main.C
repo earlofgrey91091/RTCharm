@@ -34,7 +34,7 @@ Main::Main(CkArgMsg* arg)
     int image_w, image_h, pixel_w, pixel_h; 
     //string filename = "objects.txt";
     size = SHAPES;
-    chareDimension = 8;
+    chareDimension = 1;
 
     //Process command-line arguments
     if( arg->argc > 2 )
@@ -72,6 +72,10 @@ Main::Main(CkArgMsg* arg)
     //TODO: Read file and create shape objects
     
     lightSrc l(255.0, 255.0, 255.0, 0.0, 240.0, -100.0);
+    lightSrc l1(255.0, 255.0, 255.0, 640.0, 0.0, -100.0);
+    lightSrc l2(255.0, 255.0, 255.0, -100.0, 0.0, -100.0);
+    lightSrc l3(255.0, 255.0, 255.0, 100.0, 100.0, -100.0);
+    
     l.print();
     CkPrintf("\n*************\n");
     for(int i = 0; i<size; i++)
@@ -81,9 +85,9 @@ Main::Main(CkArgMsg* arg)
         //sp[i].printShape();
         //s[i] = new Sphere(); 
     }
-    Shape s(100.0, 0, 233.0, 290.0, 0.0, 0.5, 0.0, 0.0, 250.0);
-    Shape s2(100.0, 0, 407.0, 290.0, 0.0, 0.5, 250.0, 0.0, 0.0);
-    Shape s3(100.0, 0, 320.0, 140.0, 0.0, 0.5, 0.0, 250.0, 0.0);
+    Shape s(100.0, 0, 233.0, 290.0, 0.0, 0.0, 0, 0, 250);
+    Shape s2(100.0, 0, 407.0, 290.0, 0.0, 0.5, 250, 0, 0);
+    Shape s3(100.0, 0, 320.0, 140.0, 0.0, 0.5, 0, 250, 0);
 
     s.print();
     s2.print();
@@ -93,9 +97,11 @@ Main::Main(CkArgMsg* arg)
     myShapes.push_back(s2);
     myShapes.push_back(s3);
     myLights.push_back(l);
+    myLights.push_back(l1);
+    myLights.push_back(l2);
+    //myLights.push_back(l3);
     CkPrintf("\n*************\n");
     
-
     //Create the image pixel chares based on image size
     pixel = CProxy_PixelChare::ckNew(pixel_w/chareDimension, pixel_h/chareDimension, opts);
     CkPrintf("\nEach chare will have (%d * %d) pixels \n", pixel_w/chareDimension, pixel_h/chareDimension);

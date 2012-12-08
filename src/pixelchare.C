@@ -33,7 +33,7 @@ PixelChare::PixelChare(int width, int height)
         pixelArray.push_back(p);
     }
     tmpBuffer =  new double[w*h];
-
+    CkPrintf("\n Chare created!");
 };
 
 PixelChare::PixelChare(CkMigrateMessage *m)
@@ -82,10 +82,14 @@ void PixelChare::doWork()
                 {
                     break;
                 }
-        
-                draw((j * w) + i, viewRay, hitIndex, dist, &coef, &level);
+                //CkPrintf("\n******************************************");
+                //CkPrintf("\n Lucky pixel = [%d, %d] hitindex = %d", pixel_x, pixel_y, hitIndex);
+                draw((j * w) + i, viewRay, hitIndex, dist, coef, level);
+                //CkPrintf("\n level = %d", level);
+                //CkPrintf("\n******************************************");
+                
             }
-            while((coef > 0.0f) && (level < 3));
+            while((coef > 0.0f) && (level < 1));
         }
     }
     //CkPrintf("\nDone work [%d][%d]", thisIndex.x, thisIndex.y);
@@ -181,10 +185,13 @@ bool PixelChare::sphereHit(int index, ray r, float *t)
 }
 
 
-void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float *coef, int *level)
+void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef, int &level)
 {
    // if(hitIndex != NEGINF)
     //{
+    pixelArray[index].r = 0;
+    pixelArray[index].g = 0;
+    pixelArray[index].b = 0;
         coord3D newStart = theRay.start + t * theRay.dir;
 
         //figuring out the normal vector at the point of intersection
@@ -202,11 +209,11 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float *coef,
         temp = 1.0f / sqrtf(temp);
         n = temp * n;
    
-
+   //     CkPrintf("\n LightSources = %d", myLights.size());
         for(int j = 0; j < myLights.size(); ++j)
         {
             lightSrc current = myLights[j];
-
+     //       current.print();
             vec3D dist = current.loc - newStart;
 
             if(n * dist <= 0.0f)
@@ -228,24 +235,36 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float *coef,
                     inShadow = true;
                     break;
                 }
+                else
+                {
+                    //CkPrintf("\n Negative here too");
+                }
             }
 
             if(!inShadow)
             {
-                float lambert = (lightRay.dir * n) * (*coef);
-                pixelArray[index].r += lambert * current.r * myShapes[hitIndex].red;
-                pixelArray[index].g += lambert * current.g * myShapes[hitIndex].green;
-                pixelArray[index].b += lambert * current.b * myShapes[hitIndex].blue;
+                float lambert = (lightRay.dir * n) * (coef);
+                
+       //      CkPrintf("\n pixelarray(%d,%d,%d)",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
+       //         CkPrintf("\n lambert = %f   current(%d,%d,%d)", lambert, (int)current.r, (int)current.g, (int)current.b);
+       //         CkPrintf("\n hitindex = %d shape.color(%d,%d,%d)", hitIndex, myShapes[hitIndex].red, myShapes[hitIndex].green), myShapes[hitIndex].blue;
+                pixelArray[index].r += lambert * (int)((int)current.r + myShapes[hitIndex].red)/2;
+                pixelArray[index].g += lambert * (int)((int)current.g + myShapes[hitIndex].green)/2;
+                pixelArray[index].b += lambert * (int)((int)current.b + myShapes[hitIndex].blue)/2;
+           //    CkPrintf("\n pixelarray(%d,%d,%d)",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
+                //pixelArray[index].r = myShapes[hitIndex].red;
+                //pixelArray[index].g = myShapes[hitIndex].green;
+                //pixelArray[index].b = myShapes[hitIndex].blue;
             }
 
         }        
-    
-        *coef *= myShapes[hitIndex].reflection;
+        //CkExit();
+        coef *= myShapes[hitIndex].reflection;
         float reflect = 2.0f * (theRay.dir * n);
         theRay.start = newStart;
         theRay.dir = theRay.dir - reflect * n;
         
-        *level++; 
+        level++; 
         /*pixelArray[index].r = 255;
         pixelArray[index].g = 255;
         pixelArray[index].b = 255;*/
@@ -256,7 +275,7 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float *coef,
 void PixelChare::liveVizFunc(liveVizRequestMsg *m) 
 {        
     rgb* imageBuff = (rgb*)tmpBuffer;
-    //CkPrintf("in liveViz\n");
+   // CkPrintf("\nliveViz[%d][%d]", thisIndex.x, thisIndex.y);
     int imgIndex;
     rgb* c;
     for (int x = 0; x < w; x++) 
@@ -268,6 +287,7 @@ void PixelChare::liveVizFunc(liveVizRequestMsg *m)
             c->r = pixelArray[imgIndex].r;
             c->g = pixelArray[imgIndex].g;
             c->b = pixelArray[imgIndex].b;
+            
         }
     }
 
