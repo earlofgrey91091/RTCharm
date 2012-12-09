@@ -72,9 +72,9 @@ Main::Main(CkArgMsg* arg)
 
 
     //TODO: Read file and create shape objects
-    
+    /*
     lightSrc l(1.0, 1.0, 1.0, 0.0, 240.0, -100.0);
-    lightSrc l1(1.0, .5, 0.5, 640.0, 0.0, -10000.0);
+    lightSrc l1(1.0, 1.0, 1.0, 640.0, 0.0, -10000.0);
     //lightSrc l2(1.0, 1.0, 1.0, -100.0, 0.0, -100.0);
     //lightSrc l3(1.0, 1.0, 1.0, 100.0, 100.0, -100.0);
     
@@ -88,10 +88,21 @@ Main::Main(CkArgMsg* arg)
         //s[i] = new Sphere();
         
     }
+    Shape s(100.0, SPHERE, 233.0, 290.0, 0.0, 1.0, 0.0, 0.0, 1.0);
+    Shape s2(100.0, SPHERE, 407.0, 290.0, 0.0, 0.5, 1.0, 0.0, 0.0);
+    Shape s3(100.0, SPHERE, 320.0, 140.0, 0.0, 0.5, 0.0, 1.0, 0.0);
+    Shape s4(30.0, SPHERE, 50.0, 50.0, 50.0, 0.5, 0.0, 1.0, 1.0);
+    Shape s5(60.0, SPHERE, 400.0, 400.0, 400.0, 0.5, 1.0, 0.0, 1.0);
+*/
+    lightSrc l(1.0, 1.0, 1.0, 0.0, 240.0, -100.0);
+    lightSrc l1(1.0, 0.5, 0.5, 640.0, 0.0, -10000.0);
+    //lightSrc l2(1.0, 1.0, 1.0, -100.0, 0.0, -100.0);
+    //lightSrc l3(1.0, 1.0, 1.0, 100.0, 100.0, -100.0);
+    
     Shape s(100.0, 0, 233.0, 290.0, 0.0, 0.0, 0.0, 0.0, 1.0);
     Shape s2(100.0, 0, 407.0, 290.0, 0.0, 0.5, 1.0, 0.0, 0.0);
     Shape s3(100.0, 0, 320.0, 140.0, 0.0, 0.5, 0.0, 1.0, 0.0);
-
+    
     s.print();
     s2.print();
     s3.print();
@@ -99,6 +110,9 @@ Main::Main(CkArgMsg* arg)
     myShapes.push_back(s);
     myShapes.push_back(s2);
     myShapes.push_back(s3);
+    //myShapes.push_back(s4);
+    //myShapes.push_back(s5);
+    
     myLights.push_back(l);
     myLights.push_back(l1);
     l.print();
@@ -125,9 +139,17 @@ void Main::rotateLights()
     {
         x = myLights[i].loc.x - LIMIT/2;
         y = myLights[i].loc.y - LIMIT/2;
-        myLights[i].loc.x = x*cos(ROT_RAD) + y*sin(ROT_RAD) + LIMIT/2;
-        myLights[i].loc.y = x*sin(-ROT_RAD) + y*cos(ROT_RAD) +  - LIMIT/2;
-    }
+        myLights[i].loc.x = x*cos(ROT_RAD*(i+1)) + y*sin(ROT_RAD*(i+1)) + LIMIT/2;
+        myLights[i].loc.y = x*sin(-(ROT_RAD*(i+1))) + y*cos(ROT_RAD*(i+1)) + LIMIT/2;
+    }/*
+    for(int i = 0; i < myShapes.size(); i++)
+    {
+        x = myShapes[i].loc.x - LIMIT/2;
+        y = myShapes[i].loc.y - LIMIT/2;
+        myShapes[i].loc.x = x*cos(ROT_RAD*(i+1)) + y*sin(ROT_RAD*(i+1)) + LIMIT/2;
+        myShapes[i].loc.y = x*sin(-(ROT_RAD*(i+1))) + y*cos(ROT_RAD*(i+1)) +  LIMIT/2;
+    }*/
+
 }
 
 
