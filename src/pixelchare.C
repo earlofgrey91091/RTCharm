@@ -305,17 +305,20 @@ void PixelChare::liveVizFunc(liveVizRequestMsg *m)
             c = &(imageBuff[imgIndex]);
             byte red, blue, green;
             if (pixelArray[imgIndex].r * 255.0 < 255.0) {
-                c->r = (byte)(gamma(pixelArray[imgIndex].r) * 255.0);
+                if(GAMMA) c->r = (byte)(gamma(pixelArray[imgIndex].r) * 255.0);
+                else  c->r = (byte)(pixelArray[imgIndex].r * 255.0);
             } else {
                 c->r = (byte)255.0;
             }
             if (pixelArray[imgIndex].g * 255.0 < 255.0) {
-                c->g = (byte)(gamma(pixelArray[imgIndex].g) * 255.0);
+                if(GAMMA) c->g = (byte)(gamma(pixelArray[imgIndex].g) * 255.0);
+                else c->g = (byte)(pixelArray[imgIndex].g * 255.0);
             } else {
                 c->g = (byte)255.0;
             }
             if (pixelArray[imgIndex].b * 255.0 < 255.0) {
-                c->b = (byte)(gamma(pixelArray[imgIndex].b) * 255.0);
+                if(GAMMA) c->b = (byte)(gamma(pixelArray[imgIndex].b) * 255.0);
+                else c->b = (byte)(pixelArray[imgIndex].b * 255.0);
             } else {
                 c->b = (byte)255.0;
             }
