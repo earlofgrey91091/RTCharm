@@ -108,13 +108,14 @@ void PixelChare::doWork()
             index = (j * w) + i;
             pixel_x = position_x + i;
             pixel_y = position_y + j;
-	    float red = 0, green = 0, blue = 0; 
-   	    for(float fragmentx = pixel_x; fragmentx < pixel_x + 1.0f; fragmentx += 0.5f)
-   		for(float fragmenty = pixel_y; fragmenty < pixel_y + 1.0f; fragmenty += 0.5f)
-  		 {
-     			ray viewRay(float(fragmentx), float(fragmenty),-1000.0f, 0.0f, 0.0f, 1.0f);           
+            float red = 0, green = 0, blue = 0;
+            for(float fragmentx = pixel_x; fragmentx < pixel_x + 1.0f; fragmentx += 0.5f)
+            {
+                for(float fragmenty = pixel_y; fragmenty < pixel_y + 1.0f; fragmenty += 0.5f)
+                {
+                    ray viewRay(float(fragmentx), float(fragmenty),-1000.0f, 0.0f, 0.0f, 1.0f);
             		coef = 1.0f;
-		 	float sampleRatio=0.25f;
+                    float sampleRatio=0.25f;
             		level = 0;
             		pixelArray[index].r = 0;
             		pixelArray[index].g = 0;
@@ -132,20 +133,22 @@ void PixelChare::doWork()
                     			CkPrintf("******************************************\n");
                 		}
                 		draw(index, viewRay, hitIndex, dist, coef, level); 
-		 	} while((coef > 0.0f) && (level < 10));
-	
-                    float exposure = -1.00f;
-                    pixelArray[index].r = (1.0f - expf(pixelArray[index].r * exposure));
-                    pixelArray[index].g = (1.0f - expf(pixelArray[index].g * exposure));
-                    pixelArray[index].b = (1.0f - expf(pixelArray[index].b * exposure));
-		    pixelArray[index].r += pixelArray[index].r * sampleRatio;
+                    } while((coef > 0.0f) && (level < 10));
+                    if(EXPOSURE){
+                        float exposure = -1.00f;
+                        pixelArray[index].r = (1.0f - expf(pixelArray[index].r * exposure));
+                        pixelArray[index].g = (1.0f - expf(pixelArray[index].g * exposure));
+                        pixelArray[index].b = (1.0f - expf(pixelArray[index].b * exposure));
+                    }
+                    pixelArray[index].r += pixelArray[index].r * sampleRatio;
                     pixelArray[index].g += pixelArray[index].g * sampleRatio;
-		    pixelArray[index].b += pixelArray[index].b * sampleRatio;
-     		 }      
-
+                    pixelArray[index].b += pixelArray[index].b * sampleRatio;
+                }
             }
-       }
-   }
+
+        }
+    }
+    }
 
 
     else {
@@ -180,6 +183,13 @@ void PixelChare::doWork()
                 		draw(index, viewRay, hitIndex, dist, coef, level); // this is wrong for multipl.e levels we should have DIFFRENT RAYS
             		}
             		while((coef > 0.0f) && (level < 10));
+                if(EXPOSURE){
+                    float exposure = -1.00f;
+                    pixelArray[index].r = (1.0f - expf(pixelArray[index].r * exposure));
+                    pixelArray[index].g = (1.0f - expf(pixelArray[index].g * exposure));
+                    pixelArray[index].b = (1.0f - expf(pixelArray[index].b * exposure));
+                }
+
         	}
     	}
         

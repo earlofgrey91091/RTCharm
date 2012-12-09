@@ -10,7 +10,7 @@ class Main : public CBase_Main {
         int count;
         int iterations;
         vector<Shape> myShapes;
-        vector<Shape> emptyVec;
+        vector<Shape> sendShape;
         vector<Direction> shapeDirection;
         vector<lightSrc> myLights;
         Main(CkArgMsg* msg);
