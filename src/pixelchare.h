@@ -41,7 +41,7 @@ class PixelChare : public CBase_PixelChare
         void startStep(vector<Shape> shapes, vector<lightSrc> lights);
         void runStep(vector<Shape> shapes, vector<lightSrc> lights);
         int shoot(ray viewRay, float &dist);
-        void draw(int index, ray theRay, int hitIndex, float dist, float &coef, int &level);
+        void draw(int index, ray &theRay, int hitIndex, float dist, float &coef, int &level);
         
         bool hit(int index, ray theRay, float &n);
         bool sphereHit(int index, ray theRay, float &n);

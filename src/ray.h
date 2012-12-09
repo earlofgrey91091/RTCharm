@@ -95,7 +95,7 @@ inline vec3D operator - (const coord3D &p1, const coord3D &p2)
 
 inline vec3D operator * (float c, const vec3D &v)
 {
-    vec3D v2( v.x *c, v.y * c, v.z * c );
+    vec3D v2( v.x * c, v.y * c, v.z * c );
     return v2;
 }
 

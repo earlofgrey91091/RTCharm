@@ -44,8 +44,26 @@ Main::Main(CkArgMsg* arg)
     }
     else
     {
-        CkPrintf("Invalid number of arguments\n");
-        CkExit();
+        image_w = LIMIT;
+        image_h = LIMIT;
+        
+        //force fit inputs
+        image_w -= image_w % chareDimension;
+        image_h -= image_h % chareDimension;
+        if(image_w == 0 || image_h == 0)
+        {
+            CkPrintf("Invalid image size\n");
+            CkExit();
+        }
+
+        pixel_w = image_w;
+        pixel_h = image_h;
+
+        //CkPrintf(" w is %d h is %d pw is %d ph is %d", image_w, image_h, pixel_w, pixel_h); 
+        CkPrintf("\ncells will be %d pixels in height,\ncells will be %d pixels in width,\nthere will be %d cells\n", 
+                    pixel_h, pixel_w, chareDimension * chareDimension);
+        //CkPrintf("Invalid number of arguments\n");
+        //CkExit();
     }
     delete arg;
     Total_iterations = ITERATIONS;
@@ -105,10 +123,10 @@ void Main::rotateLights()
     int x,y;
     for(int i = 0; i < myLights.size(); i++)
     {
-        x = myLights[i].loc.x;
-        y = myLights[i].loc.y;
-        myLights[i].loc.x = x*cos(ROT_RAD) + y*sin(ROT_RAD);
-        myLights[i].loc.y = x*sin(-ROT_RAD) + y*cos(ROT_RAD);
+        x = myLights[i].loc.x - LIMIT/2;
+        y = myLights[i].loc.y - LIMIT/2;
+        myLights[i].loc.x = x*cos(ROT_RAD) + y*sin(ROT_RAD) + LIMIT/2;
+        myLights[i].loc.y = x*sin(-ROT_RAD) + y*cos(ROT_RAD) +  - LIMIT/2;
     }
 }
 

@@ -109,9 +109,9 @@ void PixelChare::doWork()
                     CkPrintf("level = %d\n", level);
                     CkPrintf("******************************************\n");
                 }
-                draw(index, viewRay, hitIndex, dist, coef, level);
+                draw(index, viewRay, hitIndex, dist, coef, level); // this is wrong for multipl.e levels we should have DIFFRENT RAYS
             }
-            while((coef > 0.0f) && (level < 5));
+            while((coef > 0.0f) && (level < 10));
         }
     }
         
@@ -211,9 +211,9 @@ bool PixelChare::sphereHit(int index, ray r, float &t)
 }
 
 
-void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef, int &level)
+void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coef, int &level)
 {
-    coord3D newStart = theRay.start + t * theRay.dir;
+    coord3D newStart = theRay.start + ti * theRay.dir;
     vec3D n = newStart - myShapes[hitIndex].loc; //figuring out the normal vector at the point of intersection
     float temp = n * n;
     float dummy;
@@ -221,12 +221,7 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef,
 
     
     
-    if (temp == 0.0f)
-    {
-    //it could fail here!!!!
-        //break;
-        return;
-    }
+    if (temp == 0.0f) return;
 
     temp = 1.0f / sqrtf(temp);
     n = temp * n;
@@ -237,13 +232,10 @@ void PixelChare::draw(int index, ray theRay, int hitIndex, float t, float &coef,
         lightSrc current = myLights[j];
         vec3D dist = current.loc - newStart;
 
-        if(n * dist <= 0.0f)
-        {
-            continue;
-        }
+        if(n * dist <= 0.0f) continue;
+
         float t = sqrtf(dist * dist);
-        if ( t <= 0.0f )
-            continue;
+        if (t <= 0.0f) continue;
         ray lightRay;
         lightRay.start = newStart;
         lightRay.dir = (1/t)*dist;

@@ -13,7 +13,7 @@
 #define DEBUG_CODE false
 #define PI 3.14159265
 #define LB_TIME 5
-#define ROT_TIME 2
+#define ROT_TIME 1
 #define ROT_RAD 0.034906585 //2*PI/180
-
+#define LIMIT 512 //boundry size of the viewable space
 #endif //COMMON_H
