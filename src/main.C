@@ -80,14 +80,12 @@ Main::Main(CkArgMsg* arg)
     
     l.print();
     CkPrintf("\n*************\n");
-    for(int i = 0; i<size; i++)
+    /*for(int i = 0; i<size; i++)
     {
-        //myShapes
-    
         //sp[i].printShape();
         //s[i] = new Sphere();
         
-    }
+    }*/
     Shape s(100.0, 0, 233.0, 290.0, 0.0, 0.0, 0.0, 0.0, 1.0);
     Shape s2(100.0, 0, 407.0, 290.0, 0.0, 0.5, 1.0, 0.0, 0.0);
     Shape s3(100.0, 0, 320.0, 140.0, 0.0, 0.5, 0.0, 1.0, 0.0);
@@ -126,7 +124,7 @@ void Main::rotateLights()
         x = myLights[i].loc.x - LIMIT/2;
         y = myLights[i].loc.y - LIMIT/2;
         myLights[i].loc.x = x*cos(ROT_RAD) + y*sin(ROT_RAD) + LIMIT/2;
-        myLights[i].loc.y = x*sin(-ROT_RAD) + y*cos(ROT_RAD) +  - LIMIT/2;
+        myLights[i].loc.y = x*sin(-ROT_RAD) + y*cos(ROT_RAD) + LIMIT/2;
     }
 }
 
