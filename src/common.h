@@ -9,6 +9,7 @@
 #define INF 999999
 #define NEGINF -999999
 #define SPHERE 0
+#define TRIANGLE 1
 #define PAUSE_TIME 5.0
 #define DEBUG_CODE false
 #define PI 3.14159265

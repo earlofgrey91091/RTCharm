@@ -1,35 +1,8 @@
 //Ray header file
 #ifndef RAY_H
 #define RAY_H
-
-class  coord3D
-{
-    public:
-        float x;
-        float y;
-        float z;
-
-        coord3D()
-        {
-            this->x = 0;
-            this->y = 0;
-            this->z = 0;
-        }
-        coord3D(float x, float y, float z) 
-        {
-            this->x = x;
-            this->y = y;
-            this->z = z;    
-        }
-        void pup(PUP::er &p)
-        {
-            p | x;
-            p | y;
-            p | z;
-        }
-    
-};
-
+#include "common.h"
+#include <math.h>
 class  vec3D 
 {
     public:
@@ -55,6 +28,13 @@ class  vec3D
             this->z += v2.z;
             return *this;
         }
+        vec3D& operator -= (const vec3D &v2)
+        {
+            this->x += v2.x;
+            this->y += v2.y;
+            this->z += v2.z;
+            return *this;
+        }
         void pup(PUP::er &p)
         {
             p | x;
@@ -63,39 +43,24 @@ class  vec3D
         }
 };
 
-inline coord3D operator + (const coord3D &p, const vec3D &v)
-{
-    coord3D p2;
-    p2.x = p.x + v.x;
-    p2.y = p.y + v.y;
-    p2.z = p.z + v.z;
-    return p2;
-}
-
-inline coord3D operator - (const coord3D &p, const vec3D &v)
-{
-    coord3D p2;
-    p2.x = p.x - v.x;
-    p2.y = p.y - v.y;
-    p2.z = p.z - v.z;
-    return p2;
-}
-
 inline vec3D operator + (const vec3D &v1, const vec3D &v2)
 {
     vec3D v(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z );
     return v;
 }
 
-inline vec3D operator - (const coord3D &p1, const coord3D &p2)
-{
-    vec3D v( p1.x - p2.x, p1.y - p2.y, p1.z - p2.z );
-    return v;
-}
-
 inline vec3D operator * (float c, const vec3D &v)
 {
     vec3D v2( v.x * c, v.y * c, v.z * c );
+    return v2;
+}
+
+//cross product
+inline vec3D cross(const vec3D &v0, const vec3D &v1)
+{
+    vec3D v2(v0.y * v1.z - v0.z * v1.y, 
+            v0.z * v1.x - v0.x * v1.z,  
+            v0.x * v1.y - v0.y * v1.x);
     return v2;
 }
 
@@ -114,13 +79,9 @@ class ray
 {
     public:
         
-        coord3D start;
-        vec3D dir;
+        vec3D start, dir;
      
-        ray()
-        {
-        //do nothing defult constructor for start and dir will run    
-        }
+        ray(){}
 
         ray(float x, float y, float z)
         {
@@ -152,7 +113,7 @@ class lightSrc
 {
     public:
 
-        coord3D loc;
+        vec3D loc;
         float r, g, b;
 
         lightSrc()
@@ -204,8 +165,10 @@ class Shape
 {
     public:
        
-        coord3D loc;
+        vec3D loc;
         float size;
+        vec3D v0, v1, v2;
+        vec3D N;
         float reflection;
         float red, green, blue;
         int type;
@@ -213,50 +176,18 @@ class Shape
         Shape()
         {
            this->size = 1;
-           this->type = 0;
+           this->type = SPHERE;
            this->reflection = 0.0;
            this->red = 0;
            this->green = 0;
            this->blue = 0;
         }
-
-        Shape(float size)
+        
+        //SPHERE
+        Shape(float size, float x, float y, float z, float reflection, float r, float g, float b)
         {
             this->size = size;
-            this->type = 0;
-            this->reflection = 0.0;
-            this->red = 0;
-            this->green = 0;
-            this->blue = 0;
-        }
-
-        Shape(float size, int type)
-        {
-            this->size = size;
-            this->type = type;
-            this->reflection = 0.0;
-            this->red = 0;
-            this->green = 0;
-            this->blue = 0;
-        }
-
-        Shape(float size, int type, float x, float y, float z)
-        {
-            this->size = size;
-            this->type = type;
-            this->loc.x = x;
-            this->loc.y = y;
-            this->loc.z = z;
-            this->reflection = 0.0;
-            this->red = 0;
-            this->green = 0;
-            this->blue = 0;
-        }
-
-        Shape(float size, int type, float x, float y, float z, float reflection, float r, float g, float b)
-        {
-            this->size = size;
-            this->type = type;
+            this->type = SPHERE;
             this->loc.x = x;
             this->loc.y = y;
             this->loc.z = z;
@@ -265,6 +196,37 @@ class Shape
             this->green = g;
             this->blue = b;
 
+        }
+        
+        //TRIANGLE
+        Shape(float x0, float y0, float z0, float x1, float y1, float z1, float x2, float y2, float z2, float reflection, float r, float g, float b)
+        {
+            this->type = TRIANGLE;
+            this->loc.x = (x0 + x1 + x2)/3;
+            this->loc.y = (y0 + y1 + y2)/3;
+            this->loc.z = (z0 + z1 + z2)/3;
+            this->v0.x = x0;
+            this->v0.y = y0;
+            this->v0.z = z0;
+            this->v0 -=  this->loc;
+            this->v1.x = x1;
+            this->v1.y = y1;
+            this->v1.z = z1;
+            this->v0 -=  this->loc;
+            this->v2.x = x2;
+            this->v2.y = y2;
+            this->v2.z = z2;
+            vec3D A = v1 - v0;
+            vec3D B = v2 - v0;
+            this->N = cross(A, B);
+            float tot = sqrtf(1/(pow(this->N.x, 2)  + pow(this->N.y, 2) + pow(this->N.z, 2)));
+            this->N.x *= tot;
+            this->N.y *= tot;
+            this->N.z *= tot;
+            this->reflection = reflection;
+            this->red = r;
+            this->green = g;
+            this->blue = b;
         }
 
         void print()

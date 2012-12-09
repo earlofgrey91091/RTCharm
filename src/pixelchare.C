@@ -35,21 +35,10 @@ PixelChare::PixelChare(int width, int height)
         pixelArray.push_back(p);
     }
     tmpBuffer =  new double[w*h];
-   if(DEBUG_CODE) CkPrintf("Chare created!\n");
+    if(DEBUG_CODE) CkPrintf("Chare created!\n");
 };
 
 
-float PixelChare::gamma(float c)
-{
-    if (c <= 0.0031308f)
-    {
-        return 12.92f * c; 
-    }
-    else
-    {
-        return 1.055f * powf(c, 0.4166667f) - 0.055f; // Inverse gamma 2.4
-    }
-};
 
 
 PixelChare::PixelChare(CkMigrateMessage *m)
@@ -196,6 +185,7 @@ bool PixelChare::hit(int index, ray theRay, float &n)
     switch(myShapes[index].type)
     {
         case SPHERE: result = sphereHit( index, theRay, n); break;
+        case TRIANGLE: result = triHit( index, theRay, n); break;
         default: CkPrintf("Attempted to compute hit for unrecognised shape with type id %d\n", myShapes[index].type);
     }
     return result;
@@ -233,11 +223,53 @@ bool PixelChare::sphereHit(int index, ray r, float &t)
     return retvalue; 
 }
 
+bool PixelChare::triHit(int index, ray r, float &t)
+{
+    // triangle hit function
+    // check if parallel
+    
+    float NdotRayDirection = myShapes[index].N * r.dir; 
+    if (NdotRayDirection == 0) return false; 
+
+    float d = myShapes[index].N * myShapes[index].v0; 
+
+    t = -(myShapes[index].N*r.start + d) / NdotRayDirection; 
+    if(t < 0) return false; // triangle is behind
+
+    // compute the intersection point using equation 1 
+    vec3D P = r.start + t * r.dir;
+
+    // // Step 2: inside-outside test // 
+    vec3D C; // vector perpendicular to triangle's plane 
+    // edge 0 
+    vec3D edge0 = myShapes[index].v1 - myShapes[index].v0; 
+    vec3D VP0 = P - myShapes[index].v0; 
+    C = cross(edge0, VP0); 
+    if (myShapes[index].N * C < 0) return false; // P is outside 
+    // edge 1 
+    vec3D edge1 = myShapes[index].v2 - myShapes[index].v1; 
+    vec3D VP1 = P - myShapes[index].v1; 
+    C = cross(edge1, VP1); 
+    if (myShapes[index].N * C < 0) return false; // P is outside 
+    // edge 2 
+    vec3D edge2 = myShapes[index].v0 -myShapes[index].v2; 
+    vec3D VP2 = P - myShapes[index].v2; 
+    C = cross(edge2, VP2); 
+    if (myShapes[index].N * C < 0) return false; // P is outside 
+    return true; 
+}
+
 
 void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coef, int &level)
 {
-    coord3D newStart = theRay.start + ti * theRay.dir;
-    vec3D n = newStart - myShapes[hitIndex].loc; //figuring out the normal vector at the point of intersection
+    vec3D newStart = theRay.start + ti * theRay.dir;
+    
+    vec3D n;
+    if(false)//myShapes[hitIndex].type == TRIANGLE)
+    {
+        //if
+    }
+    else n = newStart - myShapes[hitIndex].loc; //figuring out the normal vector at the point of intersection
     float temp = n * n;
     float dummy;
     float lambert;
@@ -292,6 +324,19 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
     
     level++; 
 }
+
+float PixelChare::gamma(float c)
+{
+    if (c <= 0.0031308f)
+    {
+        return 12.92f * c; 
+    }
+    else
+    {
+        return 1.055f * powf(c, 0.4166667f) - 0.055f; // Inverse gamma 2.4
+    }
+};
+
 
 void PixelChare::liveVizFunc(liveVizRequestMsg *m) 
 {        

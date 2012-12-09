@@ -46,6 +46,7 @@ class PixelChare : public CBase_PixelChare
         
         bool hit(int index, ray theRay, float &n);
         bool sphereHit(int index, ray theRay, float &n);
+        bool triHit(int index, ray theRay, float &n);
         void liveVizFunc(liveVizRequestMsg *m); 
         void pup(PUP::er &p);
         void ResumeFromSync();
