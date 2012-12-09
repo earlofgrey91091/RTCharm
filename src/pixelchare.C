@@ -252,6 +252,7 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
 
         float t = sqrtf(dist * dist);
         if (t <= 0.0f) continue;
+
         ray lightRay;
         lightRay.start = newStart;
         lightRay.dir = (1/t)*dist;
