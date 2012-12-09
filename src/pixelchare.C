@@ -38,6 +38,20 @@ PixelChare::PixelChare(int width, int height)
    if(DEBUG_CODE) CkPrintf("Chare created!\n");
 };
 
+
+float PixelChare::gamma(float c)
+{
+    if (c <= 0.0031308f)
+    {
+        return 12.92f * c; 
+    }
+    else
+    {
+        return 1.055f * powf(c, 0.4166667f) - 0.055f; // Inverse gamma 2.4
+    }
+};
+
+
 PixelChare::PixelChare(CkMigrateMessage *m)
 {
     __sdag_init();
@@ -180,6 +194,8 @@ bool PixelChare::hit(int index, ray theRay, float &n)
     return result;
 }
 
+
+
 bool PixelChare::sphereHit(int index, ray r, float &t)
 {
     // sphere hit function
@@ -283,17 +299,17 @@ void PixelChare::liveVizFunc(liveVizRequestMsg *m)
             c = &(imageBuff[imgIndex]);
             byte red, blue, green;
             if (pixelArray[imgIndex].r * 255.0 < 255.0) {
-                c->r = (byte)(pixelArray[imgIndex].r * 255.0);
+                c->r = (byte)(gamma(pixelArray[imgIndex].r) * 255.0);
             } else {
                 c->r = (byte)255.0;
             }
             if (pixelArray[imgIndex].g * 255.0 < 255.0) {
-                c->g = (byte)(pixelArray[imgIndex].g * 255.0);
+                c->g = (byte)(gamma(pixelArray[imgIndex].g) * 255.0);
             } else {
                 c->g = (byte)255.0;
             }
             if (pixelArray[imgIndex].b * 255.0 < 255.0) {
-                c->b = (byte)(pixelArray[imgIndex].b * 255.0);
+                c->b = (byte)(gamma(pixelArray[imgIndex].b) * 255.0);
             } else {
                 c->b = (byte)255.0;
             }
