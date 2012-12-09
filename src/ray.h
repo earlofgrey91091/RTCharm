@@ -15,6 +15,12 @@ class  vec3D
             this->z = 0;
         }
      
+        vec3D(float i)
+        {
+            this->x = i;
+            this->y = i;
+            this->z = i;
+        }
         vec3D(float x, float y, float z)
         {
             this->x = x;
@@ -42,6 +48,7 @@ class  vec3D
             p | z;
         }
 };
+
 
 inline vec3D operator + (const vec3D &v1, const vec3D &v2)
 {

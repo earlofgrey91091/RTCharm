@@ -1,7 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define ITERATIONS 100
+#define ITERATIONS 50
 #define SHAPES 2
 #define loc(x,y, width)  (x + (y*width))
 #define rnd(x) (x*rand() / RAND_MAX)
@@ -18,6 +18,8 @@
 #define ROT_RAD 0.034906585 //2*PI/180
 #define LIMIT 512 //boundry size of the viewable space
 #define GAMMA true
-#define ANTI_ALIASING true
-#define EXPOSURE true
+#define ANTI_ALIASING false
+#define EXPOSURE false
+#define SHAPE_DISP 3
+#define MOVE_SHAPE true
 #endif //COMMON_H
