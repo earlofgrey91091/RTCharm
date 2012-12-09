@@ -31,7 +31,7 @@ mainmodule main {
                 {
                     if(iterations%ROT_TIME == 0) {
                         rotateLights();
-                        pixel.runStep(emptyVec, myLights);
+                        pixel.runStep(/*emptyVec*/myShapes, myLights);
                     }
                     else {
                         pixel.run();

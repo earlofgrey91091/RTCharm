@@ -141,14 +141,22 @@ void Main::rotateLights()
         y = myLights[i].loc.y - LIMIT/2;
         myLights[i].loc.x = x*cos(ROT_RAD*(i+1)) + y*sin(ROT_RAD*(i+1)) + LIMIT/2;
         myLights[i].loc.y = x*sin(-(ROT_RAD*(i+1))) + y*cos(ROT_RAD*(i+1)) + LIMIT/2;
-    }/*
+    }
     for(int i = 0; i < myShapes.size(); i++)
     {
-        x = myShapes[i].loc.x - LIMIT/2;
-        y = myShapes[i].loc.y - LIMIT/2;
-        myShapes[i].loc.x = x*cos(ROT_RAD*(i+1)) + y*sin(ROT_RAD*(i+1)) + LIMIT/2;
-        myShapes[i].loc.y = x*sin(-(ROT_RAD*(i+1))) + y*cos(ROT_RAD*(i+1)) +  LIMIT/2;
-    }*/
+        
+        //x = myShapes[i].loc.x - LIMIT/2;
+        //y = myShapes[i].loc.y - LIMIT/2;
+        //myShapes[i].loc.x = x*cos(pow(-1.0, i)*ROT_RAD*(i+1)) + y*sin(pow(-1.0, i)*ROT_RAD*(i+1)) + LIMIT/2;
+        //myShapes[i].loc.y = x*sin(-pow(-1.0, i)*(ROT_RAD*(i+1))) + y*cos(pow(-1.0, i)*ROT_RAD*(i+1)) + LIMIT/2;
+        
+        myShapes[i].loc.x = myShapes[i].loc.x + (pow(-1.0, i)*(((i + 1)%20)%LIMIT));
+        myShapes[i].loc.y = myShapes[i].loc.y + (pow(-1.0, i)*(((i + 1)%20)%LIMIT));
+        myShapes[i].loc.z = myShapes[i].loc.z + (pow(-1.0, i)*(((i + 1)%20)%LIMIT));
+        myShapes[i].loc.x = fmod(myShapes[i].loc.x,(float)LIMIT) ;
+        myShapes[i].loc.y = fmod(myShapes[i].loc.y,(float)LIMIT) ;
+        myShapes[i].loc.z = fmod(myShapes[i].loc.z,(float)LIMIT) ;
+    }
 
 }
 
