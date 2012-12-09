@@ -11,8 +11,9 @@
 #define SPHERE 0
 #define PAUSE_TIME 5.0
 #define DEBUG_CODE false
+#define PI 3.14159265
 #define LB_TIME 5
-#define ROT_CONSTANT 2
-#define ROT_DEGREE 2
+#define ROT_TIME 2
+#define ROT_RAD 0.034906585 //2*PI/180
 
 #endif //COMMON_H

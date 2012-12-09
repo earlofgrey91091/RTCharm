@@ -29,8 +29,9 @@ mainmodule main {
                 CkPrintf("Start iteration %d\n", iterations);
                 if(iterations < ITERATIONS)
                 {
-                    if(iterations%ROTATE_LIGHT == 0) {
-                        
+                    if(iterations%ROT_TIME == 0) {
+                        rotateLights();
+                        pixel.runStep(emptyVec, myLights);
                     }
                     else {
                         pixel.run();

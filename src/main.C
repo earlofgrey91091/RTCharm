@@ -3,6 +3,7 @@
 #include "common.h"
 #include <stdio.h>
 #include "ray.h"
+#include "math.h"
 using namespace std;
 #include "main.h"
 //#include "ShapeMsg.h"
@@ -96,6 +97,20 @@ Main::Main(CkArgMsg* arg)
 }
 
 Main::Main(CkMigrateMessage *msg){ }
+
+
+//Rotates all lightsources about the Z-axis
+void Main::rotateLights()
+{
+    int x,y;
+    for(int i = 0; i < myLights.size(); i++)
+    {
+        x = myLights[i].loc.x;
+        y = myLights[i].loc.y;
+        myLights[i].loc.x = x*cos(ROT_RAD) + y*sin(ROT_RAD);
+        myLights[i].loc.y = x*sin(-ROT_RAD) + y*cos(ROT_RAD);
+    }
+}
 
 
 void Main::startVis()

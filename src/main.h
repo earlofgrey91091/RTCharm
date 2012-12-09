@@ -10,6 +10,7 @@ class Main : public CBase_Main {
         int count;
         int iterations;
         vector<Shape> myShapes;
+        vector<Shape> emptyVec;
         vector<lightSrc> myLights;
         Main(CkArgMsg* msg);
         Main(CkMigrateMessage *msg);
@@ -18,6 +19,7 @@ class Main : public CBase_Main {
         CProxy_PixelChare pixel;
         CkArrayOptions myOpts;
     private:
+        void rotateLights();
         
         
 };
