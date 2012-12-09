@@ -126,6 +126,12 @@ void PixelChare::doWork()
                 draw(index, viewRay, hitIndex, dist, coef, level); // this is wrong for multipl.e levels we should have DIFFRENT RAYS
             }
             while((coef > 0.0f) && (level < 10));
+
+            float exposure = -1.00f;
+            pixelArray[index].r = (1.0f - expf(pixelArray[index].r * exposure));
+            pixelArray[index].g = (1.0f - expf(pixelArray[index].g * exposure));
+            pixelArray[index].b = (1.0f - expf(pixelArray[index].b * exposure));
+
         }
     }
         
