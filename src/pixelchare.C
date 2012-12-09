@@ -95,47 +95,95 @@ void PixelChare::doWork()
     // pixels will go from position_x -> position_x + w -1
     // pixels will go from position_y -> position_x + h -1
     //CkPrintf("\nDoing work [%d][%d] [%d][%d]-[%d][%d]", thisIndex.x, thisIndex.y, position_x,position_y, position_x+w-1, position_y+h-1);
-    for(int i = 0; i < w; i++) 
+    
+
+
+    if(ANTI_ALIASING) {
+    for(int j = 0; j < w; j++) 
     {
-        for(int j = 0; j < h; j++) 
+        for(int i = 0; i < h; i++) 
         {
-            //CkPrintf("\n[%d][%d]", position_x + i, position_y + j);
-            //Creating ray passing through each pixel in this chare
+            
+            
             index = (j * w) + i;
             pixel_x = position_x + i;
             pixel_y = position_y + j;
-            ray viewRay(float(pixel_x), float(pixel_y), -1000.0f, 0.0f, 0.0f, 1.0f);
-            //see what the closest hit is             
-            coef = 1.0f;
-            level = 0;
-            pixelArray[index].r = 0;
-            pixelArray[index].g = 0;
-            pixelArray[index].b = 0;
-            do
-            {
-                hitIndex = shoot(viewRay, dist);
-                //DRAW!
-                if(hitIndex == NEGINF) break;
-                if(DEBUG_CODE)
-                {
-                    CkPrintf("******************************************\n");
-                    CkPrintf(" Lucky pixel = [%d, %d] hitindex = %d\n", pixel_x, pixel_y, hitIndex);
-                    CkPrintf("level = %d\n", level);
-                    CkPrintf("******************************************\n");
-                }
-                draw(index, viewRay, hitIndex, dist, coef, level); // this is wrong for multipl.e levels we should have DIFFRENT RAYS
+	    float red = 0, green = 0, blue = 0; 
+   	    for(float fragmentx = pixel_x; fragmentx < pixel_x + 1.0f; fragmentx += 0.5f)
+   		for(float fragmenty = pixel_y; fragmenty < pixel_y + 1.0f; fragmenty += 0.5f)
+  		 {
+     			ray viewRay(float(fragmentx), float(fragmenty),-1000.0f, 0.0f, 0.0f, 1.0f);           
+            		coef = 1.0f;
+		 	float sampleRatio=0.25f;
+            		level = 0;
+            		pixelArray[index].r = 0;
+            		pixelArray[index].g = 0;
+            		pixelArray[index].b = 0;
+            		do
+            		{
+                		hitIndex = shoot(viewRay, dist);
+                
+                		if(hitIndex == NEGINF) break;
+                		if(DEBUG_CODE)
+                		{
+                    			CkPrintf("******************************************\n");
+                    			CkPrintf(" Lucky pixel = [%d, %d] hitindex = %d\n", pixel_x, pixel_y, hitIndex);
+                    			CkPrintf("level = %d\n", level);
+                    			CkPrintf("******************************************\n");
+                		}
+                		draw(index, viewRay, hitIndex, dist, coef, level); 
+		 	} while((coef > 0.0f) && (level < 10));
+	
+                    float exposure = -1.00f;
+                    pixelArray[index].r = (1.0f - expf(pixelArray[index].r * exposure));
+                    pixelArray[index].g = (1.0f - expf(pixelArray[index].g * exposure));
+                    pixelArray[index].b = (1.0f - expf(pixelArray[index].b * exposure));
+		    pixelArray[index].r += pixelArray[index].r * sampleRatio;
+                    pixelArray[index].g += pixelArray[index].g * sampleRatio;
+		    pixelArray[index].b += pixelArray[index].b * sampleRatio;
+     		 }      
+
             }
-            while((coef > 0.0f) && (level < 10));
-            if(EXPOSURE)
-            {
-                float exposure = -1.00f;
-                pixelArray[index].r = (1.0f - expf(pixelArray[index].r * exposure));
-                pixelArray[index].g = (1.0f - expf(pixelArray[index].g * exposure));
-                pixelArray[index].b = (1.0f - expf(pixelArray[index].b * exposure));
-            }
-        }
-    }
+       }
+   }
+
+
+    else {
+    	for(int i = 0; i < w; i++) 
+    	{
+        	for(int j = 0; j < h; j++) 
+        	{
+            		//CkPrintf("\n[%d][%d]", position_x + i, position_y + j);
+            		//Creating ray passing through each pixel in this chare
+            		index = (j * w) + i;
+            		pixel_x = position_x + i;
+            		pixel_y = position_y + j;
+            		ray viewRay(float(pixel_x), float(pixel_y), -1000.0f, 0.0f, 0.0f, 1.0f);
+            		//see what the closest hit is             
+            		coef = 1.0f;
+            		level = 0;
+            		pixelArray[index].r = 0;
+            		pixelArray[index].g = 0;
+            		pixelArray[index].b = 0;
+            		do
+            		{
+                		hitIndex = shoot(viewRay, dist);
+                		//DRAW!
+                		if(hitIndex == NEGINF) break;
+                		if(DEBUG_CODE)
+                		{
+                    			CkPrintf("******************************************\n");
+                    			CkPrintf(" Lucky pixel = [%d, %d] hitindex = %d\n", pixel_x, pixel_y, hitIndex);
+                    			CkPrintf("level = %d\n", level);
+                    			CkPrintf("******************************************\n");
+                		}
+                		draw(index, viewRay, hitIndex, dist, coef, level); // this is wrong for multipl.e levels we should have DIFFRENT RAYS
+            		}
+            		while((coef > 0.0f) && (level < 10));
+        	}
+    	}
         
+    }
 }
 
 void PixelChare::ResumeFromSync()
@@ -259,7 +307,6 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
 
         float t = sqrtf(dist * dist);
         if (t <= 0.0f) continue;
-
         ray lightRay;
         lightRay.start = newStart;
         lightRay.dir = (1/t)*dist;
