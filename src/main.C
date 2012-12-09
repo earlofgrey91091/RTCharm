@@ -80,13 +80,10 @@ Main::Main(CkArgMsg* arg)
     
     l.print();
     CkPrintf("\n*************\n");
-    for(int i = 0; i<size; i++)
+    /*for(int i = 0; i<size; i++)
     {
-        //myShapes
-    
         //sp[i].printShape();
         //s[i] = new Sphere();
-        
     }
     Shape s(100.0, SPHERE, 233.0, 290.0, 0.0, 1.0, 0.0, 0.0, 1.0);
     Shape s2(100.0, SPHERE, 407.0, 290.0, 0.0, 0.5, 1.0, 0.0, 0.0);
@@ -99,9 +96,11 @@ Main::Main(CkArgMsg* arg)
     //lightSrc l2(1.0, 1.0, 1.0, -100.0, 0.0, -100.0);
     //lightSrc l3(1.0, 1.0, 1.0, 100.0, 100.0, -100.0);
     
-    Shape s(100.0, 0, 233.0, 290.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-    Shape s2(100.0, 0, 407.0, 290.0, 0.0, 0.5, 1.0, 0.0, 0.0);
-    Shape s3(100.0, 0, 320.0, 140.0, 0.0, 0.5, 0.0, 1.0, 0.0);
+    Shape s(100.0, SPHERE, 233.0, 290.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+    Shape s2(100.0, SPHERE, 407.0, 290.0, 0.0, 0.5, 1.0, 0.0, 0.0);
+    Shape s3(100.0, SPHERE, 320.0, 140.0, 0.0, 0.5, 0.0, 1.0, 0.0);
+    Shape s4(30.0, SPHERE, 50.0, 50.0, 50.0, 0.5, 0.0, 1.0, 1.0);
+    Shape s5(60.0, SPHERE, 400.0, 400.0, 400.0, 0.5, 1.0, 0.0, 1.0);
     
     s.print();
     s2.print();
@@ -110,11 +109,17 @@ Main::Main(CkArgMsg* arg)
     myShapes.push_back(s);
     myShapes.push_back(s2);
     myShapes.push_back(s3);
-    //myShapes.push_back(s4);
-    //myShapes.push_back(s5);
+    myShapes.push_back(s4);
+    myShapes.push_back(s5);
     
     myLights.push_back(l);
     myLights.push_back(l1);
+    
+    for (int i=0; i<myShapes.size(); i++)
+    {
+        Direction d(pow(-1.0, i));
+        shapeDirection.push_back(d);
+    }
     l.print();
     l1.print();
     //myLights.push_back(l2);
@@ -149,14 +154,16 @@ void Main::rotateLights()
         //y = myShapes[i].loc.y - LIMIT/2;
         //myShapes[i].loc.x = x*cos(pow(-1.0, i)*ROT_RAD*(i+1)) + y*sin(pow(-1.0, i)*ROT_RAD*(i+1)) + LIMIT/2;
         //myShapes[i].loc.y = x*sin(-pow(-1.0, i)*(ROT_RAD*(i+1))) + y*cos(pow(-1.0, i)*ROT_RAD*(i+1)) + LIMIT/2;
-        
-        myShapes[i].loc.x = myShapes[i].loc.x + (pow(-1.0, i)*(((i + 1)%20)%LIMIT));
-        myShapes[i].loc.y = myShapes[i].loc.y + (pow(-1.0, i)*(((i + 1)%20)%LIMIT));
-        myShapes[i].loc.z = myShapes[i].loc.z + (pow(-1.0, i)*(((i + 1)%20)%LIMIT));
-        myShapes[i].loc.x = fmod(myShapes[i].loc.x,(float)LIMIT) ;
+        myShapes[i].loc.x = myShapes[i].loc.x + (shapeDirection[i].x_dir*(((i + 1)%SHAPE_DISP)%LIMIT));
+        myShapes[i].loc.y = myShapes[i].loc.y + (shapeDirection[i].y_dir*(((i + 1)%SHAPE_DISP)%LIMIT));
+        myShapes[i].loc.z = myShapes[i].loc.z + (shapeDirection[i].z_dir*(((i + 1)%SHAPE_DISP)%LIMIT));
+        /*myShapes[i].loc.x = fmod(myShapes[i].loc.x,(float)LIMIT) ;
         myShapes[i].loc.y = fmod(myShapes[i].loc.y,(float)LIMIT) ;
-        myShapes[i].loc.z = fmod(myShapes[i].loc.z,(float)LIMIT) ;
-    }
+        myShapes[i].loc.z = fmod(myShapes[i].loc.z,(float)LIMIT) ;*/
+        (myShapes[i].loc.x + myShapes[i].size > LIMIT || myShapes[i].loc.x-myShapes[i].size < 0)? shapeDirection[i].x_dir*=-1:shapeDirection[i].x_dir*=1;
+        (myShapes[i].loc.y + myShapes[i].size > LIMIT || myShapes[i].loc.y-myShapes[i].size < 0) ? shapeDirection[i].y_dir*=-1:shapeDirection[i].y_dir*=1;
+        (myShapes[i].loc.z + myShapes[i].size > LIMIT || myShapes[i].loc.y-myShapes[i].size < 0) ? shapeDirection[i].z_dir*=-1:shapeDirection[i].z_dir*=1;
+   }
 
 }
 

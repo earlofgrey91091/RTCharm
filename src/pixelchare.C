@@ -126,6 +126,13 @@ void PixelChare::doWork()
                 draw(index, viewRay, hitIndex, dist, coef, level); // this is wrong for multipl.e levels we should have DIFFRENT RAYS
             }
             while((coef > 0.0f) && (level < 10));
+            if(EXPOSURE)
+            {
+                float exposure = -1.00f;
+                pixelArray[index].r = (1.0f - expf(pixelArray[index].r * exposure));
+                pixelArray[index].g = (1.0f - expf(pixelArray[index].g * exposure));
+                pixelArray[index].b = (1.0f - expf(pixelArray[index].b * exposure));
+            }
         }
     }
         
@@ -252,6 +259,7 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
 
         float t = sqrtf(dist * dist);
         if (t <= 0.0f) continue;
+
         ray lightRay;
         lightRay.start = newStart;
         lightRay.dir = (1/t)*dist;
@@ -299,17 +307,20 @@ void PixelChare::liveVizFunc(liveVizRequestMsg *m)
             c = &(imageBuff[imgIndex]);
             byte red, blue, green;
             if (pixelArray[imgIndex].r * 255.0 < 255.0) {
-                c->r = (byte)(gamma(pixelArray[imgIndex].r) * 255.0);
+                if(GAMMA) c->r = (byte)(gamma(pixelArray[imgIndex].r) * 255.0);
+                else  c->r = (byte)(pixelArray[imgIndex].r * 255.0);
             } else {
                 c->r = (byte)255.0;
             }
             if (pixelArray[imgIndex].g * 255.0 < 255.0) {
-                c->g = (byte)(gamma(pixelArray[imgIndex].g) * 255.0);
+                if(GAMMA) c->g = (byte)(gamma(pixelArray[imgIndex].g) * 255.0);
+                else c->g = (byte)(pixelArray[imgIndex].g * 255.0);
             } else {
                 c->g = (byte)255.0;
             }
             if (pixelArray[imgIndex].b * 255.0 < 255.0) {
-                c->b = (byte)(gamma(pixelArray[imgIndex].b) * 255.0);
+                if(GAMMA) c->b = (byte)(gamma(pixelArray[imgIndex].b) * 255.0);
+                else c->b = (byte)(pixelArray[imgIndex].b * 255.0);
             } else {
                 c->b = (byte)255.0;
             }

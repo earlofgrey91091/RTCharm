@@ -16,4 +16,9 @@
 #define ROT_TIME 1
 #define ROT_RAD 0.034906585 //2*PI/180
 #define LIMIT 512 //boundry size of the viewable space
+#define GAMMA true
+#define ANTI_ALIASING true
+#define EXPOSURE true
+#define SHAPE_DISP 3
+#define MOVE_SHAPE false
 #endif //COMMON_H

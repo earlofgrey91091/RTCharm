@@ -63,6 +63,32 @@ class  vec3D
         }
 };
 
+class Direction
+{
+    public:
+    int x_dir, y_dir, z_dir;
+    
+    Direction()
+    {
+        this->x_dir = 0;
+        this->y_dir = 0;
+        this->z_dir = 0;
+    }
+    Direction(int i)
+    {
+        this->x_dir = i;
+        this->y_dir = i;
+        this->z_dir = i;
+    }
+    void pup(PUP::er &p)
+    {
+        p | x_dir;
+        p | y_dir;
+        p | z_dir;
+    }
+    
+};
+
 inline coord3D operator + (const coord3D &p, const vec3D &v)
 {
     coord3D p2;

@@ -11,6 +11,7 @@ class Main : public CBase_Main {
         int iterations;
         vector<Shape> myShapes;
         vector<Shape> emptyVec;
+        vector<Direction> shapeDirection;
         vector<lightSrc> myLights;
         Main(CkArgMsg* msg);
         Main(CkMigrateMessage *msg);
