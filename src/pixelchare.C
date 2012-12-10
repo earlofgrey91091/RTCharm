@@ -81,12 +81,14 @@ PixelChare::~PixelChare()
 
 void PixelChare::doWork()
 {
+    //CkPrintf("doingwork\n");
     if(ANTI_ALIASING) antiAliasWork();
     else normalWork();
 }
 
 void PixelChare::antiAliasWork()
 {
+    //CkPrintf("antialiaswork\n");
     int pixel_x, pixel_y, hitIndex, level, index;
     int position_x = thisIndex.x * w;
     int position_y = thisIndex.y * h;
@@ -125,32 +127,35 @@ void PixelChare::antiAliasWork()
     }
 }
 
-void PixelChare:: clearPixel(int index)
+void PixelChare::clearPixel(int index)
 {
     pixelArray[index].r = 0;
     pixelArray[index].g = 0;
     pixelArray[index].b = 0;
 }
 
-void PixelChare:: exposePixel(int index)
+void PixelChare::exposePixel(int index)
 {
     pixelArray[index].r = (1.0f - expf(pixelArray[index].r * EXPOSURE_CONST));
     pixelArray[index].g = (1.0f - expf(pixelArray[index].g * EXPOSURE_CONST));
     pixelArray[index].b = (1.0f - expf(pixelArray[index].b * EXPOSURE_CONST));
 }
 
-void PixelChare:: normalWork()
+
+
+void PixelChare::normalWork()
 {
+        //CkPrintf("normalwork\n");
     int pixel_x, pixel_y, hitIndex, level, index;
     int position_x = thisIndex.x * w;
     int position_y = thisIndex.y * h;
-    float dist, coef /*, correction*/;
+    float dist, coef; //, correction;
 
     for(int i = 0; i < w; i++) 
     {
         for(int j = 0; j < h; j++) 
         {
-            //CkPrintf("\n[%d][%d]", position_x + i, position_y + j);
+            //if(thisIndex.x == 0 && thisIndex.y == 0) CkPrintf("[%d][%d]\n", position_x + i, position_y + j);
             //Creating ray passing through each pixel in this chare
             index = (j * w) + i;
             pixel_x = position_x + i;
@@ -163,10 +168,11 @@ void PixelChare:: normalWork()
             
             do
             {
-                /*correction = sqrtf(1/(pow(viewRay.dir.x, 2)  + pow(viewRay.dir.y, 2) + pow(viewRay.dir.z, 2)));
-                viewRay.dir.x *= correction;
-                viewRay.dir.y *= correction;
-                viewRay.dir.z *= correction;*/
+                //correction = sqrtf(1/(pow(viewRay.dir.x, 2)  + pow(viewRay.dir.y, 2) + pow(viewRay.dir.z, 2)));
+                //viewRay.dir.x *= correction;
+                //viewRay.dir.y *= correction;
+                //viewRay.dir.z *= correction;
+                //if(thisIndex.x == 0 && thisIndex.y == 0) CkPrintf("in while before shoot\n");
                 hitIndex = shoot(viewRay, dist);
                 if(hitIndex == NEGINF) break;
                 if(DEBUG_CODE)
@@ -176,7 +182,9 @@ void PixelChare:: normalWork()
                     CkPrintf("level = %d\n", level);
                     CkPrintf("******************************************\n");
                 }
-                draw(index, viewRay, hitIndex, dist, coef, level); 
+                //if(thisIndex.x == 0 && thisIndex.y == 0) CkPrintf("in while before draw\n");
+                draw(index, viewRay, hitIndex, dist, coef, level);  
+                //if(thisIndex.x == 0 && thisIndex.y == 0) CkPrintf("in while after draw on pixel %d %d, and iteration %d with level %d and coeff %f \n",i,j,iteration, level, coef);
             }
             while((coef > 0.0f) && (level < 10));
             if(EXPOSURE)exposePixel(index);
@@ -294,7 +302,7 @@ bool PixelChare::triHit(int index, ray r, float &t)
     vec3D pvec = cross(r.dir, edge2);
     float det = edge1 * pvec;
 
-    CkPrintf("det = %f \n", det);
+    //CkPrintf("det = %f \n", det);
 
     if (det == 0) 
     {
@@ -304,7 +312,7 @@ bool PixelChare::triHit(int index, ray r, float &t)
     vec3D tvec = r.start - (myShapes[index].v0 + myShapes[index].loc);
     float u = (tvec * pvec) * invDet;
    
-    CkPrintf("u = %f \n", u);  
+    //CkPrintf("u = %f \n", u);  
 
     if (u < 0 || u > 1) 
     {
@@ -313,7 +321,7 @@ bool PixelChare::triHit(int index, ray r, float &t)
     vec3D qvec = cross(tvec, edge1);
     float v = (r.dir * qvec) * invDet;
 
-    CkPrintf("v = %f and u+v = %f \n", v , v+u);
+    //CkPrintf("v = %f and u+v = %f \n", v , v+u);
 
     if (v < 0 || u + v > 1) 
     {
@@ -321,67 +329,9 @@ bool PixelChare::triHit(int index, ray r, float &t)
     }
     
     t = (edge2*qvec) * invDet;
-    CkPrintf("Tri is true\n");
+    //CkPrintf("Tri is true\n");
     return true;
 
-/*
-bool intersect(const Ray<float> &r, IsectData &isectData) const
-    {
-#ifdef MOLLER_TRUMBORE
-        Vec3f edge1 = v1 - v0;
-        Vec3f edge2 = v2 - v0;
-        Vec3f pvec = cross(r.dir, edge2);
-        float det = dot(edge1, pvec);
-        if (det == 0) return false;
-        float invDet = 1 / det;
-        Vec3f tvec = r.orig - v0;
-        isectData.u = dot(tvec, pvec) * invDet;
-        if (isectData.u < 0 || isectData.u > 1) return false;
-        Vec3f qvec = cross(tvec, edge1);
-        isectData.v = dot(r.dir, qvec) * invDet;
-        if (isectData.v < 0 || isectData.u + isectData.v > 1) return false;
-        isectData.t = dot(edge2, qvec) * invDet;
-#else
-        Vec3f v0v1 = v1 - v0;
-        Vec3f v0v2 = v2 - v0;
-        Vec3f N = cross(v0v1, v0v2);
-        float nDotRay = dot(N, r.dir);
-        if (nDotRay == 0 || (nDotRay > 0 && isSingledSided)) return false; // ray parallel to triangle 
-        float d = dot(N, v0);
-        float t = -(dot(N, r.orig) + d) / nDotRay;
-        if (t < 0) return false; // ray behind triangle
-
-        // inside-out test
-        Vec3f Phit = r(t);
-
-        // inside-out test edge0
-        Vec3f v0p = Phit - v0;
-        float v = dot(N, cross(v0v1, v0p));
-        if (v < 0) return false; // P outside triangle
-
-        // inside-out test edge1
-        Vec3f v1p = Phit - v1;
-        Vec3f v1v2 = v2 - v1;
-        float w = dot(N, cross(v1v2, v1p));
-        if (w < 0) return false; // P outside triangle
-
-        // inside-out test edge2
-        Vec3f v2p = Phit - v2;
-        Vec3f v2v0 = v0 - v2;
-        float u = dot(N, cross(v2v0, v2p));
-        if (u < 0) return false; // P outside triangle
-
-        float nlen2 = dot(N, N);
-        isectData.t = t;
-        isectData.u = u / nlen2;
-        isectData.v = v / nlen2;
-#endif
-        return true;
-    }
-
-
-
-*/
 }
 
 void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coef, int &level)
@@ -389,7 +339,7 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
     vec3D newStart = theRay.start + ti * theRay.dir;
     vec3D n; 
     vec3D dist;
-    float det = n * n;
+    float det;
     float dummy;
     float lambert;
     float magDist;
@@ -398,17 +348,21 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
     //figuring out the normal vector at the point of intersection
     if(myShapes[hitIndex].type == TRIANGLE)
     {
-        /*if(abs(theRay.dir * myShapes[hitIndex].N / mag(theRay.dir)) < COS_ENOUGH)
-            n = myShapes[hitIndex].N;
-        else n = myShapes[hitIndex].N * -1;*/
+        //if(abs(theRay.dir * myShapes[hitIndex].N / mag(theRay.dir)) < COS_ENOUGH)
+        //    n = myShapes[hitIndex].N;
+        //else n = myShapes[hitIndex].N * -1;*
         pixelArray[index].r = 255;
         pixelArray[index].g = 255;
         pixelArray[index].b = 255; 
     }
     else n = newStart - myShapes[hitIndex].loc;
-    if (det == 0.0f) return; // if the ray is parallel with the viewer
-
-    det = 1.0f / sqrtf(magDist);
+    det = n * n;
+    if (det == 0.0f)
+    {
+        level = 10;
+        return; // if the ray is parallel with the viewer
+    }
+    det = 1.0f / sqrtf(det);
     n = det * n;
 
     

@@ -180,7 +180,9 @@ class Shape
        
         vec3D loc;
         float size;
-        vec3D v0, v1, v2;
+        vec3D v0;
+        vec3D v1;
+        vec3D v2;
         vec3D N;
         float reflection;
         float red, green, blue;
@@ -208,6 +210,19 @@ class Shape
             this->red = r;
             this->green = g;
             this->blue = b;
+///
+            this->v0.x = 0;
+            this->v0.y = 0;
+            this->v0.z = 0;
+            this->v1.x = 0;
+            this->v1.y = 0;
+            this->v1.z = 0;
+            this->v2.x = 0;
+            this->v2.y = 0;
+            this->v2.z = 0;
+            this->N.x = 0;
+            this->N.y = 0;
+            this->N.z = 0;
 
         }
         
@@ -238,6 +253,8 @@ class Shape
             this->red = r;
             this->green = g;
             this->blue = b;
+///
+            this->size = 0;
         }
 
         void print()
@@ -257,10 +274,10 @@ class Shape
             p | red;
             p | green;
             p | blue;
-            p | v0;
+            /*p | v0;
             p | v1;
             p | v2;
-            p | N;
+            p | N;*/
         }
     
 };
