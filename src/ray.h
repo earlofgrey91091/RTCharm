@@ -257,6 +257,10 @@ class Shape
             p | red;
             p | green;
             p | blue;
+            p | v0;
+            p | v1;
+            p | v2;
+            p | N;
         }
     
 };

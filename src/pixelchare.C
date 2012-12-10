@@ -285,19 +285,41 @@ bool PixelChare::triHit(int index, ray r, float &t)
     // triangle hit function
         //CkPrintf("int tri\n");   
     bool one = true,two= true, three = true; 
-    vec3D edge1 = myShapes[index].v0 - myShapes[index].v0;
-    vec3D edge2 = myShapes[index].v0 - myShapes[index].v0;
+
+    //CkPrintf("v1 = {%f, %f, %f} ", myShapes[index].v1.x, myShapes[index].v1.y, myShapes[index].v1.z);
+    //CkPrintf("v1 = {%f, %f, %f} \n", myShapes[index].v0.x, myShapes[index].v0.y, myShapes[index].v0.z);
+
+    vec3D edge1 = myShapes[index].v1 - myShapes[index].v0;
+    vec3D edge2 = myShapes[index].v2 - myShapes[index].v0;
     vec3D pvec = cross(r.dir, edge2);
     float det = edge1 * pvec;
-    if (det == 0) return false; // ray and plane are parallel
 
+    CkPrintf("det = %f \n", det);
+
+    if (det == 0) 
+    {
+        return false; // ray and plane are parallel
+    }
     float invDet = 1 / det;
     vec3D tvec = r.start - (myShapes[index].v0 + myShapes[index].loc);
     float u = (tvec * pvec) * invDet;
-    if (u < 0 || u > 1) return false; //out of bounds
+   
+    CkPrintf("u = %f \n", u);  
+
+    if (u < 0 || u > 1) 
+    {
+        return false; //out of bounds
+    }
     vec3D qvec = cross(tvec, edge1);
     float v = (r.dir * qvec) * invDet;
-    if (v < 0 || u + v > 1) return false;//out of bounds
+
+    CkPrintf("v = %f and u+v = %f \n", v , v+u);
+
+    if (v < 0 || u + v > 1) 
+    {
+        return false;//out of bounds
+    }
+    
     t = (edge2*qvec) * invDet;
     CkPrintf("Tri is true\n");
     return true;
