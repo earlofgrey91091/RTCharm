@@ -30,4 +30,4 @@ clean:
 	rm -f myvalg_txt.*****
 	rm -f pixelchare charmrun 
 test:
-	./charmrun pixelchare 512 512 +p4 ++local ++server ++server-port 1234
+	./charmrun pixelchare 512 512 8 20 +p4 ++local ++server ++server-port 1234

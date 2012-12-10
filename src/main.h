@@ -7,12 +7,6 @@
 class Main : public CBase_Main {
     public:
         Main_SDAG_CODE;
-        int count;
-        int iterations;
-        vector<Shape> myShapes;
-        vector<Shape> sendShape;
-        vector<vec3D> shapeDirection;
-        vector<lightSrc> myLights;
         Main(CkArgMsg* msg);
         Main(CkMigrateMessage *msg);
         //void done();
@@ -20,7 +14,18 @@ class Main : public CBase_Main {
         CProxy_PixelChare pixel;
         CkArrayOptions myOpts;
     private:
+        int count;
+        int iterations;
+        int chareDimension;
+        int numSpheres;
+        int image_w;
+        int image_h;
+        vector<Shape> myShapes;
+        vector<Shape> sendShape;
+        vector<vec3D> shapeDirection;
+        vector<lightSrc> myLights;
         void rotateLights();
+        
         
         
 };

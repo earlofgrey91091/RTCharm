@@ -13,9 +13,6 @@ using namespace std;
 
 
 extern /*readonly*/ CProxy_Main mainProxy;
-extern /*readonly*/ int Total_iterations;
-extern /*readonly*/ int chareDimension;
-
 
 PixelChare::PixelChare(int width, int height) 
 {

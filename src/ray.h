@@ -56,6 +56,12 @@ inline vec3D operator + (const vec3D &v1, const vec3D &v2)
     return v;
 }
 
+inline vec3D operator + (const vec3D &v1, float val)
+{
+    vec3D v(v1.x + val, v1.y + val, v1.z + val );
+    return v;
+}
+
 inline vec3D operator * (float c, const vec3D &v)
 {
     vec3D v2( v.x * c, v.y * c, v.z * c );
