@@ -23,4 +23,6 @@
 #define SHAPE_DISP 3
 #define MOVE_SHAPE false
 #define COS_ENOUGH 0.70710678118
+#define EXPOSURE_CONST -1.00f
+#define SAMPLE_RATIO 0.25f
 #endif //COMMON_H

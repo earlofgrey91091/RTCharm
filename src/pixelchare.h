@@ -32,21 +32,29 @@ class PixelChare : public CBase_PixelChare
         double *tmpBuffer;
         int x, y, w, h;
         int iteration;
+
+        void doWork();
+        void antiAliasWork();
+        void normalWork();
+        void clearPixel(int index);
+        void exposePixel(int index);
+        int shoot(ray viewRay, float &dist);
+        void draw(int index, ray &theRay, int hitIndex, float dist, float &coef, int &level);
+        float gamma(float);
+        bool hit(int index, ray theRay, float &n);
+        bool sphereHit(int index, ray theRay, float &n);
+        bool triHit(int index, ray theRay, float &n);
+
     public:
         PixelChare_SDAG_CODE;    
         PixelChare(int width, int height); 
         PixelChare(CkMigrateMessage *m);
         ~PixelChare(); 
-        void doWork();
+        
+
         void startStep(vector<Shape> shapes, vector<lightSrc> lights);
         void runStep(vector<Shape> shapes, vector<lightSrc> lights);
-        int shoot(ray viewRay, float &dist);
-        void draw(int index, ray &theRay, int hitIndex, float dist, float &coef, int &level);
-        float gamma(float);
         
-        bool hit(int index, ray theRay, float &n);
-        bool sphereHit(int index, ray theRay, float &n);
-        bool triHit(int index, ray theRay, float &n);
         void liveVizFunc(liveVizRequestMsg *m); 
         void pup(PUP::er &p);
         void ResumeFromSync();

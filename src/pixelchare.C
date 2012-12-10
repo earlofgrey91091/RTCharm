@@ -22,7 +22,7 @@ PixelChare::PixelChare(int width, int height)
     //CkPrintf("\nPixelChare [%d][%d]", thisIndex.x, thisIndex.y);
     __sdag_init();
     usesAtSync = CmiTrue;
-	setMigratable(CmiTrue);
+    setMigratable(CmiTrue);
     iteration = 0;
     w = width;
     h = height;
@@ -61,17 +61,17 @@ PixelChare::PixelChare(CkMigrateMessage *m)
 void PixelChare::pup(PUP::er &p)
 {
     CBase_PixelChare::pup(p);
-	__sdag_pup(p);
-	p|myShapes;
-	p|myLights;
-	p|pixelArray;
-	p|iteration;
-	p|x;
-	p|y;
-	p|w;
-	p|h;
-	if (p.isUnpacking()) tmpBuffer = new double[w*h];
-	p(tmpBuffer,w*h); 
+    __sdag_pup(p);
+    p|myShapes;
+    p|myLights;
+    p|pixelArray;
+    p|iteration;
+    p|x;
+    p|y;
+    p|w;
+    p|h;
+    if (p.isUnpacking()) tmpBuffer = new double[w*h];
+    p(tmpBuffer,w*h); 
 }
 
 PixelChare::~PixelChare() 
@@ -81,123 +81,106 @@ PixelChare::~PixelChare()
 
 void PixelChare::doWork()
 {
-    //Do work
-    //Generate ray for each pixel in this pixel chare.
-    int pixel_x;
-    int pixel_y;
+    if(ANTI_ALIASING) antiAliasWork();
+    else normalWork();
+}
+
+void PixelChare::antiAliasWork()
+{
+    int pixel_x, pixel_y, hitIndex, level, index;
     int position_x = thisIndex.x * w;
     int position_y = thisIndex.y * h;
-    float dist;
-    int hitIndex;
-    float coef = 1.0f;
-    int level = 0;
-    int index;
-    float correction;
-    // pixels will go from position_x -> position_x + w -1
-    // pixels will go from position_y -> position_x + h -1
-    //CkPrintf("\nDoing work [%d][%d] [%d][%d]-[%d][%d]", thisIndex.x, thisIndex.y, position_x,position_y, position_x+w-1, position_y+h-1);
-    
-
-
-    if(ANTI_ALIASING) {
+    float dist, coef /*, correction*/;
     for(int j = 0; j < w; j++) 
     {
         for(int i = 0; i < h; i++) 
         {
-            
-            
             index = (j * w) + i;
             pixel_x = position_x + i;
             pixel_y = position_y + j;
-            float red = 0, green = 0, blue = 0;
-            for(float fragmentx = pixel_x; fragmentx < pixel_x + 1.0f; fragmentx += 0.5f)
+            for(float fragmentx = pixel_x; fragmentx < pixel_x + 1.0f; fragmentx += SAMPLE_RATIO * 2)
             {
-                for(float fragmenty = pixel_y; fragmenty < pixel_y + 1.0f; fragmenty += 0.5f)
+                for(float fragmenty = pixel_y; fragmenty < pixel_y + 1.0f; fragmenty += SAMPLE_RATIO * 2)
                 {
+                    clearPixel();
                     ray viewRay(float(fragmentx), float(fragmenty),-1000.0f, 0.0f, 0.0f, 1.0f);
-            		coef = 1.0f;
-                    float sampleRatio=0.25f;
-            		level = 0;
-            		pixelArray[index].r = 0;
-            		pixelArray[index].g = 0;
-            		pixelArray[index].b = 0;
-            		do
-            		{
-                		hitIndex = shoot(viewRay, dist);
-                
-                		if(hitIndex == NEGINF) break;
-                		if(DEBUG_CODE)
-                		{
-                    			CkPrintf("******************************************\n");
-                    			CkPrintf(" Lucky pixel = [%d, %d] hitindex = %d\n", pixel_x, pixel_y, hitIndex);
-                    			CkPrintf("level = %d\n", level);
-                    			CkPrintf("******************************************\n");
-                		}
-                		draw(index, viewRay, hitIndex, dist, coef, level); 
+                    
+                    coef = 1.0f;
+                    level = 0;
+                    do
+                    {
+                        hitIndex = shoot(viewRay, dist);
+                        if(hitIndex == NEGINF) break;
+                        draw(index, viewRay, hitIndex, dist, coef, level); 
                     } while((coef > 0.0f) && (level < 10));
-                    if(EXPOSURE){
-                        float exposure = -1.00f;
-                        pixelArray[index].r = (1.0f - expf(pixelArray[index].r * exposure));
-                        pixelArray[index].g = (1.0f - expf(pixelArray[index].g * exposure));
-                        pixelArray[index].b = (1.0f - expf(pixelArray[index].b * exposure));
-                    }
-                    pixelArray[index].r += pixelArray[index].r * sampleRatio;
-                    pixelArray[index].g += pixelArray[index].g * sampleRatio;
-                    pixelArray[index].b += pixelArray[index].b * sampleRatio;
+                    
+                    if(EXPOSURE)exposePixel(index);
+                    //average in samples
+                    pixelArray[index].r += pixelArray[index].r * SAMPLE_RATIO;
+                    pixelArray[index].g += pixelArray[index].g * SAMPLE_RATIO;
+                    pixelArray[index].b += pixelArray[index].b * SAMPLE_RATIO;
                 }
             }
-
         }
     }
-    }
+}
 
+void PixelChare:: clearPixel(int index)
+{
+    pixelArray[index].r = 0;
+    pixelArray[index].g = 0;
+    pixelArray[index].b = 0;
+}
 
-    else {
-    	for(int i = 0; i < w; i++) 
-    	{
-        	for(int j = 0; j < h; j++) 
-        	{
-            		//CkPrintf("\n[%d][%d]", position_x + i, position_y + j);
-            		//Creating ray passing through each pixel in this chare
-            		index = (j * w) + i;
-            		pixel_x = position_x + i;
-            		pixel_y = position_y + j;
-            		ray viewRay(float(pixel_x), float(pixel_y), -1000.0f, 0.0f, 0.0f, 1.0f);
-            		//see what the closest hit is             
-            		coef = 1.0f;
-            		level = 0;
-            		pixelArray[index].r = 0;
-            		pixelArray[index].g = 0;
-            		pixelArray[index].b = 0;
-            		do
-            		{
-                		correction = sqrtf(1/(pow(viewRay.dir.x, 2)  + pow(viewRay.dir.y, 2) + pow(viewRay.dir.z, 2)));
-                        viewRay.dir.x *= correction;
-                        viewRay.dir.y *= correction;
-                        viewRay.dir.z *= correction;
-                        hitIndex = shoot(viewRay, dist);
-                		//DRAW!
-                		if(hitIndex == NEGINF) break;
-                		if(DEBUG_CODE)
-                		{
-                    			CkPrintf("******************************************\n");
-                    			CkPrintf(" Lucky pixel = [%d, %d] hitindex = %d\n", pixel_x, pixel_y, hitIndex);
-                    			CkPrintf("level = %d\n", level);
-                    			CkPrintf("******************************************\n");
-                		}
-                		draw(index, viewRay, hitIndex, dist, coef, level); // this is wrong for multipl.e levels we should have DIFFRENT RAYS
-            		}
-            		while((coef > 0.0f) && (level < 10));
-                if(EXPOSURE){
-                    float exposure = -1.00f;
-                    pixelArray[index].r = (1.0f - expf(pixelArray[index].r * exposure));
-                    pixelArray[index].g = (1.0f - expf(pixelArray[index].g * exposure));
-                    pixelArray[index].b = (1.0f - expf(pixelArray[index].b * exposure));
+void PixelChare:: exposePixel(int index, float sampleRatio)
+{
+    pixelArray[index].r = (1.0f - expf(pixelArray[index].r * exposure));
+    pixelArray[index].g = (1.0f - expf(pixelArray[index].g * exposure));
+    pixelArray[index].b = (1.0f - expf(pixelArray[index].b * exposure));
+}
+
+void PixelChare:: normalWork()
+{
+    int pixel_x, pixel_y, hitIndex, level, index;
+    int position_x = thisIndex.x * w;
+    int position_y = thisIndex.y * h;
+    float dist, coef /*, correction*/;
+
+    for(int i = 0; i < w; i++) 
+    {
+        for(int j = 0; j < h; j++) 
+        {
+            //CkPrintf("\n[%d][%d]", position_x + i, position_y + j);
+            //Creating ray passing through each pixel in this chare
+            index = (j * w) + i;
+            pixel_x = position_x + i;
+            pixel_y = position_y + j;
+            ray viewRay(float(pixel_x), float(pixel_y), -1000.0f, 0.0f, 0.0f, 1.0f);
+            //see what the closest hit is             
+            coef = 1.0f;
+            level = 0;
+            clearPixel();
+            
+            do
+            {
+                /*correction = sqrtf(1/(pow(viewRay.dir.x, 2)  + pow(viewRay.dir.y, 2) + pow(viewRay.dir.z, 2)));
+                viewRay.dir.x *= correction;
+                viewRay.dir.y *= correction;
+                viewRay.dir.z *= correction;*/
+                hitIndex = shoot(viewRay, dist);
+                if(hitIndex == NEGINF) break;
+                if(DEBUG_CODE)
+                {
+                    CkPrintf("******************************************\n");
+                    CkPrintf(" Lucky pixel = [%d, %d] hitindex = %d\n", pixel_x, pixel_y, hitIndex);
+                    CkPrintf("level = %d\n", level);
+                    CkPrintf("******************************************\n");
                 }
-
-        	}
-    	}
-        
+                draw(index, viewRay, hitIndex, dist, coef, level); 
+            }
+            while((coef > 0.0f) && (level < 10));
+            if(EXPOSURE)exposePixel(index);
+        }
     }
 }
 
@@ -213,7 +196,6 @@ void PixelChare::startStep(vector<Shape> shapes, vector<lightSrc> lights)
     myLights.insert(myLights.end(), lights.begin(), lights.end());
 
     run();
-
 }
 
 
@@ -322,58 +304,58 @@ bool PixelChare::triHit(int index, ray r, float &t)
 
 /*
 bool intersect(const Ray<float> &r, IsectData &isectData) const
-	{
+    {
 #ifdef MOLLER_TRUMBORE
-		Vec3f edge1 = v1 - v0;
-		Vec3f edge2 = v2 - v0;
-		Vec3f pvec = cross(r.dir, edge2);
-		float det = dot(edge1, pvec);
-		if (det == 0) return false;
-		float invDet = 1 / det;
-		Vec3f tvec = r.orig - v0;
-		isectData.u = dot(tvec, pvec) * invDet;
-		if (isectData.u < 0 || isectData.u > 1) return false;
-		Vec3f qvec = cross(tvec, edge1);
-		isectData.v = dot(r.dir, qvec) * invDet;
-		if (isectData.v < 0 || isectData.u + isectData.v > 1) return false;
-		isectData.t = dot(edge2, qvec) * invDet;
+        Vec3f edge1 = v1 - v0;
+        Vec3f edge2 = v2 - v0;
+        Vec3f pvec = cross(r.dir, edge2);
+        float det = dot(edge1, pvec);
+        if (det == 0) return false;
+        float invDet = 1 / det;
+        Vec3f tvec = r.orig - v0;
+        isectData.u = dot(tvec, pvec) * invDet;
+        if (isectData.u < 0 || isectData.u > 1) return false;
+        Vec3f qvec = cross(tvec, edge1);
+        isectData.v = dot(r.dir, qvec) * invDet;
+        if (isectData.v < 0 || isectData.u + isectData.v > 1) return false;
+        isectData.t = dot(edge2, qvec) * invDet;
 #else
-		Vec3f v0v1 = v1 - v0;
-		Vec3f v0v2 = v2 - v0;
-		Vec3f N = cross(v0v1, v0v2);
-		float nDotRay = dot(N, r.dir);
-		if (nDotRay == 0 || (nDotRay > 0 && isSingledSided)) return false; // ray parallel to triangle 
-		float d = dot(N, v0);
-		float t = -(dot(N, r.orig) + d) / nDotRay;
-		if (t < 0) return false; // ray behind triangle
+        Vec3f v0v1 = v1 - v0;
+        Vec3f v0v2 = v2 - v0;
+        Vec3f N = cross(v0v1, v0v2);
+        float nDotRay = dot(N, r.dir);
+        if (nDotRay == 0 || (nDotRay > 0 && isSingledSided)) return false; // ray parallel to triangle 
+        float d = dot(N, v0);
+        float t = -(dot(N, r.orig) + d) / nDotRay;
+        if (t < 0) return false; // ray behind triangle
 
-		// inside-out test
-		Vec3f Phit = r(t);
+        // inside-out test
+        Vec3f Phit = r(t);
 
-		// inside-out test edge0
-		Vec3f v0p = Phit - v0;
-		float v = dot(N, cross(v0v1, v0p));
-		if (v < 0) return false; // P outside triangle
+        // inside-out test edge0
+        Vec3f v0p = Phit - v0;
+        float v = dot(N, cross(v0v1, v0p));
+        if (v < 0) return false; // P outside triangle
 
-		// inside-out test edge1
-		Vec3f v1p = Phit - v1;
-		Vec3f v1v2 = v2 - v1;
-		float w = dot(N, cross(v1v2, v1p));
-		if (w < 0) return false; // P outside triangle
+        // inside-out test edge1
+        Vec3f v1p = Phit - v1;
+        Vec3f v1v2 = v2 - v1;
+        float w = dot(N, cross(v1v2, v1p));
+        if (w < 0) return false; // P outside triangle
 
-		// inside-out test edge2
-		Vec3f v2p = Phit - v2;
-		Vec3f v2v0 = v0 - v2;
-		float u = dot(N, cross(v2v0, v2p));
-		if (u < 0) return false; // P outside triangle
+        // inside-out test edge2
+        Vec3f v2p = Phit - v2;
+        Vec3f v2v0 = v0 - v2;
+        float u = dot(N, cross(v2v0, v2p));
+        if (u < 0) return false; // P outside triangle
 
-		float nlen2 = dot(N, N);
-		isectData.t = t;
-		isectData.u = u / nlen2;
-		isectData.v = v / nlen2;
+        float nlen2 = dot(N, N);
+        isectData.t = t;
+        isectData.u = u / nlen2;
+        isectData.v = v / nlen2;
 #endif
-		return true;
-	}
+        return true;
+    }
 
 
 
@@ -384,6 +366,13 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
 {
     vec3D newStart = theRay.start + ti * theRay.dir;
     vec3D n; 
+    vec3D dist;
+    float det = n * n;
+    float dummy;
+    float lambert;
+    float magDist;
+    ray lightRay;
+    
     //figuring out the normal vector at the point of intersection
     if(myShapes[hitIndex].type == TRIANGLE)
     {
@@ -392,41 +381,27 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
         else n = myShapes[hitIndex].N * -1;*/
         pixelArray[index].r = 255;
         pixelArray[index].g = 255;
-        pixelArray[index].b = 255;
-        
+        pixelArray[index].b = 255; 
     }
     else n = newStart - myShapes[hitIndex].loc;
-    float temp = n * n;
-    float dummy;
-    float lambert;
+    if (det == 0.0f) return; // if the ray is parallel with the viewer
 
-    
-    
-    if (temp == 0.0f) return;
-
-    temp = 1.0f / sqrtf(temp);
-    n = temp * n;
+    det = 1.0f / sqrtf(temp);
+    n = det * n;
 
     
     for(int j = 0; j < myLights.size(); ++j)
     {
         lightSrc current = myLights[j];
-        vec3D dist = current.loc - newStart;
-
-        if(n * dist <= 0.0f) continue;
-
-        float t = sqrtf(dist * dist);
-        if (t <= 0.0f) continue;
-        ray lightRay;
+        dist = current.loc - newStart;
+        if(n * dist <= 0.0f) continue; //out of sight
+        magDist = mag(dist);
+        if (magDist <= 0.0f) continue; // covered
         lightRay.start = newStart;
-        lightRay.dir = (1/t)*dist;
-
-
-
+        lightRay.dir = (1/magDist)*dist;
         if(shoot(lightRay, dummy) == NEGINF)
         {
             lambert = (lightRay.dir * n) * (coef);
-            
             pixelArray[index].r += lambert * current.r * myShapes[hitIndex].red;
             pixelArray[index].g += lambert * current.g * myShapes[hitIndex].green;
             pixelArray[index].b += lambert * current.b * myShapes[hitIndex].blue;
@@ -437,16 +412,17 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
                 CkPrintf("hitindex = %d shape.color(%f,%f,%f)\n", hitIndex, myShapes[hitIndex].red, myShapes[hitIndex].green, myShapes[hitIndex].blue);
                 CkPrintf("pixelarray(%f,%f,%f\n",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
                 //myShapes[hitIndex].print();
+                //CkAssert(lambert <= 1);
             }
-            //CkAssert(lambert <= 1);
         }
     }        
 
-    coef *= myShapes[hitIndex].reflection;
-    float reflect = 2.0f * (theRay.dir * n);
-    theRay.start = newStart;
-    theRay.dir = theRay.dir - reflect * n;
     
+    float reflect = 2.0f * (theRay.dir * n);
+    //modify return vars
+    coef *= myShapes[hitIndex].reflection;
+    theRay.start = newStart;
+    theRay.dir = theRay.dir - reflect * n;   
     level++; 
 }
 
