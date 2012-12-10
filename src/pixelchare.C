@@ -92,6 +92,7 @@ void PixelChare::doWork()
     float coef = 1.0f;
     int level = 0;
     int index;
+    float correction;
     // pixels will go from position_x -> position_x + w -1
     // pixels will go from position_y -> position_x + h -1
     //CkPrintf("\nDoing work [%d][%d] [%d][%d]-[%d][%d]", thisIndex.x, thisIndex.y, position_x,position_y, position_x+w-1, position_y+h-1);
@@ -170,7 +171,11 @@ void PixelChare::doWork()
             		pixelArray[index].b = 0;
             		do
             		{
-                		hitIndex = shoot(viewRay, dist);
+                		correction = sqrtf(1/(pow(viewRay.dir.x, 2)  + pow(viewRay.dir.y, 2) + pow(viewRay.dir.z, 2)));
+                        viewRay.dir.x *= correction;
+                        viewRay.dir.y *= correction;
+                        viewRay.dir.z *= correction;
+                        hitIndex = shoot(viewRay, dist);
                 		//DRAW!
                 		if(hitIndex == NEGINF) break;
                 		if(DEBUG_CODE)
@@ -296,37 +301,83 @@ bool PixelChare::sphereHit(int index, ray r, float &t)
 bool PixelChare::triHit(int index, ray r, float &t)
 {
     // triangle hit function
-    // check if parallel
-    
-    float NdotRayDirection = myShapes[index].N * r.dir; 
-    if (NdotRayDirection == 0) return false; 
+        //CkPrintf("int tri\n");   
+    bool one = true,two= true, three = true; 
+    vec3D edge1 = myShapes[index].v0 - myShapes[index].v0;
+    vec3D edge2 = myShapes[index].v0 - myShapes[index].v0;
+    vec3D pvec = cross(r.dir, edge2);
+    float det = edge1 * pvec;
+    if (det == 0) return false; // ray and plane are parallel
 
-    float d = myShapes[index].N * myShapes[index].v0; 
+    float invDet = 1 / det;
+    vec3D tvec = r.start - (myShapes[index].v0 + myShapes[index].loc);
+    float u = (tvec * pvec) * invDet;
+    if (u < 0 || u > 1) return false; //out of bounds
+    vec3D qvec = cross(tvec, edge1);
+    float v = (r.dir * qvec) * invDet;
+    if (v < 0 || u + v > 1) return false;//out of bounds
+    t = (edge2*qvec) * invDet;
+    CkPrintf("Tri is true\n");
+    return true;
 
-    t = -(myShapes[index].N*r.start + d) / NdotRayDirection; 
-    if(t < 0) return false; // triangle is behind
+/*
+bool intersect(const Ray<float> &r, IsectData &isectData) const
+	{
+#ifdef MOLLER_TRUMBORE
+		Vec3f edge1 = v1 - v0;
+		Vec3f edge2 = v2 - v0;
+		Vec3f pvec = cross(r.dir, edge2);
+		float det = dot(edge1, pvec);
+		if (det == 0) return false;
+		float invDet = 1 / det;
+		Vec3f tvec = r.orig - v0;
+		isectData.u = dot(tvec, pvec) * invDet;
+		if (isectData.u < 0 || isectData.u > 1) return false;
+		Vec3f qvec = cross(tvec, edge1);
+		isectData.v = dot(r.dir, qvec) * invDet;
+		if (isectData.v < 0 || isectData.u + isectData.v > 1) return false;
+		isectData.t = dot(edge2, qvec) * invDet;
+#else
+		Vec3f v0v1 = v1 - v0;
+		Vec3f v0v2 = v2 - v0;
+		Vec3f N = cross(v0v1, v0v2);
+		float nDotRay = dot(N, r.dir);
+		if (nDotRay == 0 || (nDotRay > 0 && isSingledSided)) return false; // ray parallel to triangle 
+		float d = dot(N, v0);
+		float t = -(dot(N, r.orig) + d) / nDotRay;
+		if (t < 0) return false; // ray behind triangle
 
-    // compute the intersection point using equation 1 
-    vec3D P = r.start + t * r.dir;
+		// inside-out test
+		Vec3f Phit = r(t);
 
-    // // Step 2: inside-outside test // 
-    vec3D C; // vector perpendicular to triangle's plane 
-    // edge 0 
-    vec3D edge0 = myShapes[index].v1 - myShapes[index].v0; 
-    vec3D VP0 = P - myShapes[index].v0; 
-    C = cross(edge0, VP0); 
-    if (myShapes[index].N * C < 0) return false; // P is outside 
-    // edge 1 
-    vec3D edge1 = myShapes[index].v2 - myShapes[index].v1; 
-    vec3D VP1 = P - myShapes[index].v1; 
-    C = cross(edge1, VP1); 
-    if (myShapes[index].N * C < 0) return false; // P is outside 
-    // edge 2 
-    vec3D edge2 = myShapes[index].v0 -myShapes[index].v2; 
-    vec3D VP2 = P - myShapes[index].v2; 
-    C = cross(edge2, VP2); 
-    if (myShapes[index].N * C < 0) return false; // P is outside 
-    return true; 
+		// inside-out test edge0
+		Vec3f v0p = Phit - v0;
+		float v = dot(N, cross(v0v1, v0p));
+		if (v < 0) return false; // P outside triangle
+
+		// inside-out test edge1
+		Vec3f v1p = Phit - v1;
+		Vec3f v1v2 = v2 - v1;
+		float w = dot(N, cross(v1v2, v1p));
+		if (w < 0) return false; // P outside triangle
+
+		// inside-out test edge2
+		Vec3f v2p = Phit - v2;
+		Vec3f v2v0 = v0 - v2;
+		float u = dot(N, cross(v2v0, v2p));
+		if (u < 0) return false; // P outside triangle
+
+		float nlen2 = dot(N, N);
+		isectData.t = t;
+		isectData.u = u / nlen2;
+		isectData.v = v / nlen2;
+#endif
+		return true;
+	}
+
+
+
+*/
 }
 
 void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coef, int &level)
@@ -334,9 +385,15 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
     vec3D newStart = theRay.start + ti * theRay.dir;
     vec3D n; 
     //figuring out the normal vector at the point of intersection
-    if(false)//myShapes[hitIndex].type == TRIANGLE)
+    if(myShapes[hitIndex].type == TRIANGLE)
     {
-        //if
+        /*if(abs(theRay.dir * myShapes[hitIndex].N / mag(theRay.dir)) < COS_ENOUGH)
+            n = myShapes[hitIndex].N;
+        else n = myShapes[hitIndex].N * -1;*/
+        pixelArray[index].r = 255;
+        pixelArray[index].g = 255;
+        pixelArray[index].b = 255;
+        
     }
     else n = newStart - myShapes[hitIndex].loc;
     float temp = n * n;

@@ -73,34 +73,24 @@ Main::Main(CkArgMsg* arg)
 
     //TODO: Read file and create shape objects
     /*
-    lightSrc l(1.0, 1.0, 1.0, 0.0, 240.0, -100.0);
-    lightSrc l1(1.0, 1.0, 1.0, 640.0, 0.0, -10000.0);
-    //lightSrc l2(1.0, 1.0, 1.0, -100.0, 0.0, -100.0);
-    //lightSrc l3(1.0, 1.0, 1.0, 100.0, 100.0, -100.0);
-    
-    l.print();
     CkPrintf("\n*************\n");
     /*for(int i = 0; i<size; i++)
     {
         //sp[i].printShape();
         //s[i] = new Sphere();   
     }
-    Shape s(100.0, 233.0, 290.0, 0.0, 1.0, 0.0, 0.0, 1.0);
-    Shape s2(100.0, 407.0, 290.0, 0.0, 0.5, 1.0, 0.0, 0.0);
-    Shape s3(100.0, 320.0, 140.0, 0.0, 0.5, 0.0, 1.0, 0.0);
-    Shape s4(30.0, 50.0, 50.0, 50.0, 0.5, 0.0, 1.0, 1.0);
-    Shape s5(60.0, 400.0, 400.0, 400.0, 0.5, 1.0, 0.0, 1.0);
     */
     lightSrc l(1.0, 1.0, 1.0, 0.0, 240.0, -100.0);
     lightSrc l1(1.0, 0.5, 0.5, 640.0, 0.0, -10000.0);
     //lightSrc l2(1.0, 1.0, 1.0, -100.0, 0.0, -100.0);
     //lightSrc l3(1.0, 1.0, 1.0, 100.0, 100.0, -100.0);
     
-    Shape s(100.0, 233.0, 290.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-    Shape s2(100.0, 407.0, 290.0, 0.0, 0.5, 1.0, 0.0, 0.0);
-    Shape s3(100.0, 320.0, 140.0, 0.0, 0.5, 0.0, 1.0, 0.0);
-    Shape s4(30.0, 50.0, 50.0, 50.0, 0.5, 0.0, 1.0, 1.0);
-    Shape s5(60.0, 400.0, 400.0, 400.0, 0.5, 1.0, 0.0, 1.0);
+    Shape s(100.0, 233.0, 290.0, 0.0, 0.0, 0.0, 0.0, 1.0);//sphere
+    Shape s2(100.0, 407.0, 290.0, 0.0, 0.5, 1.0, 0.0, 0.0);//sphere
+    Shape s3(100.0, 320.0, 140.0, 0.0, 0.5, 0.0, 1.0, 0.0);//sphere
+    Shape s4(20.0, 20.0, 0.0, 60.0, 60.0, 0.0, 90.0, 90.0, 0.0, 0.5, 0.0, 1.0, 1.0);//triangle
+    //Shape s4(30.0, 50.0, 50.0, 50.0, 0.5, 0.0, 1.0, 1.0);//sphere
+    Shape s5(60.0, 400.0, 400.0, 400.0, 0.5, 1.0, 0.0, 1.0);//sphere
     
     s.print();
     s2.print();
@@ -134,33 +124,7 @@ Main::Main(CkArgMsg* arg)
 }
 
 Main::Main(CkMigrateMessage *msg){ }
-/*
-class Direction
-{
-    public:
-    int x_dir, y_dir, z_dir;
-    
-    Direction()
-    {
-        this->x_dir = 0;
-        this->y_dir = 0;
-        this->z_dir = 0;
-    }
-    Direction(int i)
-    {
-        this->x_dir = i;
-        this->y_dir = i;
-        this->z_dir = i;
-    }
-    void pup(PUP::er &p)
-    {
-        p | x_dir;
-        p | y_dir;
-        p | z_dir;
-    }
-    
-};
-*/
+
 //Rotates all lightsources about the Z-axis
 void Main::rotateLights()
 {

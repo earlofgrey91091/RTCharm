@@ -36,9 +36,9 @@ class  vec3D
         }
         vec3D& operator -= (const vec3D &v2)
         {
-            this->x += v2.x;
-            this->y += v2.y;
-            this->z += v2.z;
+            this->x -= v2.x;
+            this->y -= v2.y;
+            this->z -= v2.z;
             return *this;
         }
         void pup(PUP::er &p)
@@ -69,6 +69,12 @@ inline vec3D cross(const vec3D &v0, const vec3D &v1)
             v0.z * v1.x - v0.x * v1.z,  
             v0.x * v1.y - v0.y * v1.x);
     return v2;
+}
+
+//cross product
+inline float mag(const vec3D &v)
+{
+    return sqrtf((pow(v.x, 2)  + pow(v.y, 2) + pow(v.z, 2)));
 }
 
 inline vec3D operator - (const vec3D &v1, const vec3D &v2)
@@ -223,9 +229,7 @@ class Shape
             this->v2.x = x2;
             this->v2.y = y2;
             this->v2.z = z2;
-            vec3D A = v1 - v0;
-            vec3D B = v2 - v0;
-            this->N = cross(A, B);
+            this->N = cross(this->v1 - this->v0, this->v2 - this->v0);
             float tot = sqrtf(1/(pow(this->N.x, 2)  + pow(this->N.y, 2) + pow(this->N.z, 2)));
             this->N.x *= tot;
             this->N.y *= tot;

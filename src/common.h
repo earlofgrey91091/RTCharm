@@ -21,5 +21,6 @@
 #define ANTI_ALIASING false
 #define EXPOSURE false
 #define SHAPE_DISP 3
-#define MOVE_SHAPE true
+#define MOVE_SHAPE false
+#define COS_ENOUGH 0.70710678118
 #endif //COMMON_H
