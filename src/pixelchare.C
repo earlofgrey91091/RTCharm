@@ -102,7 +102,7 @@ void PixelChare::antiAliasWork()
             {
                 for(float fragmenty = pixel_y; fragmenty < pixel_y + 1.0f; fragmenty += SAMPLE_RATIO * 2)
                 {
-                    clearPixel();
+                    clearPixel(index);
                     ray viewRay(float(fragmentx), float(fragmenty),-1000.0f, 0.0f, 0.0f, 1.0f);
                     
                     coef = 1.0f;
@@ -132,11 +132,11 @@ void PixelChare:: clearPixel(int index)
     pixelArray[index].b = 0;
 }
 
-void PixelChare:: exposePixel(int index, float sampleRatio)
+void PixelChare:: exposePixel(int index)
 {
-    pixelArray[index].r = (1.0f - expf(pixelArray[index].r * exposure));
-    pixelArray[index].g = (1.0f - expf(pixelArray[index].g * exposure));
-    pixelArray[index].b = (1.0f - expf(pixelArray[index].b * exposure));
+    pixelArray[index].r = (1.0f - expf(pixelArray[index].r * EXPOSURE_CONST));
+    pixelArray[index].g = (1.0f - expf(pixelArray[index].g * EXPOSURE_CONST));
+    pixelArray[index].b = (1.0f - expf(pixelArray[index].b * EXPOSURE_CONST));
 }
 
 void PixelChare:: normalWork()
@@ -159,7 +159,7 @@ void PixelChare:: normalWork()
             //see what the closest hit is             
             coef = 1.0f;
             level = 0;
-            clearPixel();
+            clearPixel(index);
             
             do
             {
@@ -386,7 +386,7 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
     else n = newStart - myShapes[hitIndex].loc;
     if (det == 0.0f) return; // if the ray is parallel with the viewer
 
-    det = 1.0f / sqrtf(temp);
+    det = 1.0f / sqrtf(magDist);
     n = det * n;
 
     
