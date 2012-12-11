@@ -34,8 +34,8 @@ Main::Main(CkArgMsg* arg)
         }
 
         //CkPrintf(" w is %d h is %d pw is %d ph is %d", image_w, image_h, pixel_w, pixel_h); 
-        CkPrintf("\npicture will be %d pixels in height,\ncells will be %d pixels in width,\nthere will be %d cells\n", 
-                    image_h, image_w, chareDimension * chareDimension);
+        CkPrintf("\npicture will be %d pixels in height,\ncells will be %d pixels in width,\nthere will be %d cells\nthere will be %dspheres\n", 
+                    image_h, image_w, chareDimension * chareDimension, numSpheres);
     }
     else
     {
@@ -43,8 +43,8 @@ Main::Main(CkArgMsg* arg)
         image_h = LIMIT;
         chareDimension = DEFAULT_CHAREDIM;
         numSpheres = DEFAULT_SPHERES;
-        CkPrintf("\npicture will be %d pixels in height,\ncells will be %d pixels in width,\nthere will be %d cells\n", 
-                    image_h, image_w, chareDimension * chareDimension);
+        CkPrintf("\npicture will be %d pixels in height,\ncells will be %d pixels in width,\nthere will be %d cells\nthere will be %dspheres\n", 
+                    image_h, image_w, chareDimension * chareDimension,numSpheres);
     }
     delete arg;
 
@@ -129,12 +129,12 @@ void Main::startVis()
     // Initialize the liveViz library
     liveVizInit(lvConfig, pixel, cb0, myOpts);
 
-    double resumeTime = CmiWallTimer() + PAUSE_TIME;     // Pause for PAUSE_TIME seconds
+    /*double resumeTime = CmiWallTimer() + PAUSE_TIME;     // Pause for PAUSE_TIME seconds
      
     CkPrintf("Stalling after setup for %f s\n", PAUSE_TIME);
     int j = 0;
     while(CmiWallTimer() < resumeTime) j++;
-    CkPrintf("Starting\n");
+    CkPrintf("Starting\n");*/
 
 }
     

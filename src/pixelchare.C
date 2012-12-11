@@ -402,7 +402,7 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
 void PixelChare::liveVizFunc(liveVizRequestMsg *m) 
 {        
     rgb_byte* imageBuff = (rgb_byte*)tmpBuffer;
-   // CkPrintf("\nliveViz[%d][%d]", thisIndex.x, thisIndex.y);
+    //if(thisIndex.x == thisIndex.y && thisIndex.x == 0) CkPrintf("liveViz[%d][%d]\n", thisIndex.x, thisIndex.y);
     int imgIndex;
     rgb_byte* c;
     for (int x = 0; x < w; x++) 
@@ -411,6 +411,9 @@ void PixelChare::liveVizFunc(liveVizRequestMsg *m)
         {
             imgIndex = (y * w) + x;
             c = &(imageBuff[imgIndex]);
+            /*c->r = 255;
+            c->g = 255;
+            c->b = 255;*/
             byte red, blue, green;
             if (pixelArray[imgIndex].r * 255.0 < 255.0) {
                 if(GAMMA) c->r = (byte)(gamma(pixelArray[imgIndex].r) * 255.0);

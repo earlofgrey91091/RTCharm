@@ -12,6 +12,8 @@ module pixelchare {
                 //if(thisIndex.x == thisIndex.y && thisIndex.x == 0){CkPrintf("Iteration %d\n", iteration);}
                 doWork();
                 iteration++;
+                //while(!hasprinted);
+                //hasprinted=false;
                 if(iteration%LB_TIME == 0)
                 {
                     AtSync();
