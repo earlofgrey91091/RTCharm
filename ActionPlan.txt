@@ -1,74 +1,29 @@
-STEP 0
-* Sync with Github -- done
-* Read and understand CUDA code for Ray Tracing -- done
-* Initial Design we have a 2d grid of pixel chares each of which containis a sizeable grainsize 
-worth of image pixels, and some sort of global array that contains the objects in the space that
-each pixelchare needs a copy of to proceed with computation.
-Basic flow structure:
-Startup
-- user input image size and relative position
-- hardcoded array of objects passed either globally or to each chare
-- indivivual ray computation
-- live viz
-- retuction to image creation
-- repeat
-- temporary assumption: individual chares have square grids, 
-if necessary we can change that up later, it is a trivial change
+things we need to get done in order:
+1. Triangles For ray tracing
+2. Genereal kdtree implimentation 
+3. Correct shared memory
+4. localized kdtrees per chare
 
-Mainchare
-- will have to create all shapes and pass them into array
-- startup pixel chares
-- user querys
+Side options that we could do
+1. look into piping live viz into image files
+2. correct polling liveviz use
+3. figure out movement model for kd tree use
 
-Pixel chares
- - 2dArray
- - interal array of rgbapixels
- - serial work for pixel
- - calling refrence functions in relation to shapes
- - returning either through a liveviz painging, or returing our final image data 
- - (thought: if actually compling images greate a seperate image compilation 
-  chare on it's own lonely processor to deal with that)
 
-Shapes
-- C++ class constructs
- - superclass shape:
-  pup function
-  necessary values
-  a hit function - if a given arrya hits it, returns distance
-  a random rgb color, and xyz location and radius
-- subclasses:
--triangeles
- - three points (xyz)
-- specific hit function
--other shapes:
-  - see iof we can make them from triangles
+ideas for the future
+1. openGl cover for charm?
+2. 
 
-Work Details:
-1: framework, basic chares, how our sdag works, liveviz, progression 
 
-2: basic shape creation, the super class triangles, making larger shapes 
-from triangles, or other shapes from the superclass
+Meeting time:
+1. Friday @ 12:30PM @ ACM OFFICE
 
-3:  
 
-STEP 1
-* Divide Up Work
-* Basic code
-* Objects in space
-* Minor test runs
-* Basic Output
-* 
+PLAN OF ATTACK
+1. Triangles DUE by the the week of 3/11/13
+2. GENERAL KD TREE DUE by the week of 3/25/13
+3. Correct Shared Memory by the week of 4/15/13
 
-STEP 2
-* Multiple images
-* loadBalancing
-* saveData for after the fact animation
-* multiple objects in space
-* mobile objects
-
-STEP 3
-* optimization
-* polishing
-* yet more objects
-
+AGENDA for meeting on FRIDAY the 1st
+ - FULL understanding of TRIANGLE RAYtracing AS described on SCratch PIXEL, - refactor old code
 
