@@ -3,21 +3,21 @@ mainmodule main {
     readonly CProxy_Main mainProxy;
 
     extern module pixelchare;
-    mainchare Main 
+    mainchare Main
     {
         entry Main(CkArgMsg *m);
         entry void done();
         entry void run()
         {
-            for(count = 0; count < chareDimension*chareDimension; count++) 
+            for(count = 0; count < chareDimension*chareDimension; count++)
             {
                 when done()
-                atomic 
+                atomic
                 {
                     //force sync
                 }
             }
-            atomic  
+            atomic
             {
                 iterations++;
                 CkPrintf("Start iteration %d\n", iterations);
@@ -33,7 +33,7 @@ mainmodule main {
                 }
                 else CkExit();
                 mainProxy.run();
-            }    
+            }
         };
     };
 };

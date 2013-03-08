@@ -1,7 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define ITERATIONS 200
+#define ITERATIONS 1000
 #define DEFAULT_CHAREDIM 8
 #define DEFAULT_SPHERES 40
 #define loc(x,y, width)  (x + (y*width))
@@ -18,11 +18,11 @@
 #define ROT_TIME 1
 #define ROT_RAD 0.034906585 //2*PI/180
 #define LIMIT 1024 //boundry size of the viewable space
-#define GAMMA true
+#define GAMMA false
 #define ANTI_ALIASING false
 #define EXPOSURE false
 #define SHAPE_DISP 3
-#define MOVE_SHAPE true
+#define MOVE_SHAPE false
 #define COS_ENOUGH 0.70710678118
 #define EXPOSURE_CONST -1.00f
 #define SAMPLE_RATIO 0.25f

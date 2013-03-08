@@ -306,7 +306,9 @@ bool PixelChare::triHit(int index, ray r, float &t)
         return false; // ray and plane are parallel
     }
     float invDet = 1 / det;
-    vec3D tvec = r.start - (myShapes[index].v0 + myShapes[index].loc);
+    
+    vec3D tvec = r.start - myShapes[index].v0;
+    //vec3D tvec = r.start - (myShapes[index].v0 + myShapes[index].loc);
     float u = (tvec * pvec) * invDet;
    
     //CkPrintf("u = %f \n", u);  

@@ -56,11 +56,15 @@ Main::Main(CkArgMsg* arg)
     lightSrc l1(1.0, 0.5, 0.5, image_w/2, 0.0, -10000.0);
     myLights.push_back(l);
     myLights.push_back(l1);
-    for(int i = 0; i < numSpheres ; i++)
+    /*for(int i = 0; i < numSpheres ; i++)
     {
         Shape s(drand48()*60.0, drand48()*image_w, drand48()*image_h, drand48()*image_w, .5, drand48(), drand48(), drand48());//sphere
         myShapes.push_back(s);
     }
+    */
+        Shape s(0, 200, 0, -100, -100, 0, 100, -100, 0, .5, drand48(), drand48(), drand48());//sphere
+        myShapes.push_back(s);
+    
     if(MOVE_SHAPE)
     {
         for (int i=0; i<myShapes.size(); i++)

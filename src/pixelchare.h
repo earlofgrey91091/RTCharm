@@ -6,8 +6,6 @@
 //#include "shape.h"
 //#include "ShapeMsg.h"
 
-extern /*readonly*/ int size;
-
 class PixelChare : public CBase_PixelChare 
 {
     private:
