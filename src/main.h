@@ -22,7 +22,7 @@ class Main : public CBase_Main {
         int image_h;
         vector<Shape> myShapes;
         vector<Shape> sendShape;
-        vector<vec3D> shapeDirection;
+        vector<vec3d> shapeDirection;
         vector<lightSrc> myLights;
         void rotateLights();
         

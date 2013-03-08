@@ -1,4 +1,4 @@
-CHARMDIR = /dcsdata/home/ginsbur3/charm
+CHARMDIR = ~/gitRepos/charm
 #CHARMDIR = /home/nikhil/charm/net-linux-x86_64-smp
 #CHARMDIR =  /home/kahn/gitRepos/charm
 #CHARMDIR = /Users/harinirajesh/Desktop/charm/net-darwin-x86_64-smp/
@@ -17,7 +17,7 @@ main.o : main.C main.h main.decl.h main.def.h pixelchare.decl.h
 main.decl.h main.def.h : main.ci
 	$(CHARMC) main.ci
 
-pixelchare.o : pixelchare.C pixelchare.h pixelchare.decl.h pixelchare.def.h main.decl.h ray.h
+pixelchare.o : pixelchare.C pixelchare.h pixelchare.decl.h pixelchare.def.h main.decl.h ray.h vecmath.h
 	$(CHARMC) -g -o pixelchare.o pixelchare.C
 
 pixelchare.decl.h pixelchare.def.h : pixelchare.ci
