@@ -54,17 +54,25 @@ Main::Main(CkArgMsg* arg)
 
     lightSrc l(1.0, 1.0, 1.0, 0.0, image_h/2, -100.0);
     lightSrc l1(1.0, 0.5, 0.5, image_w/2, 0.0, -10000.0);
+    //lightSrc l2(1.0, 1.0, 1.0, 300.0, 100.0, -100.0);
     myLights.push_back(l);
     myLights.push_back(l1);
+    //myLights.push_back(l2);
     /*for(int i = 0; i < numSpheres ; i++)
     {
         Shape s(drand48()*60.0, drand48()*image_w, drand48()*image_h, drand48()*image_w, .5, drand48(), drand48(), drand48());//sphere
         myShapes.push_back(s);
     }
     */
-        Shape s(0, 200, 0, -100, -100, 0, 100, -100, 0, .5, drand48(), drand48(), drand48());//sphere
+    for(int i = 0; i < numSpheres ; i++)
+    {
+	Shape s(drand48()*image_w, drand48()*image_h, drand48()*image_w, drand48()*image_w, drand48()*image_h, drand48()*image_w, drand48()*image_w, drand48()*image_h, drand48()*image_w, 2.0, drand48(), drand48(), drand48());
+
+        //Shape s(200, 200, 0, 400, 200, 0, 300, 0, 0, .5, drand48(), drand48(), drand48());//triangle
         myShapes.push_back(s);
-    
+	//Shape s1(0, 200, 0, 200, 200, 0, 100, 0, 0, .5, drand48(), drand48(), drand48());//triangle
+        //myShapes.push_back(s1);
+    }
     if(MOVE_SHAPE)
     {
         for (int i=0; i<myShapes.size(); i++)
@@ -86,6 +94,7 @@ Main::Main(CkMigrateMessage *msg){ }
 //Rotates all lightsources about the Z-axis
 void Main::rotateLights()
 {
+    /*
     int x,y;
     for(int i = 0; i < myLights.size(); i++)
     {
@@ -118,7 +127,7 @@ void Main::rotateLights()
             }
         }
         sendShape = myShapes;
-    }
+    }*/
 }
 
 

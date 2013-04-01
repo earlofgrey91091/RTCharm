@@ -235,6 +235,7 @@ class Shape
         //TRIANGLE
         Shape(float x0, float y0, float z0, float x1, float y1, float z1, float x2, float y2, float z2, float reflection, float r, float g, float b)
         {
+
             this->type = TRIANGLE;
             this->loc.x = (x0 + x1 + x2)/3;
             this->loc.y = (y0 + y1 + y2)/3;
@@ -242,19 +243,19 @@ class Shape
             this->v0.x = x0;
             this->v0.y = y0;
             this->v0.z = z0;
-            this->v0 -=  this->loc;
+           // this->v0 -=  this->loc;
             this->v1.x = x1;
             this->v1.y = y1;
             this->v1.z = z1;
-            this->v0 -=  this->loc;
+           // this->v0 -=  this->loc;
             this->v2.x = x2;
             this->v2.y = y2;
             this->v2.z = z2;
-            this->N = cross(this->v1 - this->v0, this->v2 - this->v0);
-            float tot = sqrtf(1/(pow(this->N.x, 2)  + pow(this->N.y, 2) + pow(this->N.z, 2)));
-            this->N.x *= tot;
-            this->N.y *= tot;
-            this->N.z *= tot;
+            this->N = cross((this->v1 - this->v0), (this->v2 - this->v0));
+            //float tot = sqrtf(1/(pow(this->N.x, 2)  + pow(this->N.y, 2) + pow(this->N.z, 2)));
+            //this->N.x *= tot;
+            //this->N.y *= tot;
+            //this->N.z *= tot;
             this->reflection = reflection;
             this->red = r;
             this->green = g;
@@ -280,10 +281,10 @@ class Shape
             p | red;
             p | green;
             p | blue;
-            /*p | v0;
+            p | v0;
             p | v1;
             p | v2;
-            p | N;*/
+            p | N;
         }
     
 };

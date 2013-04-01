@@ -31,4 +31,4 @@ clean:
 	rm -f myvalg_txt.*****
 	rm -f pixelchare charmrun 
 test:
-	./charmrun pixelchare 520 520 8 10 +p8 +balancer GreedyLB ++server ++server-port 1236 +LBOff
+	./charmrun pixelchare 520 520 8 3 +p8 +balancer GreedyLB ++server ++server-port 1237 +LBOff
