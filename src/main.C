@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "ray.h"
+#include "vecmath.h"
 #include "math.h"
 using namespace std;
 #include "main.h"
@@ -73,7 +74,7 @@ Main::Main(CkArgMsg* arg)
     {
         for (int i=0; i<myShapes.size(); i++)
         {
-            vec3D d(drand48()*10*pow(-1.0, i));
+            vec3d d(drand48()*10*pow(-1.0, i));
             shapeDirection.push_back(d);
         }
     }*/

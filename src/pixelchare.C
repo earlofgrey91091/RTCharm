@@ -80,14 +80,12 @@ PixelChare::~PixelChare()
 
 void PixelChare::doWork()
 {
-    //CkPrintf("doingwork\n");
     if(ANTI_ALIASING) antiAliasWork();
     else normalWork();
 }
 
 void PixelChare::antiAliasWork()
 {
-    //CkPrintf("antialiaswork\n");
     int pixel_x, pixel_y, hitIndex, level, index;
     int position_x = thisIndex.x * w;
     int position_y = thisIndex.y * h;
@@ -255,10 +253,10 @@ bool PixelChare::hit(int index, ray theRay, float &n)
 bool PixelChare::sphereHit(int index, ray r, float &t)
 {
     // sphere hit function
-    vec3D dist = myShapes[index].loc - r.start;
+    vec3d dist = myShapes[index].loc - r.start;
 
-    float B = r.dir * dist;
-    float D = B*B - dist * dist + myShapes[index].size * myShapes[index].size;
+    float B = dot(r.dir, dist);
+    float D = B*B - dot(dist, dist) + myShapes[index].size * myShapes[index].size;
 
     if (D < 0.0f) 
     {
@@ -294,10 +292,10 @@ bool PixelChare::triHit(int index, ray r, float &t)
     //CkPrintf("v2 = {%f, %f, %f} \n", myShapes[index].v2.x, myShapes[index].v2.y, myShapes[index].v2.z);
 
 
-    vec3D edge1 = myShapes[index].v1 - myShapes[index].v0;
-    vec3D edge2 = myShapes[index].v2 - myShapes[index].v0;
-    vec3D pvec = cross(r.dir, edge2);
-    float det = edge1 * pvec;
+    vec3d edge1 = myShapes[index].v1 - myShapes[index].v0;
+    vec3d edge2 = myShapes[index].v2 - myShapes[index].v0;
+    vec3d pvec = cross(r.dir, edge2);
+    float det = dot(edge1, pvec);
 
     if (det == 0) 
     {
@@ -305,18 +303,17 @@ bool PixelChare::triHit(int index, ray r, float &t)
         return false; // ray and plane are parallel
     }
     float invDet = 1 / det;
-    
-    vec3D tvec = r.start - myShapes[index].v0;
-    //vec3D tvec = r.start - (myShapes[index].v0 + myShapes[index].loc);
-    float u = (tvec * pvec) * invDet;
+    vec3d tvec = r.start - (myShapes[index].v0 + myShapes[index].loc);
+    float u = dot(tvec, pvec) * invDet;
+
     //CkPrintf("u = %f \n", u);  
 
     if (u < 0 || u > 1) 
     {
         return false; //out of bounds
     }
-    vec3D qvec = cross(tvec, edge1);
-    float v = (r.dir * qvec) * invDet;
+    vec3d qvec = cross(tvec, edge1);
+    float v = dot(r.dir, qvec) * invDet;
 
     //CkPrintf("v = %f and u+v = %f \n", v , v+u);
 
@@ -325,18 +322,17 @@ bool PixelChare::triHit(int index, ray r, float &t)
         return false;//out of bounds
     }
     
-    t = (edge2*qvec) * invDet; // this may be our issue because are we supposed to compute cross(edge2, qvec)*invDet  
-                               //it's possible that this all vectormath issues
-    // CkPrintf("Tri is true\n");
+    t = dot(edge2, qvec) * invDet;
+    //CkPrintf("Tri is true\n");
     return true;
 
 }
 
 void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coef, int &level)
 {
-    vec3D newStart = theRay.start + ti * theRay.dir;
-    vec3D n; 
-    vec3D dist;
+    vec3d newStart = theRay.start + ti * theRay.dir;
+    vec3d n; 
+    vec3d dist;
     float det;
     float dummy;
     float lambert;
@@ -365,11 +361,10 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
         //pixelArray[index].b = 255; 
     }
     else 
-    {
-        n = newStart - myShapes[hitIndex].loc;
-        det = n * n;
+    {   n = newStart - myShapes[hitIndex].loc;
+        det = dot(n, n);
     }
-
+    
     if (det == 0.0f)
     {
         if((index%w + thisIndex.x*w) == 100 && (index/w  + thisIndex.y*h) == 400) CkPrintf("views target pixel as parallel!");
@@ -393,43 +388,38 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
     {
         lightSrc current = myLights[j];
         dist = current.loc - newStart;
-        if(n * dist <= 0.0f) continue; //out of sight
-        magDist = mag(dist);
+        if(dot(n, dist) <= 0.0f) continue; //out of sight
+        magDist = dist.mag();
         if (magDist <= 0.0f) continue; // covered
         lightRay.start = newStart;
         lightRay.dir = (1/magDist)*dist;
         if(shoot(lightRay, dummy) == NEGINF)
         {
-            lambert = (lightRay.dir * n) * (coef);
-            pixelArray[index].r += lambert * current.r * myShapes[hitIndex].red;
-            pixelArray[index].g += lambert * current.g * myShapes[hitIndex].green;
-            pixelArray[index].b += lambert * current.b * myShapes[hitIndex].blue;
-        
-            //pixelArray[index].r += current.r * myShapes[hitIndex].red;
-            //pixelArray[index].g += current.g * myShapes[hitIndex].green;
-            //pixelArray[index].b += current.b * myShapes[hitIndex].blue;
-
-
+            lambert = dot(lightRay.dir, n) * (coef);
+            pixelArray[index].r += lambert * current.color.x * myShapes[hitIndex].color.x;
+            pixelArray[index].g += lambert * current.color.y * myShapes[hitIndex].color.y;
+            pixelArray[index].b += lambert * current.color.z * myShapes[hitIndex].color.z;
             //if(DEBUG_CODE) 
             //{
             if((index%w + thisIndex.x*w) == 100 && (index/w  + thisIndex.y*h) == 400)
-            {          
+            {
                 //CkPrintf("current lightray.dir = %f, n = %f coef = %f", lightRay.dir, n, coef);
                 CkPrintf("lambert = %f   current(%f,%f,%f)\n", 
-                    lambert, current.r, current.g, current.b);
+                    lambert, current.color.x, current.color.y, current.color.z);
                 CkPrintf("hitindex = %d shape.color(%f,%f,%f)\n", 
-                    hitIndex, myShapes[hitIndex].red, myShapes[hitIndex].green, 
-                    myShapes[hitIndex].blue);
-                CkPrintf("pixelarray(%f,%f,%f\n",
-                        pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
+                    hitIndex, myShapes[hitIndex].color.x, 
+                    myShapes[hitIndex].color.y, myShapes[hitIndex].color.z);
+                CkPrintf("pixelarray(%f,%f,%f\n",pixelArray[index].r,
+                    pixelArray[index].g,pixelArray[index].b);
                 //myShapes[hitIndex].print();
                 //CkAssert(lambert <= 1);
             }
         }
-    }
-    float reflect = 2.0f * (theRay.dir * n);
+
+    }           
+    float reflect = 2.0f * dot(theRay.dir, n);
     //modify return vars
-    coef *= myShapes[hitIndex].reflection;
+    coef *= myShapes[hitIndex].r;
     theRay.start = newStart;
     theRay.dir = theRay.dir - reflect * n;   
     level++; 

@@ -3,121 +3,30 @@
 #define RAY_H
 #include "common.h"
 #include <math.h>
-class  vec3D 
-{
-    public:
-        float x, y, z;
-
-        vec3D()
-        {
-            this->x = 0;
-            this->y = 0;
-            this->z = 0;
-        }
-     
-        vec3D(float i)
-        {
-            this->x = i;
-            this->y = i;
-            this->z = i;
-        }
-        vec3D(float x, float y, float z)
-        {
-            this->x = x;
-            this->y = y;
-            this->z = z;
-        }
-        vec3D& operator += (const vec3D &v2)
-        {
-            this->x += v2.x;
-            this->y += v2.y;
-            this->z += v2.z;
-            return *this;
-        }
-        vec3D& operator -= (const vec3D &v2)
-        {
-            this->x -= v2.x;
-            this->y -= v2.y;
-            this->z -= v2.z;
-            return *this;
-        }
-        void pup(PUP::er &p)
-        {
-            p | x;
-            p | y;
-            p | z;
-        }
-};
-
-
-inline vec3D operator + (const vec3D &v1, const vec3D &v2)
-{
-    vec3D v(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z );
-    return v;
-}
-
-inline vec3D operator + (const vec3D &v1, float val)
-{
-    vec3D v(v1.x + val, v1.y + val, v1.z + val );
-    return v;
-}
-
-inline vec3D operator * (float c, const vec3D &v)
-{
-    vec3D v2( v.x * c, v.y * c, v.z * c );
-    return v2;
-}
-
-//cross product
-inline vec3D cross(const vec3D &v0, const vec3D &v1)
-{
-    vec3D v2(v0.y * v1.z - v0.z * v1.y, 
-            v0.z * v1.x - v0.x * v1.z,  
-            v0.x * v1.y - v0.y * v1.x);
-    return v2;
-}
-
-//cross product
-inline float mag(const vec3D &v)
-{
-    return sqrtf((pow(v.x, 2)  + pow(v.y, 2) + pow(v.z, 2)));
-}
-
-inline vec3D operator - (const vec3D &v1, const vec3D &v2)
-{
-    vec3D v( v1.x - v2.x, v1.y - v2.y, v1.z - v2.z );
-    return v;
-}
-
-inline float operator * (const vec3D &v1, const vec3D &v2 ) 
-{
-    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
-}
+#include "vecmath.h"
 
 class ray 
 {
     public:
         
-        vec3D start, dir;
+        vec3d start, dir;
      
-        ray(){}
+        ray()
+        {
+            start = vec3d();
+            dir = vec3d();
+        }
 
         ray(float x, float y, float z)
         {
-            this->start.x = x;
-            this->start.y = y;
-            this->start.z = z;
+            start = vec3d(x, y, x);
+            dir = vec3d();
         }
 
         ray(float cx, float cy, float cz, float vx, float vy, float vz)
         {
-            this->start.x = cx;
-            this->start.y = cy;
-            this->start.z = cz;
-
-            this->dir.x = vx;
-            this->dir.y = vy;
-            this->dir.z = vz;
+            start = vec3d(cx, cy, cx);
+            dir = vec3d(vx, vy, vz);
         }
 
         void pup(PUP::er &p)
@@ -132,136 +41,93 @@ class lightSrc
 {
     public:
 
-        vec3D loc;
-        float r, g, b;
+        vec3d loc, color;
 
         lightSrc()
         {
-            this->r = 0;
-            this->g = 0;
-            this->b = 0;
+            color = vec3d();
+            loc = vec3d();
         }
      
         lightSrc(float r, float g, float b)
         {
-            this->r = r;
-            this->g = g;
-            this->b = b;
+            color = vec3d(r, g, b);
+            loc = vec3d();
         }
 
         lightSrc(float r, float g, float b, float x, float y, float z)
         {
-            this->r = r;
-            this->g = g;
-            this->b = b;
-            
-            this->loc.x = x;
-            this->loc.y = y;
-            this->loc.z = z;
-
+            color = vec3d(r, g, b);
+            loc = vec3d(x, y, z);
         }
         
 
         void print()
         {
             CkPrintf("location(x, y, z) = (%f, %f, %f)\n", loc.x, loc.y, loc.z);
-            CkPrintf("red = %f, green = %f, blue = %f \n", r, g, b);
+            CkPrintf("red = %f, green = %f, blue = %f \n", color.x, color.y, color.z);
         }
 
         void pup(PUP::er &p)
         {
-            p | r;
-            p | g;
-            p | b;
+            p | color;
             p | loc;
         }
-    
-
-
 };
 
 class Shape
 {
     public:
        
-        vec3D loc;
+        vec3d loc;
         float size;
-        vec3D v0;
-        vec3D v1;
-        vec3D v2;
-        vec3D N;
-        float reflection;
-        float red, green, blue;
+        vec3d v0, v1, v2, N, color;
+        float r;
         int type;
 
         Shape()
         {
-           this->size = 1;
-           this->type = SPHERE;
-           this->reflection = 0.0;
-           this->red = 0;
-           this->green = 0;
-           this->blue = 0;
-        }
+           size = 1;
+           type = SPHERE;
+           r = 0.0;
+           color = vec3d();
+       }
         
         //SPHERE
-        Shape(float size, float x, float y, float z, float reflection, float r, float g, float b)
+        Shape(float s, float x, float y, float z, float reflection, 
+                float r, float g, float b)
         {
-            this->size = size;
-            this->type = SPHERE;
-            this->loc.x = x;
-            this->loc.y = y;
-            this->loc.z = z;
-            this->reflection = reflection;
-            this->red = r;
-            this->green = g;
-            this->blue = b;
-///
-            this->v0.x = 0;
-            this->v0.y = 0;
-            this->v0.z = 0;
-            this->v1.x = 0;
-            this->v1.y = 0;
-            this->v1.z = 0;
-            this->v2.x = 0;
-            this->v2.y = 0;
-            this->v2.z = 0;
-            this->N.x = 0;
-            this->N.y = 0;
-            this->N.z = 0;
-
+            size = s;
+            type = SPHERE;
+            loc = vec3d(x,y,z);
+            r = reflection;
+            color = vec3d(r, g, b);
+            v1 = vec3d();
+            v2 = vec3d();
+            v0 = vec3d();
+            N = vec3d();
         }
         
         //TRIANGLE
-        Shape(float x0, float y0, float z0, float x1, float y1, float z1, float x2, float y2, float z2, float reflection, float r, float g, float b)
+        Shape(float x0, float y0, float z0, float x1, float y1, float z1, 
+                float x2, float y2, float z2, float reflection, 
+                float r, float g, float b)
         {
-
-            this->type = TRIANGLE;
-            this->loc.x = (x0 + x1 + x2)/3;
-            this->loc.y = (y0 + y1 + y2)/3;
-            this->loc.z = (z0 + z1 + z2)/3;
-            this->v0.x = x0;
-            this->v0.y = y0;
-            this->v0.z = z0;
-           // this->v0 -=  this->loc;
-            this->v1.x = x1;
-            this->v1.y = y1;
-            this->v1.z = z1;
-           // this->v0 -=  this->loc;
-            this->v2.x = x2;
-            this->v2.y = y2;
-            this->v2.z = z2;
-            this->N = cross((this->v1 - this->v0), (this->v2 - this->v0));
-            //float tot = sqrtf(1/(pow(this->N.x, 2)  + pow(this->N.y, 2) + pow(this->N.z, 2)));
-            //this->N.x *= tot;
-            //this->N.y *= tot;
-            //this->N.z *= tot;
-            this->reflection = reflection;
-            this->red = r;
-            this->green = g;
-            this->blue = b;
-///
-            this->size = 0;
+            type = TRIANGLE;
+            loc = vec3d((x0 + x1 + x2)/3, (y0 + y1 + y2)/3, (z0 + z1 + z2)/3);
+            
+            v1 = vec3d(x1, y1, z1);
+            v1 -= loc;
+            v2 = vec3d(x2, y2, z2);
+            v2-= loc;
+            v0 = vec3d(x0, y0, z0);
+            v0 -= loc;
+            N = cross(v1 - v0, v2 - v0);
+            
+            N.norm();
+            r = reflection;
+            color = vec3d(r, g, b);
+            size = 0;
         }
 
         void print()
@@ -269,7 +135,7 @@ class Shape
             CkPrintf("location(x,y,z) = (%f, %f, %f)\n", loc.x, loc.y, loc.z);
             CkPrintf("size = %f \n", size);
             CkPrintf("type = %d \n", type);
-            CkPrintf("color = (%f,%f,%f)\n", this->red, this->green, this->blue);
+            CkPrintf("color = (%f,%f,%f)\n", color.x, color.y, color.z);
         }
 
         void pup(PUP::er &p)
@@ -277,16 +143,13 @@ class Shape
             p | size;
             p | type;
             p | loc;
-            p | reflection;
-            p | red;
-            p | green;
-            p | blue;
+            p | r;
+            p | color;
             p | v0;
             p | v1;
             p | v2;
             p | N;
         }
-    
 };
 
 #endif //RAY_H

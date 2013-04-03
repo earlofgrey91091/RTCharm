@@ -29,6 +29,7 @@ clean:
 	rm -f pixelchare.*.log.gz *~
 	rm -f pixelchare.projrc pixelchare.sts pixelchare.topo
 	rm -f myvalg_txt.*****
+	rm -f *~
 	rm -f pixelchare charmrun 
 test:
 	./charmrun pixelchare 520 520 8 3 +p8 +balancer GreedyLB ++server ++server-port 1237 +LBOff
