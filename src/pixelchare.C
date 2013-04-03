@@ -33,6 +33,8 @@ PixelChare::PixelChare(int width, int height)
     }
     tmpBuffer =  new double[w*h];
    if(DEBUG_CODE) CkPrintf("Chare created!\n");
+   CkPrintf("\nPixelChare created at [%d][%d]\n", thisIndex.x, thisIndex.y);
+   CkPrintf("\nhas width %d and height %d", w, h);
 };
 
 
@@ -102,8 +104,8 @@ void PixelChare::antiAliasWork()
                 for(float fragmenty = pixel_y; fragmenty < pixel_y + 1.0f; fragmenty += SAMPLE_RATIO * 2)
                 {
                     clearPixel(index);
-                    ray viewRay(float(fragmentx), float(fragmenty),-1000.0f, 0.0f, 0.0f, 1.0f);
-                    
+                    ray viewRay(float(fragmentx), float(fragmenty),
+                                    -1000.0f, 0.0f, 0.0f, 1.0f);
                     coef = 1.0f;
                     level = 0;
                     do
@@ -142,7 +144,6 @@ void PixelChare::exposePixel(int index)
 
 void PixelChare::normalWork()
 {
-        //CkPrintf("normalwork\n");
     int pixel_x, pixel_y, hitIndex, level, index;
     int position_x = thisIndex.x * w;
     int position_y = thisIndex.y * h;
@@ -152,7 +153,6 @@ void PixelChare::normalWork()
     {
         for(int j = 0; j < h; j++) 
         {
-            //if(thisIndex.x == 0 && thisIndex.y == 0) CkPrintf("[%d][%d]\n", position_x + i, position_y + j);
             //Creating ray passing through each pixel in this chare
             index = (j * w) + i;
             pixel_x = position_x + i;
@@ -175,13 +175,12 @@ void PixelChare::normalWork()
                 if(DEBUG_CODE)
                 {
                     CkPrintf("******************************************\n");
-                    CkPrintf(" Lucky pixel = [%d, %d] hitindex = %d\n", pixel_x, pixel_y, hitIndex);
+                    CkPrintf(" Lucky pixel = [%d, %d] hitindex = %d\n", 
+                        pixel_x, pixel_y, hitIndex);
                     CkPrintf("level = %d\n", level);
                     CkPrintf("******************************************\n");
                 }
-                //if(thisIndex.x == 0 && thisIndex.y == 0) CkPrintf("in while before draw\n");
                 draw(index, viewRay, hitIndex, dist, coef, level);  
-                //if(thisIndex.x == 0 && thisIndex.y == 0) CkPrintf("in while after draw on pixel %d %d, and iteration %d with level %d and coeff %f \n",i,j,iteration, level, coef);
             }
             while((coef > 0.0f) && (level < 10));
             if(EXPOSURE)exposePixel(index);
@@ -229,8 +228,7 @@ int PixelChare::shoot(ray theRay, float &dist)
     float n = INF;    
     for(int i = 0; i < myShapes.size(); i++)
     {
-        hit(i, theRay, n);
-        if(n < minVal)
+        if(hit(i, theRay, n) && n < minVal)
         {
             minVal = n;
             minIndex = i;
@@ -293,7 +291,6 @@ bool PixelChare::triHit(int index, ray r, float &t)
 
     //CkPrintf("v1 = {%f, %f, %f} \n", myShapes[index].v1.x, myShapes[index].v1.y, myShapes[index].v1.z);
     //CkPrintf("v0 = {%f, %f, %f} \n", myShapes[index].v0.x, myShapes[index].v0.y, myShapes[index].v0.z);
-
     //CkPrintf("v2 = {%f, %f, %f} \n", myShapes[index].v2.x, myShapes[index].v2.y, myShapes[index].v2.z);
 
 
@@ -302,11 +299,9 @@ bool PixelChare::triHit(int index, ray r, float &t)
     vec3D pvec = cross(r.dir, edge2);
     float det = edge1 * pvec;
 
-    //CkPrintf("det = %f \n", det);
-
     if (det == 0) 
     {
-	//CkPrintf("ray and plane are parallel\n");
+        //CkPrintf("ray and plane are parallel\n");
         return false; // ray and plane are parallel
     }
     float invDet = 1 / det;
@@ -314,7 +309,6 @@ bool PixelChare::triHit(int index, ray r, float &t)
     vec3D tvec = r.start - myShapes[index].v0;
     //vec3D tvec = r.start - (myShapes[index].v0 + myShapes[index].loc);
     float u = (tvec * pvec) * invDet;
-   
     //CkPrintf("u = %f \n", u);  
 
     if (u < 0 || u > 1) 
@@ -331,9 +325,9 @@ bool PixelChare::triHit(int index, ray r, float &t)
         return false;//out of bounds
     }
     
-	
-    t = (edge2*qvec) * invDet;
-   // CkPrintf("Tri is true\n");
+    t = (edge2*qvec) * invDet; // this may be our issue because are we supposed to compute cross(edge2, qvec)*invDet  
+                               //it's possible that this all vectormath issues
+    // CkPrintf("Tri is true\n");
     return true;
 
 }
@@ -349,6 +343,7 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
     float magDist;
     ray lightRay;
     
+    //if((index%w + thisIndex.x*w) == 100 && (index/w  + thisIndex.y*h) == 400) CkPrintf("drawpixel!");
     //figuring out the normal vector at the point of intersection
     if(myShapes[hitIndex].type == TRIANGLE)
     {
@@ -359,13 +354,11 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
         vec3D edge1 = myShapes[hitIndex].v1 - myShapes[hitIndex].v0;
         vec3D edge2 = myShapes[hitIndex].v2 - myShapes[hitIndex].v0;
         vec3D pvec = cross(theRay.dir, edge2);
-	//n = cross(edge1, edge2);
-	n = newStart - myShapes[hitIndex].loc;
+        //n = cross(edge1, edge2);
+        n = newStart - myShapes[hitIndex].loc;
         //det = n * n;
         //n = cross(edge1, edge2);
-	det = edge1 * pvec;
-        
-
+        det = edge1 * pvec;
 
         //pixelArray[index].r = 255;
         //pixelArray[index].g = 255;
@@ -373,27 +366,28 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
     }
     else 
     {
-	n = newStart - myShapes[hitIndex].loc;
+        n = newStart - myShapes[hitIndex].loc;
         det = n * n;
     }
 
     if (det == 0.0f)
     {
+        if((index%w + thisIndex.x*w) == 100 && (index/w  + thisIndex.y*h) == 400) CkPrintf("views target pixel as parallel!");
         level = 10;
         return; // if the ray is parallel with the viewer
     }
 
-    if(myShapes[hitIndex].type == TRIANGLE)
+    if(myShapes[hitIndex].type != TRIANGLE)
     {
-	//det = 1.0f / det;
-        //n = det * n;	
+        det = 1.0f / sqrtf(det);
+        n = det * n;
     }
-    else
+    /*else
     {
-    	det = 1.0f / sqrtf(det);
-    	n = det * n;
-    }
-
+        //det = 1.0f / det;
+        //n = det * n;    
+    }*/
+    
     
     for(int j = 0; j < myLights.size(); ++j)
     {
@@ -410,31 +404,29 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
             pixelArray[index].r += lambert * current.r * myShapes[hitIndex].red;
             pixelArray[index].g += lambert * current.g * myShapes[hitIndex].green;
             pixelArray[index].b += lambert * current.b * myShapes[hitIndex].blue;
-	    
-	    //pixelArray[index].r += current.r * myShapes[hitIndex].red;
+        
+            //pixelArray[index].r += current.r * myShapes[hitIndex].red;
             //pixelArray[index].g += current.g * myShapes[hitIndex].green;
             //pixelArray[index].b += current.b * myShapes[hitIndex].blue;
 
 
-            if(DEBUG_CODE) 
-            {
+            //if(DEBUG_CODE) 
+            //{
+            if((index%w + thisIndex.x*w) == 100 && (index/w  + thisIndex.y*h) == 400)
+            {          
                 //CkPrintf("current lightray.dir = %f, n = %f coef = %f", lightRay.dir, n, coef);
-                CkPrintf("lambert = %f   current(%f,%f,%f)\n", lambert, current.r, current.g, current.b);
-                CkPrintf("hitindex = %d shape.color(%f,%f,%f)\n", hitIndex, myShapes[hitIndex].red, myShapes[hitIndex].green, myShapes[hitIndex].blue);
-                CkPrintf("pixelarray(%f,%f,%f\n",pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
+                CkPrintf("lambert = %f   current(%f,%f,%f)\n", 
+                    lambert, current.r, current.g, current.b);
+                CkPrintf("hitindex = %d shape.color(%f,%f,%f)\n", 
+                    hitIndex, myShapes[hitIndex].red, myShapes[hitIndex].green, 
+                    myShapes[hitIndex].blue);
+                CkPrintf("pixelarray(%f,%f,%f\n",
+                        pixelArray[index].r,pixelArray[index].g,pixelArray[index].b);
                 //myShapes[hitIndex].print();
                 //CkAssert(lambert <= 1);
             }
         }
     }
-	
-    if (pixelArray[index].r == 0 && pixelArray[index].b == 0 && pixelArray[index].g == 0)
-    {        
-    	//CkPrintf("pixelarray[%d] = %f, %f, %f \n", index, pixelArray[index].r, pixelArray[index].g, pixelArray[index].b);
-    }
-
-    //CkAssert(pixelArray[index].r == 0 && pixelArray[index].b == 0 && pixelArray[index].g == 0); 
-
     float reflect = 2.0f * (theRay.dir * n);
     //modify return vars
     coef *= myShapes[hitIndex].reflection;
@@ -477,11 +469,7 @@ void PixelChare::liveVizFunc(liveVizRequestMsg *m)
             } else {
                 c->b = (byte)255.0;
             }
-	 //c->r= 0;c->g = 0; c->b = 0;
-	if((x+thisIndex.x * w) == 100 && (y+ thisIndex.y*h)== 400) 
-	{
-		c->r= 0;c->g = 0; c->b = 255;
-	}
+     
         }
     }
 

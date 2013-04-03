@@ -33,18 +33,21 @@ Main::Main(CkArgMsg* arg)
             CkExit();
         }
 
-        //CkPrintf(" w is %d h is %d pw is %d ph is %d", image_w, image_h, pixel_w, pixel_h); 
-        CkPrintf("\npicture will be %d pixels in height,\ncells will be %d pixels in width,\nthere will be %d cells\nthere will be %dspheres\n", 
-                    image_h, image_w, chareDimension * chareDimension, numSpheres);
+        CkPrintf("\npicture will be %d pixels in height,\n", image_h);
+        CkPrintf("picture will be %d pixels in width,\n", image_w);
+        CkPrintf("there will be %d cells\n", chareDimension * chareDimension);
+        CkPrintf("there will be %d shapes\n", numSpheres);
     }
     else
     {
         image_w = LIMIT;
         image_h = LIMIT;
         chareDimension = DEFAULT_CHAREDIM;
-        numSpheres = DEFAULT_SPHERES;
-        CkPrintf("\npicture will be %d pixels in height,\ncells will be %d pixels in width,\nthere will be %d cells\nthere will be %dspheres\n", 
-                    image_h, image_w, chareDimension * chareDimension,numSpheres);
+        numSpheres = DEFAULT_SPHERES; //misnameed need fix
+        CkPrintf("\npicture will be %d pixels in height,\n", image_h);
+        CkPrintf("picture will be %d pixels in width,\n", image_w);
+        CkPrintf("there will be %d cells\n", chareDimension * chareDimension);
+        CkPrintf("there will be %d shapes\n", numSpheres);
     }
     delete arg;
 
@@ -54,25 +57,18 @@ Main::Main(CkArgMsg* arg)
 
     lightSrc l(1.0, 1.0, 1.0, 0.0, image_h/2, -100.0);
     lightSrc l1(1.0, 0.5, 0.5, image_w/2, 0.0, -10000.0);
-    //lightSrc l2(1.0, 1.0, 1.0, 300.0, 100.0, -100.0);
     myLights.push_back(l);
     myLights.push_back(l1);
-    //myLights.push_back(l2);
-    /*for(int i = 0; i < numSpheres ; i++)
-    {
-        Shape s(drand48()*60.0, drand48()*image_w, drand48()*image_h, drand48()*image_w, .5, drand48(), drand48(), drand48());//sphere
-        myShapes.push_back(s);
-    }
-    */
     for(int i = 0; i < numSpheres ; i++)
     {
-	Shape s(drand48()*image_w, drand48()*image_h, drand48()*image_w, drand48()*image_w, drand48()*image_h, drand48()*image_w, drand48()*image_w, drand48()*image_h, drand48()*image_w, 2.0, drand48(), drand48(), drand48());
-
-        //Shape s(200, 200, 0, 400, 200, 0, 300, 0, 0, .5, drand48(), drand48(), drand48());//triangle
+	    //triangle
+	    Shape s(drand48()*image_w, drand48()*image_h, drand48()*image_w, 
+	            drand48()*image_w, drand48()*image_h, drand48()*image_w, 
+	            drand48()*image_w, drand48()*image_h, drand48()*image_w, 
+	            .1, drand48(), drand48(), drand48());
         myShapes.push_back(s);
-	//Shape s1(0, 200, 0, 200, 200, 0, 100, 0, 0, .5, drand48(), drand48(), drand48());//triangle
-        //myShapes.push_back(s1);
     }
+    /*
     if(MOVE_SHAPE)
     {
         for (int i=0; i<myShapes.size(); i++)
@@ -80,10 +76,12 @@ Main::Main(CkArgMsg* arg)
             vec3D d(drand48()*10*pow(-1.0, i));
             shapeDirection.push_back(d);
         }
-    }
+    }*/
     //Create the image pixel chares based on image size
-    pixel = CProxy_PixelChare::ckNew(image_w/chareDimension, image_h/chareDimension, opts);
-    CkPrintf("\nEach chare will have (%d * %d) pixels \n", image_w/chareDimension, image_h/chareDimension);
+    pixel = CProxy_PixelChare::ckNew(image_w/chareDimension, 
+                                        image_h/chareDimension, opts);
+    CkPrintf("\nEach chare will have (%d * %d) pixels \n", 
+                image_w/chareDimension, image_h/chareDimension);
     startVis();
     pixel.startStep(myShapes, myLights);
     mainProxy.run();
