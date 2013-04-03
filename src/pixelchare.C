@@ -347,14 +347,14 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
         //    n = myShapes[hitIndex].N;
         //else n = myShapes[hitIndex].N * -1;
 
-        vec3D edge1 = myShapes[hitIndex].v1 - myShapes[hitIndex].v0;
-        vec3D edge2 = myShapes[hitIndex].v2 - myShapes[hitIndex].v0;
-        vec3D pvec = cross(theRay.dir, edge2);
+        vec3d edge1 = myShapes[hitIndex].v1 - myShapes[hitIndex].v0;
+        vec3d edge2 = myShapes[hitIndex].v2 - myShapes[hitIndex].v0;
+        vec3d pvec = cross(theRay.dir, edge2);
         //n = cross(edge1, edge2);
         n = newStart - myShapes[hitIndex].loc;
         //det = n * n;
         //n = cross(edge1, edge2);
-        det = edge1 * pvec;
+        det = dot(edge1, pvec);
 
         //pixelArray[index].r = 255;
         //pixelArray[index].g = 255;
