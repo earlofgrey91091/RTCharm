@@ -29,6 +29,7 @@ clean:
 	rm -f pixelchare.*.log.gz
 	rm -f pixelchare.projrc pixelchare.sts pixelchare.topo
 	rm -f myvalg_txt.*****
+	rm -f *~
 	rm -f pixelchare charmrun 
 test:
 	./charmrun pixelchare 1024 1024 8 60 +p4  ++server ++server-port 1234
