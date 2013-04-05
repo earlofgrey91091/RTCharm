@@ -60,14 +60,33 @@ Main::Main(CkArgMsg* arg)
     lightSrc l1(1.0, 0.5, 0.5, image_w/2, 0.0, -10000.0);
     myLights.push_back(l);
     myLights.push_back(l1);
+    vec3d v0(268.0, 178.0, 276.0), v1( 178.0,268.0, 200.0), v2(268.0,268.0, 170.0), mod(-50, -50, 90);
     for(int i = 0; i < numSpheres ; i++)
     {
 	    //triangle
-	    Shape s(drand48()*image_w, drand48()*image_h, drand48()*image_w, 
+	    /*Shape s(drand48()*image_w, drand48()*image_h, drand48()*image_w, 
 	            drand48()*image_w, drand48()*image_h, drand48()*image_w, 
 	            drand48()*image_w, drand48()*image_h, drand48()*image_w, 
-	            .1, drand48(), drand48(), drand48());
+	           .9, drand48(), drand48(), drand48());
         myShapes.push_back(s);
+        */
+        
+	    Shape s(v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, 1.0, 1.0, 1.0, 0.0);
+	    myShapes.push_back(s);
+	    v0+=mod; v1+=mod; v2+=mod;
+	            
+       /*Shape s1(268.024200,478.535675,276.409576,
+                455.510040,155.062531,131.227081,
+                9.835698,398.866608,26.432596, 
+	           .9, 1.0, 1.0, 0.0);
+	         
+       Shape s2(131.721527,52.476463,407.931488,
+                464.831055,61.542889,512.143311,
+                423.942413,39.922775,296.719299, 
+	           .9, 1.0, 1.0, 0.0);*/
+        //myShapes.push_back(s2);
+        //myShapes.push_back(s0);
+        //myShapes.push_back(s1);
     }
     /*
     if(MOVE_SHAPE)
@@ -83,6 +102,7 @@ Main::Main(CkArgMsg* arg)
                                         image_h/chareDimension, opts);
     CkPrintf("\nEach chare will have (%d * %d) pixels \n", 
                 image_w/chareDimension, image_h/chareDimension);
+    CkPrintf("MyShapes.size() = %d", myShapes.size());
     startVis();
     pixel.startStep(myShapes, myLights);
     mainProxy.run();
@@ -93,7 +113,7 @@ Main::Main(CkMigrateMessage *msg){ }
 //Rotates all lightsources about the Z-axis
 void Main::rotateLights()
 {
-    /*
+    
     int x,y;
     for(int i = 0; i < myLights.size(); i++)
     {
@@ -105,10 +125,7 @@ void Main::rotateLights()
     if(MOVE_SHAPE){
         for(int i = 0; i < myShapes.size(); i++)
         {
-            myShapes[i].loc.x = myShapes[i].loc.x + shapeDirection[i].x;
-            myShapes[i].loc.y = myShapes[i].loc.y + shapeDirection[i].y;
-            myShapes[i].loc.z = myShapes[i].loc.z + shapeDirection[i].z;
-            
+            myShapes[i].loc += shapeDirection[i];
             if ((myShapes[i].loc.x + myShapes[i].size > image_w) || 
                 (myShapes[i].loc.x - myShapes[i].size < 0))
             {
@@ -126,7 +143,7 @@ void Main::rotateLights()
             }
         }
         sendShape = myShapes;
-    }*/
+    }
 }
 
 

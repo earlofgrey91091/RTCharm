@@ -115,19 +115,22 @@ class Shape
         {
             type = TRIANGLE;
             loc = vec3d((x0 + x1 + x2)/3, (y0 + y1 + y2)/3, (z0 + z1 + z2)/3);
+            color = vec3d(r, g, b);
             
             v1 = vec3d(x1, y1, z1);
-            v1 -= loc;
+            //v1 -= loc;
+            //CkAssert(v1 == vec3d(x1, y1, z1) -loc)
             v2 = vec3d(x2, y2, z2);
-            v2-= loc;
+            //v2-= loc;
             v0 = vec3d(x0, y0, z0);
-            v0 -= loc;
+            //v0 -= loc;
             N = cross(v1 - v0, v2 - v0);
             
             N.norm();
             r = reflection;
-            color = vec3d(r, g, b);
+            
             size = 0;
+            
         }
 
         void print()

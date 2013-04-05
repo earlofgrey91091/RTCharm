@@ -19,7 +19,7 @@
 #define ROT_RAD 0.034906585 //2*PI/180
 #define LIMIT 1024 //boundry size of the viewable space
 #define GAMMA false
-#define ANTI_ALIASING false
+#define ANTI_ALIASING true
 #define EXPOSURE false
 #define SHAPE_DISP 3
 #define MOVE_SHAPE false
