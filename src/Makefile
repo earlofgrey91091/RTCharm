@@ -1,6 +1,6 @@
-#CHARMDIR = /dcsdata/home/ginsbur3/charm
+CHARMDIR = /dcsdata/home/ginsbur3/charm
 #CHARMDIR = /home/nikhil/charm/net-linux-x86_64-smp
-CHARMDIR =  /home/josh/gitRepos/charm
+#CHARMDIR =  /home/josh/gitRepos/charm
 #CHARMDIR = /Users/harinirajesh/Desktop/charm/net-darwin-x86_64-smp/
 #[put Charm++ install directory here] ^
 CHARMC = $(CHARMDIR)/bin/charmc $(OPTS)
@@ -31,5 +31,12 @@ clean:
 	rm -f myvalg_txt.*****
 	rm -f *~
 	rm -f pixelchare charmrun 
+
 test:
-	./charmrun pixelchare 520 520 8 3 +p8 +balancer GreedyLB ++server ++server-port 1237 +LBOff
+	./charmrun pixelchare 520 520 1 3 +p8 ++server ++server-port 1237
+	
+testsimpler:
+	./charmrun pixelchare 520 520 1 1 +p8 ++server ++server-port 1237
+	
+testGLB:
+	./charmrun pixelchare 520 520 8 3 +p8 +balancer GreedyLB ++server ++server-port 1237

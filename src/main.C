@@ -60,7 +60,7 @@ Main::Main(CkArgMsg* arg)
     lightSrc l1(1.0, 0.5, 0.5, image_w/2, 0.0, -10000.0);
     myLights.push_back(l);
     myLights.push_back(l1);
-    float zdiff = 70.0;
+    float zdiff = 0;//70.0;
     vec3d v0(268.0, 178.0, 276.0), v1( 178.0,268.0, 276.0 - zdiff), v2(268.0,268.0, 276.0 - zdiff*1.5), mod(-50, -50, 90);
     for(int i = 0; i < numSpheres ; i++)
     {
