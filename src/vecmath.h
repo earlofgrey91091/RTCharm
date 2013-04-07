@@ -96,6 +96,7 @@ class vec3d
         void norm()
         {
             float m = mag();
+            if(m == 0) return;
             x /= m;
             y /= m;
             z /= m;
