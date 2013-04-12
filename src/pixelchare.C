@@ -344,7 +344,7 @@ bool PixelChare::triHit(int index, ray r, float &t)
     if (v < 0 || u + v > 1) return false;
     t = (float)(float(dot(edge2, qvec)) * invDet);
     if(t == 0) t = INF; 
-    //CkPrintf("in tri-hit returned t is %f\n dot(e2,qvec) was %f, and invdet was %f", t, dot(edge2, qvec), invDet);
+    CkPrintf("in tri-hit returned t is %f\n dot(e2,qvec) was %f, and invdet was %f", t, dot(edge2, qvec), invDet);
     return true;
 
 }
@@ -382,7 +382,7 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
     if (det == 0.0f)
     {
         level = 10;
-        //CkPrintf("pixel at (%f,%f) thinks it's parallel", index%w + thisIndex.x*w, index/w + thisIndex.y*h);
+        CkPrintf("pixel at (%f,%f) thinks it's parallel", index%w + thisIndex.x*w, index/w + thisIndex.y*h);
         return; // if the ray is parallel with the viewer
     }
 
@@ -395,7 +395,7 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
     {
         det = 1.0f / det;
         n = det * n;    
-    }//*/
+    }*/
 
     
     for(int j = 0; j < myLights.size(); ++j)
@@ -408,8 +408,8 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
         lightRay.start = newStart;
         lightRay.dir = (1/magDist)*dist;
         int shotret = shoot(lightRay, dummy);
-        //CkPrintf("in draw pixel at (%d,%d) returns shortest distance %f, at index %d \n", index%w + thisIndex.x*w, index/w + thisIndex.y*h, dummy,shotret);
-        CkAssert(shotret < 3);
+        CkPrintf("in draw pixel at (%d,%d) returns shortest distance %f, at index %d \n", index%w + thisIndex.x*w, index/w + thisIndex.y*h, dummy,shotret);
+        //CkAssert(shotret < 3);
         if(shotret == NEGINF)
         {
             lambert = dot(lightRay.dir, n) * (coef);
@@ -417,9 +417,9 @@ void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coe
             pixelArray[index].g += lambert * current.color.y * myShapes[hitIndex].color.y;
             pixelArray[index].b += lambert * current.color.z * myShapes[hitIndex].color.z;
         
-            //pixelArray[index].r += current.r * myShapes[hitIndex].red;
-            //pixelArray[index].g += current.g * myShapes[hitIndex].green;
-            //pixelArray[index].b += current.b * myShapes[hitIndex].blue;
+            //pixelArray[index].r += current.r * myShapes[hitIndex].r;
+            //pixelArray[index].g += current.g * myShapes[hitIndex].g;
+            //pixelArray[index].b += current.b * myShapes[hitIndex].b;
 
 
             if(DEBUG_CODE) 
