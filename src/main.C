@@ -23,7 +23,7 @@ Main::Main(CkArgMsg* arg)
         image_w = atoi(arg->argv[1]);
         image_h = atoi(arg->argv[2]);
         chareDimension = atoi(arg->argv[3]);
-        numSpheres = atoi(arg->argv[4]);
+        numShapes = atoi(arg->argv[4]);
         
         //force fit inputs
         image_w -= image_w % chareDimension;
@@ -37,18 +37,18 @@ Main::Main(CkArgMsg* arg)
         CkPrintf("\npicture will be %d pixels in height,\n", image_h);
         CkPrintf("picture will be %d pixels in width,\n", image_w);
         CkPrintf("there will be %d cells\n", chareDimension * chareDimension);
-        CkPrintf("there will be %d shapes\n", numSpheres);
+        CkPrintf("there will be %d shapes\n", numShapes);
     }
     else
     {
         image_w = LIMIT;
         image_h = LIMIT;
         chareDimension = DEFAULT_CHAREDIM;
-        numSpheres = DEFAULT_SPHERES; //misnameed need fix
+        numShapes = DEFAULT_SHAPES; //misnameed need fix
         CkPrintf("\npicture will be %d pixels in height,\n", image_h);
         CkPrintf("picture will be %d pixels in width,\n", image_w);
         CkPrintf("there will be %d cells\n", chareDimension * chareDimension);
-        CkPrintf("there will be %d shapes\n", numSpheres);
+        CkPrintf("there will be %d shapes\n", numShapes);
     }
     delete arg;
 
@@ -62,32 +62,13 @@ Main::Main(CkArgMsg* arg)
     myLights.push_back(l1);
     float zdiff = 70.0; //0
     vec3d v0(268.0, 178.0, 276.0), v1( 178.0,268.0, 276.0 - zdiff), v2(268.0,268.0, 276.0 - zdiff*1.5), mod(-50, -50, 90);
-    for(int i = 0; i < numSpheres ; i++)
+    for(int i = 0; i < numShapes ; i++)
     {
-	    //triangle
-	    /*Shape s(drand48()*image_w, drand48()*image_h, drand48()*image_w, 
-	            drand48()*image_w, drand48()*image_h, drand48()*image_w, 
-	            drand48()*image_w, drand48()*image_h, drand48()*image_w, 
-	           .9, drand48(), drand48(), drand48());
-        myShapes.push_back(s);
-        */
         
-	    Shape s(v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, 1.0, 1.0, 1.0, 0.0);
+	    Shape s(v0, v1, v2, vec3d(1.0, 1.0, 1.0), 0.0);
 	    myShapes.push_back(s);
 	    v0+=mod; v1+=mod; v2+=mod;
 	            
-       /*Shape s1(268.024200,478.535675,276.409576,
-                455.510040,155.062531,131.227081,
-                9.835698,398.866608,26.432596, 
-	           .9, 1.0, 1.0, 0.0);
-	         
-       Shape s2(131.721527,52.476463,407.931488,
-                464.831055,61.542889,512.143311,
-                423.942413,39.922775,296.719299, 
-	           .9, 1.0, 1.0, 0.0);*/
-        //myShapes.push_back(s2);
-        //myShapes.push_back(s0);
-        //myShapes.push_back(s1);
     }
     /*
     if(MOVE_SHAPE)
@@ -114,7 +95,7 @@ Main::Main(CkMigrateMessage *msg){ }
 //Rotates all lightsources about the Z-axis
 void Main::rotateLights()
 {
-    
+    /*
     int x,y;
     for(int i = 0; i < myLights.size(); i++)
     {
@@ -126,25 +107,18 @@ void Main::rotateLights()
     if(MOVE_SHAPE){
         for(int i = 0; i < myShapes.size(); i++)
         {
-            myShapes[i].loc += shapeDirection[i];
-            if ((myShapes[i].loc.x + myShapes[i].size > image_w) || 
-                (myShapes[i].loc.x - myShapes[i].size < 0))
-            {
-                shapeDirection[i].x*=-1;
-            }
-            if((myShapes[i].loc.y + myShapes[i].size > image_h) || 
-                (myShapes[i].loc.y - myShapes[i].size < 0))
-            {
-                shapeDirection[i].y*=-1;
-            }
-            if((myShapes[i].loc.z + myShapes[i].size > image_w) || 
-                (myShapes[i].loc.y - myShapes[i].size < 0))
-            {
-                shapeDirection[i].z*=-1;
-            }
+            //vec3d v= myShapes[i].loc;
+            
+            //fortriangles
+            myShapes[i].v1 += vec3d(0.0,0.0, 100.0);
+            myShapes[i].v1 += vec3d(0.0,0.0, 100.0);
+            myShapes[i].v2 += vec3d(0.0,0.0, 100.0);
+            
+            //CkAssert(myShapes[i].loc == (v+vec3d(60.0,0.0, 20.0)));
         }
         sendShape = myShapes;
     }
+    */
 }
 
 

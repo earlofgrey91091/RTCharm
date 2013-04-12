@@ -2,6 +2,7 @@
 #define VECMATH_H
 #include <math.h>
 #include <stdio.h>
+#define EPISILON .0000000001
 
 class vec3d 
 {
@@ -96,10 +97,31 @@ class vec3d
         void norm()
         {
             float m = mag();
-            if(m == 0) return;
+            if(m < EPSILON) return;
             x /= m;
             y /= m;
             z /= m;
+        }
+        
+        //rotate about the x axis
+        void RotX(double angle)
+        {
+            this->y = y * cos(angle) - z * sin(angle);
+            this->z = y * sin(angle) + z * cos(angle);
+        }
+
+        //rotate about the y axis
+        void RotY(double angle)
+        {
+            this->x = x * cos(angle) - z * sin(angle);
+            this->z = x * sin(angle) + z * cos(angle);
+        }
+
+        //rotate about the x axis
+        void RotX(double angle)
+        {
+            this->x = x * cos(angle) - y * sin(angle);
+            this->y = x * sin(angle) + y * cos(angle);
         }
         
         void pup(PUP::er &p)
@@ -169,6 +191,39 @@ inline vec3d operator - (const vec3d &v1, float val)
 inline float dot(const vec3d &v1, const vec3d &v2 ) 
 {
     return (float)((float)v1.x * v2.x + (float)v1.y * v2.y + (float)v1.z * v2.z);
+}
+
+
+inline vec3d Refract(const float n1, const float n2, const vec3d &in, const vec3d &mirror)
+{
+    float c1 = -Dot(mirror, in);
+    float n = n1 / n2;
+    float c2 = sqrt(1.0 - n * n * (1.0 - c1 * c1));
+    vec3d v = in*n + (n*c1 - c2)*mirror; 
+    return v;
+}
+
+inline vec3d refract(const float n1, const float n2, const vec3d &in, const vec3d &mirror)
+{
+    float c1 = -Dot(mirror, in);
+    float n = n1 / n2;
+    float c2 = sqrt(1.0 - n * n * (1.0 - c1 * c1));
+    vec3d v = in*n + (n*c1 - c2)*mirror; 
+    return v;
+}
+
+inline vec3d reflect(const vec3d &in, const vec3d &mirror)
+{
+    float c1 = -Dot(mirror, in);
+    vec3d v = (-1)*(in + (2*c1)*mirror; 
+    return v;
+}
+
+//distance betwween two points
+inline float reflect(const vec3d &v0, const vec3d &v1)
+{
+    vec3d v = v1 - v0; 
+    return v.mag();
 }
 
 // We want a featured Quaternion class for safe rotations

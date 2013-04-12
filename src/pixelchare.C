@@ -78,50 +78,12 @@ PixelChare::~PixelChare()
 
 void PixelChare::doWork()
 {
-    //CkPrintf("doingwork\n");
-    if(ANTI_ALIASING) antiAliasWork();
-    else normalWork();
+
 }
 
 void PixelChare::antiAliasWork()
 {
-    //CkPrintf("antialiaswork\n");
-    int pixel_x, pixel_y, hitIndex, level, index;
-    int position_x = thisIndex.x * w;
-    int position_y = thisIndex.y * h;
-    float dist, coef /*, correction*/;
-    for(int j = 0; j < w; j++) 
-    {
-        for(int i = 0; i < h; i++) 
-        {
-            index = (j * w) + i;
-            pixel_x = position_x + i;
-            pixel_y = position_y + j;
-            for(float fragmentx = pixel_x; fragmentx < pixel_x + 1.0f; fragmentx += SAMPLE_RATIO * 2)
-            {
-                for(float fragmenty = pixel_y; fragmenty < pixel_y + 1.0f; fragmenty += SAMPLE_RATIO * 2)
-                {
-                    clearPixel(index);
-                    ray viewRay(float(fragmentx), float(fragmenty),-1000.0f, 0.0f, 0.0f, 1.0f);
-                    
-                    coef = 1.0f;
-                    level = 0;
-                    do
-                    {
-                        hitIndex = shoot(viewRay, dist);
-                        if(hitIndex == NEGINF) break;
-                        draw(index, viewRay, hitIndex, dist, coef, level); 
-                    } while((coef > 0.0f) && (level < 10));
-                    
-                    if(EXPOSURE)exposePixel(index);
-                    //average in samples
-                    pixelArray[index].r += pixelArray[index].r * SAMPLE_RATIO;
-                    pixelArray[index].g += pixelArray[index].g * SAMPLE_RATIO;
-                    pixelArray[index].b += pixelArray[index].b * SAMPLE_RATIO;
-                }
-            }
-        }
-    }
+    
 }
 
 void PixelChare::clearPixel(int index)
@@ -142,44 +104,7 @@ void PixelChare::exposePixel(int index)
 
 void PixelChare::normalWork()
 {
-        //CkPrintf("normalwork\n");
-    int pixel_x, pixel_y, hitIndex, level, index;
-    int position_x = thisIndex.x * w;
-    int position_y = thisIndex.y * h;
-    float dist, coef; //, correction;
 
-    for(int i = 0; i < w; i++) 
-    {
-        for(int j = 0; j < h; j++) 
-        {
-            //Creating ray passing through each pixel in this chare
-            index = (j * w) + i;
-            pixel_x = position_x + i;
-            pixel_y = position_y + j;
-            ray viewRay(float(pixel_x), float(pixel_y), -1000.0f, 0.0f, 0.0f, 1.0f);
-            //see what the closest hit is             
-            coef = 1.0f;
-            level = 0;
-            clearPixel(index);
-            
-            do
-            {
-                //if(thisIndex.x == 0 && thisIndex.y == 0) CkPrintf("in while before shoot\n");
-                hitIndex = shoot(viewRay, dist);
-                if(hitIndex == NEGINF) break;
-                if(DEBUG_CODE)
-                {
-                    CkPrintf("******************************************\n");
-                    CkPrintf(" Lucky pixel = [%d, %d] hitindex = %d\n", pixel_x, pixel_y, hitIndex);
-                    CkPrintf("level = %d\n", level);
-                    CkPrintf("******************************************\n");
-                }
-                draw(index, viewRay, hitIndex, dist, coef, level);  
-            }
-            while((coef > 0.0f) && (level < 10));
-            if(EXPOSURE)exposePixel(index);
-        }
-    }
 }
 
 void PixelChare::ResumeFromSync()
@@ -217,119 +142,18 @@ void PixelChare::runStep(vector<Shape> shapes, vector<lightSrc> lights)
 //returns index of closest hit, NEGINF otherwise
 int PixelChare::shoot(ray theRay, float &dist)
 {
-    int minIndex = NEGINF;
-    float minVal = INF;
-    float n = INF;    
-    for(int i = 0; i < myShapes.size(); i++)
-    {
-        if(hit(i, theRay, n))
-        {
-            //CkPrintf("in shoot returned n is %f\n", n);
-            if(n < minVal)
-            {
-                minVal = n;
-                minIndex = i;
-            }
-        }
-    }
-    dist = minVal;
     
-    return minIndex;
 }
 
 bool PixelChare::hit(int index, ray theRay, float &n)
 {
-    bool result = false;
-    switch(myShapes[index].type)
-    {
-        case SPHERE: result = sphereHit( index, theRay, n); break;
-        case TRIANGLE: result = triHit( index, theRay, n); break;
-        default: CkPrintf("Attempted to compute hit for unrecognised shape with type id %d\n", myShapes[index].type);
-    }
-    return result;
-}
-
-
-
-bool PixelChare::sphereHit(int index, ray r, float &t)
-{
-    // sphere hit function
-    vec3d dist = myShapes[index].loc - r.start;
-
-    float B = dot(r.dir, dist);
-    float D = B*B - dot(dist, dist) + myShapes[index].size * myShapes[index].size;
-
-    if (D < 0.0f) 
-    {
-        return false; 
-    }
-
-    float t0 = B - sqrtf(D); 
-    float t1 = B + sqrtf(D);
-    bool retvalue = false;
-
-    if ((t0 > 0.1f) && (t0 < t)) 
-    {
-        t = t0;
-        retvalue = true; 
-    } 
-    if ((t1 > 0.1f) && (t1 < t)) 
-    {
-        t = t1; 
-        retvalue = true; 
-    }
-    return retvalue; 
+    
 }
 
 
 bool PixelChare::triHit(int index, ray r, float &t)
 {
-    // triangle hit function
-    //CkPrintf("int tri\n");   
-    /*
-    //CkPrintf("v1 = {%f, %f, %f} \n", myShapes[index].v1.x, myShapes[index].v1.y, myShapes[index].v1.z);
-    //CkPrintf("v0 = {%f, %f, %f} \n", myShapes[index].v0.x, myShapes[index].v0.y, myShapes[index].v0.z);
-    //CkPrintf("v2 = {%f, %f, %f} \n", myShapes[index].v2.x, myShapes[index].v2.y, myShapes[index].v2.z);
-
-
-    vec3d edge1 = myShapes[index].v1 - myShapes[index].v0;
-    vec3d edge2 = myShapes[index].v2 - myShapes[index].v0;
-    vec3d pvec = cross(r.dir, edge2);
-    float det = dot(edge1, pvec);
-
-    //CkPrintf("det = %f \n", det);
-
-    if (det == 0) 
-    {
-    //CkPrintf("ray and plane are parallel\n");
-        return false; // ray and plane are parallel
-    }
-    float invDet = 1 / det;
     
-    vec3d tvec = r.start - myShapes[index].v0;
-    //vec3d tvec = r.start - (myShapes[index].v0 + myShapes[index].loc);
-    float u = dot(tvec, pvec) * invDet;
-   
-    //CkPrintf("u = %f \n", u);  
-
-    if (u < 0 || u > 1) 
-    {
-        return false; //out of bounds
-    }
-    vec3d qvec = cross(tvec, edge1);
-    float v = dot(r.dir, qvec) * invDet;
-
-    //CkPrintf("v = %f and u+v = %f \n", v , v+u);
-
-    if (v < 0 || u + v > 1) 
-    {
-        return false;//out of bounds
-    }
-    
-    
-    t = dot(edge2, qvec) * invDet;
-   // CkPrintf("Tri is true\n");
-    return true;*/
     vec3d edge1 = myShapes[index].v1 - myShapes[index].v0;
     vec3d edge2 = myShapes[index].v2 - myShapes[index].v0;
     vec3d pvec = cross(r.dir, edge2);
@@ -344,109 +168,14 @@ bool PixelChare::triHit(int index, ray r, float &t)
     if (v < 0 || u + v > 1) return false;
     t = (float)(float(dot(edge2, qvec)) * invDet);
     if(t == 0) t = INF; 
-    CkPrintf("in tri-hit returned t is %f\n dot(e2,qvec) was %f, and invdet was %f", t, dot(edge2, qvec), invDet);
+    //CkPrintf("in tri-hit returned t is %f\n dot(e2,qvec) was %f, and invdet was %f", t, dot(edge2, qvec), invDet);
     return true;
 
 }
 
 void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coef, int &level)
 {
-    vec3d newStart = theRay.start + ti * theRay.dir;
-    vec3d n; 
-    vec3d dist;
-    float det;
-    float dummy;
-    float lambert;
-    float magDist;
-    ray lightRay;
     
-    //figuring out the normal vector at the point of intersection
-    if(myShapes[hitIndex].type == TRIANGLE)
-    {
-        /*vec3d edge1 = myShapes[hitIndex].v1 - myShapes[hitIndex].v0;
-        vec3d edge2 = myShapes[hitIndex].v2 - myShapes[hitIndex].v0;
-        vec3d pvec = cross(theRay.dir, edge2);
-        n = newStart - myShapes[hitIndex].loc;
-        det = dot(edge1, pvec);*/
-        
-        n = myShapes[hitIndex].N;
-        det = dot(n, theRay.dir);
-        //pixelArray[index].r = 255; pixelArray[index].g = 255; pixelArray[index].b = 255;  level = 10; return;
-    }
-    else 
-    {
-        n = newStart - myShapes[hitIndex].loc;
-        det = dot(n, n);
-    }
-
-    if (det == 0.0f)
-    {
-        level = 10;
-        CkPrintf("pixel at (%f,%f) thinks it's parallel", index%w + thisIndex.x*w, index/w + thisIndex.y*h);
-        return; // if the ray is parallel with the viewer
-    }
-
-    if(myShapes[hitIndex].type != TRIANGLE)
-    {
-        det = 1.0f / sqrtf(det);
-        n = det * n;
-    }
-    /*else
-    {
-        det = 1.0f / det;
-        n = det * n;    
-    }*/
-
-    
-    for(int j = 0; j < myLights.size(); ++j)
-    {
-        lightSrc current = myLights[j];
-        dist = current.loc - newStart;
-        if(dot(n, dist) <= 0.0f) continue; //out of sight
-        magDist = dist.mag();
-        if (magDist <= 0.0f) continue; // covered
-        lightRay.start = newStart;
-        lightRay.dir = (1/magDist)*dist;
-        int shotret = shoot(lightRay, dummy);
-        CkPrintf("in draw pixel at (%d,%d) returns shortest distance %f, at index %d \n", index%w + thisIndex.x*w, index/w + thisIndex.y*h, dummy,shotret);
-        //CkAssert(shotret < 3);
-        if(shotret == NEGINF)
-        {
-            lambert = dot(lightRay.dir, n) * (coef);
-            pixelArray[index].r += lambert * current.color.x * myShapes[hitIndex].color.x;
-            pixelArray[index].g += lambert * current.color.y * myShapes[hitIndex].color.y;
-            pixelArray[index].b += lambert * current.color.z * myShapes[hitIndex].color.z;
-        
-            //pixelArray[index].r += current.r * myShapes[hitIndex].r;
-            //pixelArray[index].g += current.g * myShapes[hitIndex].g;
-            //pixelArray[index].b += current.b * myShapes[hitIndex].b;
-
-
-            if(DEBUG_CODE) 
-            //if((index%w + thisIndex.x*w) == 100 && (index/w + thisIndex.y*h) == 400)
-            {
-                //CkPrintf("current lightray.dir = %f, n = %f coef = %f", lightRay.dir, n, coef);
-                CkPrintf("lambert = %f   current(%f,%f,%f)\n", 
-                    lambert, current.color.x, current.color.y, current.color.z);
-                CkPrintf("hitindex = %d shape.color(%f,%f,%f)\n", 
-                    hitIndex, myShapes[hitIndex].color.x, 
-                    myShapes[hitIndex].color.y, myShapes[hitIndex].color.z);
-                CkPrintf("pixelarray(%f,%f,%f\n",pixelArray[index].r,
-                    pixelArray[index].g,pixelArray[index].b);
-                //myShapes[hitIndex].print();
-                //CkAssert(lambert <= 1);
-            }
-        }
-    }
-
-    float reflect = 2.0f * dot(theRay.dir, n);
-    //modify return vars
-    coef *= myShapes[hitIndex].r;
-    theRay.start = newStart;
-    
-    theRay.dir = theRay.dir - reflect * n;   
-    
-    level++; 
 }
 
 void PixelChare::liveVizFunc(liveVizRequestMsg *m) 

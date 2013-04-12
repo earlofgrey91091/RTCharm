@@ -17,7 +17,7 @@ class Main : public CBase_Main {
         int count;
         int iterations;
         int chareDimension;
-        int numSpheres;
+        int numShapes;
         int image_w;
         int image_h;
         vector<Shape> myShapes;

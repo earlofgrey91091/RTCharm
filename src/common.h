@@ -3,7 +3,7 @@
 
 #define ITERATIONS 1000
 #define DEFAULT_CHAREDIM 8
-#define DEFAULT_SPHERES 40
+#define DEFAULT_SHAPES 40
 #define loc(x,y, width)  (x + (y*width))
 #define rnd(x) (x*rand() / RAND_MAX)
 #define BOX_DIM 1000
@@ -22,7 +22,7 @@
 #define ANTI_ALIASING true
 #define EXPOSURE false
 #define SHAPE_DISP 3
-#define MOVE_SHAPE false
+#define MOVE_SHAPE true
 #define COS_ENOUGH 0.70710678118
 #define EXPOSURE_CONST -1.00f
 #define SAMPLE_RATIO 0.25f
