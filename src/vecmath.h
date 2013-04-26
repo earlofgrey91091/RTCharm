@@ -2,7 +2,7 @@
 #define VECMATH_H
 #include <math.h>
 #include <stdio.h>
-#define EPISILON .0000000001
+#define EPSILON .0000000001
 
 class vec3d 
 {
@@ -117,8 +117,8 @@ class vec3d
             this->z = x * sin(angle) + z * cos(angle);
         }
 
-        //rotate about the x axis
-        void RotX(double angle)
+        //rotate about the z axis
+        void RotZ(double angle)
         {
             this->x = x * cos(angle) - y * sin(angle);
             this->y = x * sin(angle) + y * cos(angle);
@@ -196,7 +196,7 @@ inline float dot(const vec3d &v1, const vec3d &v2 )
 
 inline vec3d Refract(const float n1, const float n2, const vec3d &in, const vec3d &mirror)
 {
-    float c1 = -Dot(mirror, in);
+    float c1 = -dot(mirror, in);
     float n = n1 / n2;
     float c2 = sqrt(1.0 - n * n * (1.0 - c1 * c1));
     vec3d v = in*n + (n*c1 - c2)*mirror; 
@@ -205,7 +205,7 @@ inline vec3d Refract(const float n1, const float n2, const vec3d &in, const vec3
 
 inline vec3d refract(const float n1, const float n2, const vec3d &in, const vec3d &mirror)
 {
-    float c1 = -Dot(mirror, in);
+    float c1 = -dot(mirror, in);
     float n = n1 / n2;
     float c2 = sqrt(1.0 - n * n * (1.0 - c1 * c1));
     vec3d v = in*n + (n*c1 - c2)*mirror; 
@@ -214,17 +214,18 @@ inline vec3d refract(const float n1, const float n2, const vec3d &in, const vec3
 
 inline vec3d reflect(const vec3d &in, const vec3d &mirror)
 {
-    float c1 = -Dot(mirror, in);
-    vec3d v = (-1)*(in + (2*c1)*mirror; 
+    float c1 = -dot(mirror, in);
+    vec3d v = (-1)*(in + (2*c1))*mirror; 
     return v;
+
 }
 
-//distance betwween two points
+/*//distance betwween two points
 inline float reflect(const vec3d &v0, const vec3d &v1)
 {
     vec3d v = v1 - v0; 
     return v.mag();
-}
+}*/
 
 // We want a featured Quaternion class for safe rotations
 // is based off of wikipedia's description of quatern rotations

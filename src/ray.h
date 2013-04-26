@@ -30,6 +30,13 @@ class ray
             dir = vec3d(vx, vy, vz);
         }
 
+	void modv()
+        {
+	    //float mag = dir.mag();
+            //dir = vec3d(dir.x/mag, dir.y/mag, dir.z/mag);
+            dir.norm();    
+        }
+
         void pup(PUP::er &p)
         {
             p | start;
@@ -103,9 +110,10 @@ class Shape
 
         void print()
         {
-            CkPrintf("location(x,y,z) = (%f, %f, %f)\n", loc.x, loc.y, loc.z);
-            CkPrintf("type = %d \n", type);
-            CkPrintf("color = (%f,%f,%f)\n", color.x, color.y, color.z);
+	    //we took out loc variavle so this line does not work anymore
+            //CkPrintf("location(x,y,z) = (%f, %f, %f)\n", loc.x, loc.y, loc.z);
+            //CkPrintf("type = %d \n", type);
+            //CkPrintf("color = (%f,%f,%f)\n", color.x, color.y, color.z);
         }
         
         vec3d getNormal()
@@ -118,7 +126,7 @@ class Shape
         //
         bool SameSide(vec3d &ray, vec3d &vec0, vec3d &vec1, vec3d &vec2)
         {
-            double cp1x = 0, cp1y = 0, cp1z = 0, cp2x = 0, cp2y = 0,
+            double cp1x = 0, cp1y = 0, cp1z = 0, cp2x = 0, cp2y = 0;
             vec3d n1 = cross(vec1- vec2, ray - vec2);
             vec3d n2 = cross(vec1- vec2, vec0 - vec2);
             
@@ -140,7 +148,7 @@ class Shape
         }
         
         // scr is (screenx, screen y, 0)
-        public double GetInterSect(vec3d ray, vec3d scr)
+        float GetInterSect(vec3d ray, vec3d scr)
         {
             vec3d v1 = this->v2 - ray;
             vec3d v2 = scr - ray;
@@ -148,9 +156,9 @@ class Shape
             float dot2 = dot(this->N, this->v1);
 
             if (abs(dot2) < EPISILON) return -1; // division by 0 means parallel
-            double u = dot1 / dot2;
+            float u = dot1 / dot2;
 
-            if(!PointInTriangle(ray + u*(ray-scr)) //am i in the triangle may be unnecessary
+            if(!PointInTriangle(ray + u*(ray-scr))) //am i in the triangle may be unnecessary
                 return -1;
 
             return u; // u is the distance

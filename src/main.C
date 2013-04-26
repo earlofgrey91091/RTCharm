@@ -65,7 +65,7 @@ Main::Main(CkArgMsg* arg)
     for(int i = 0; i < numShapes ; i++)
     {
         
-	    Shape s(v0, v1, v2, vec3d(1.0, 1.0, 1.0), 0.0);
+	    Shape s(v0, v1, v2, vec3d(0.3, 0.4, 0.5), vec3d(0.3775, 0.3775, 0.5775), vec3d(0.911, 0.911, 0.911), 0.0);
 	    myShapes.push_back(s);
 	    v0+=mod; v1+=mod; v2+=mod;
 	            
