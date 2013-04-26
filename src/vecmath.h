@@ -220,6 +220,13 @@ inline vec3d reflect(const vec3d &in, const vec3d &mirror)
 
 }
 
+inline float GetCoord(float i1, float i2, float w1, float w2, float p)
+{
+    float eps = 1.0E-10;
+    if (abs(i2 - i1) < eps) return 0;
+    return ((p - i1) / (i2 - i1)) * (w2 - w1) + w1;
+}
+
 /*//distance betwween two points
 inline float reflect(const vec3d &v0, const vec3d &v1)
 {

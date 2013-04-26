@@ -60,16 +60,60 @@ Main::Main(CkArgMsg* arg)
     lightSrc l1(1.0, 0.5, 0.5, image_w/2, 0.0, -10000.0);
     myLights.push_back(l);
     myLights.push_back(l1);
-    float zdiff = 70.0; //0
-    vec3d v0(268.0, 178.0, 276.0), v1( 178.0,268.0, 276.0 - zdiff), v2(268.0,268.0, 276.0 - zdiff*1.5), mod(-50, -50, 90);
-    for(int i = 0; i < numShapes ; i++)
+    //positive z is going twards the viewer
+    // positive x is 
+    float zdiff = 0; //70
+    //vec3d v0(268.0, 178.0, 276.0), v1( 178.0,268.0, 276.0 - zdiff), v2(268.0,268.0, 276.0 - zdiff*1.5), mod(-50, -50, 90);
+    //vec3d v0(0.0, 0.0, 0), v1( -100.0,0.0, 0 -zdiff), v2(0.0,100.0, 0 - zdiff*1.5), mod(-50, -50, 90);  
+    /*for(int i = 0; i < numShapes ; i++)
     {
         
-	    Shape s(v0, v1, v2, vec3d(0.3, 0.4, 0.5), vec3d(0.3775, 0.3775, 0.5775), vec3d(0.911, 0.911, 0.911), 0.0);
+	    Shape s(v0, v1, v2, vec3d(0.3, 0.4, 0.5), vec3d(0.3775, 0.3775, 0.5775), vec3d(0.911, 0.911, 0.911), 1.0);
 	    myShapes.push_back(s);
 	    v0+=mod; v1+=mod; v2+=mod;
 	            
-    }
+    }*/
+    
+    vec3d v0(-1.000000, -1.000000, 1.000000);
+    vec3d v1(-1.000000, 1.000000, 1.000000);
+    vec3d v2(1.000000, 1.000000, 1.000000);
+    vec3d v3(1.000000, -1.000000, 1.000000);
+    vec3d v4(-1.000000, -1.000000, -1.000000);
+    vec3d v5(-1.000000, 1.000000, -1.000000);
+    vec3d v6(1.000000, 1.000000, -1.000000);
+    vec3d v7(1.000000, -1.000000, -1.000000);
+    
+    double rx = 0.75000;
+    double ry = -0.5000;
+    double rz = 0.0000;
+    
+    Shape s = Shape(v4, v7, v6, vec3d(0.3, 0.4, 0.5), vec3d(0.3775, 0.3775, 0.5775), vec3d(0.911, 0.911, 0.911), 0.0);
+    s.rot_x(rx); s.rot_y(ry); myShapes.push_back(s);
+    s = Shape(v6, v5, v4, vec3d(0.3, 0.4, 0.5), vec3d(0.3775, 0.3775, 0.5775), vec3d(0.911, 0.911, 0.911), 0.0);
+    s.rot_x(rx); s.rot_y(ry); myShapes.push_back(s);
+    s = Shape(v0, v3, v2, vec3d(0.3, 0.4, 0.5), vec3d(0.3775, 0.3775, 0.5775), vec3d(0.911, 0.911, 0.911), 0.0);
+    s.rot_x(rx); s.rot_y(ry); myShapes.push_back(s);
+    s = Shape(v2, v1, v0, vec3d(0.3, 0.4, 0.5), vec3d(0.3775, 0.3775, 0.5775), vec3d(0.911, 0.911, 0.911), 0.0);
+    s.rot_x(rx); s.rot_y(ry); myShapes.push_back(s);
+    s = Shape(v4, v0, v1, vec3d(0.3, 0.4, 0.5), vec3d(0.3775, 0.3775, 0.5775), vec3d(0.911, 0.911, 0.911), 0.0);
+    s.rot_x(rx); s.rot_y(ry); myShapes.push_back(s);
+    s = Shape(v1, v5, v4, vec3d(0.3, 0.4, 0.5), vec3d(0.3775, 0.3775, 0.5775), vec3d(0.911, 0.911, 0.911), 0.0);
+    s.rot_x(rx); s.rot_y(ry); myShapes.push_back(s);
+    s = Shape(v7, v3, v2, vec3d(0.3, 0.4, 0.5), vec3d(0.3775, 0.3775, 0.5775), vec3d(0.911, 0.911, 0.911), 0.0);
+    s.rot_x(rx); s.rot_y(ry); myShapes.push_back(s);
+    s = Shape(v2, v6, v7, vec3d(0.3, 0.4, 0.5), vec3d(0.3775, 0.3775, 0.5775), vec3d(0.911, 0.911, 0.911), 0.0);
+    s.rot_x(rx); s.rot_y(ry); myShapes.push_back(s);
+    s = Shape(v7, v3, v0, vec3d(0.3, 0.4, 0.5), vec3d(0.3775, 0.3775, 0.5775), vec3d(0.911, 0.911, 0.911), 0.0);
+    s.rot_x(rx); s.rot_y(ry); myShapes.push_back(s);
+    s = Shape(v0, v4, v7, vec3d(0.3, 0.4, 0.5), vec3d(0.3775, 0.3775, 0.5775), vec3d(0.911, 0.911, 0.911), 0.0);
+    s.rot_x(rx); s.rot_y(ry); myShapes.push_back(s);
+    s = Shape(v6, v2, v1, vec3d(0.3, 0.4, 0.5), vec3d(0.3775, 0.3775, 0.5775), vec3d(0.911, 0.911, 0.911), 0.0);
+    s.rot_x(rx); s.rot_y(ry); myShapes.push_back(s);
+    s = Shape(v1, v5, v6, vec3d(0.3, 0.4, 0.5), vec3d(0.3775, 0.3775, 0.5775), vec3d(0.911, 0.911, 0.911), 0.0);
+    s.rot_x(rx); s.rot_y(ry); myShapes.push_back(s);
+    
+
+
     /*
     if(MOVE_SHAPE)
     {

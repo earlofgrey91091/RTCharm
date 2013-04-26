@@ -90,6 +90,9 @@ class Shape
         vec3d v0, v1, v2, N, c_Amb, c_Dif, c_Spk;
         float r;
         
+        //default constructor
+        Shape(){ r = 0;}
+        
         //TRIANGLE
         Shape(vec3d iv0, vec3d iv1, vec3d iv2, vec3d ambient, vec3d diffuse, 
                 vec3d specular, float reflectivity)
@@ -116,10 +119,11 @@ class Shape
             //CkPrintf("color = (%f,%f,%f)\n", color.x, color.y, color.z);
         }
         
+        //recomputes and return normal
         vec3d getNormal()
         {
-            vec3d tempN = cross(v1 - v0, v2 - v0);
-            CkAssert(tempN == N);
+            N = cross(v1 - v0, v2 - v0);
+            N.norm();
             return N;
         }
         
@@ -150,18 +154,50 @@ class Shape
         // scr is (screenx, screen y, 0)
         float GetInterSect(vec3d ray, vec3d scr)
         {
-            vec3d v1 = this->v2 - ray;
-            vec3d v2 = scr - ray;
-            float dot1 = dot(this->N, this->v0);
-            float dot2 = dot(this->N, this->v1);
+            vec3d vt0 = v2 - ray;
+            vec3d vt1 = scr - ray;
+            float dot1 = dot(N, vt0);
+            float dot2 = dot(N, vt1);
+            CkAssert((N.x * vt1.x + N.y * vt1.y + N.z * vt1.z) == dot2);
 
             if (abs(dot2) < EPISILON) return -1; // division by 0 means parallel
             float u = dot1 / dot2;
+            //CkPrintf("ray (%f,%f,%f) hit triangle with vertices v0 (%f,%f,%f), v1 (%f,%f,%f), v2(%f,%f,%f)\n but isnt within the screen\n",
+                       // ray.x, ray.y, ray.z, v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
 
             if(!PointInTriangle(ray + u*(ray-scr))) //am i in the triangle may be unnecessary
                 return -1;
-
+            //CkPrintf("ray (%f,%f,%f) hit triangle with vertices v0 (%f,%f,%f), v1 (%f,%f,%f), v2(%f,%f,%f)\n",
+                        //ray.x, ray.y, ray.z, v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
             return u; // u is the distance
+        }
+        
+        void rot_x(double angle)
+        {
+            v0.RotX(angle);
+            v1.RotX(angle);
+            v2.RotX(angle);
+            N = cross(v1 - v0, v2 - v0);
+            N.norm();
+        }
+        
+        void rot_y(double angle)
+        {
+            v0.RotY(angle);
+            v1.RotY(angle);
+            v2.RotY(angle);
+            N = cross(v1 - v0, v2 - v0);
+            N.norm();
+        }
+        
+        
+        void rot_z(double angle)
+        {
+            v0.RotZ(angle);
+            v1.RotZ(angle);
+            v2.RotZ(angle);
+            N = cross(v1 - v0, v2 - v0);
+            N.norm();
         }
         
         

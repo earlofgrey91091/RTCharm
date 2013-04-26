@@ -81,18 +81,6 @@ PixelChare::~PixelChare()
     if(tmpBuffer != NULL) delete [] tmpBuffer;
 };
 
-void PixelChare::doWork()
-{
-
-	
-
-}
-
-void PixelChare::antiAliasWork()
-{
-    
-}
-
 void PixelChare::clearPixel(int index)
 {
     pixelArray[index].r = 0;
@@ -109,74 +97,78 @@ void PixelChare::exposePixel(int index)
 
 
 
-void PixelChare::normalWork()
+void PixelChare::doWork()
 {
     int pixel_x, pixel_y, hitIndex, level, index;
     int position_x = thisIndex.x * w;
-    int position_y = thisIndex.y * h;
+    int position_y = thisIndex.y * h; 
+    
+    
 
     for(int i = 0; i < w; i++)
     {
+        pixel_x = GetCoord(0, w, -2.5, 2.5, i);
         for(int j = 0; j < h; j++)
         {
             index = (j * w) + i;
-            pixel_x = position_x + i;
-            pixel_y = position_y + j;
+            pixel_y = GetCoord(0, h, 2.5, -2.5, j);
+            //pixel_x = position_x + i;
+            //pixel_y = position_y + j;
+
+            
 
             float mindist = 1.0E10;
-	    int HitIndex = -1;
+            int HitIndex = -1;
 
-	    //we dont use getcoordinates I dont think we need to 
+            //we dont use getcoordinates I dont think we need to 
 
-	    //not correct
+            //not correct
             //ray viewRay(float(pixel_x), float(pixel_y), 10.0f, 0.0f, 0.0f, -10.0f);
             
             //make sense because our view comes from a point not form a plane
-            ray viewRay(0.0f, 0.0f, 10.0f, 0.0f, 0.0f, -10.0f); 
+            ray viewRay(0.0f, 0.0f, 100.0f, 0.0f, 0.0f, -100.0f); 
 
-	    //gets the unit vector of the direction 
-	    viewRay.modv();
+            //gets the unit vector of the direction 
+            viewRay.modv();
 
             for(int s = 0; s < myShapes.size(); s++)
             {
                 float taux = myShapes[s].GetInterSect(viewRay.start, vec3d(pixel_x, pixel_y, 0.0));
-		if (taux < 0) continue;
+                if (taux < 0) continue;
                 if (taux > 0 && taux < mindist)
                 {
                     mindist = taux;
                     HitIndex = s;
                 }
             }
-           
-
             if (HitIndex != -1)
             {
-		 //double intersx = px + t * vx;
-		 //double intersy = py + t * vy;
-		 //double intersz = pz + t * vz;
+                //double intersx = px + t * vx;
+                //double intersy = py + t * vy;
+                //double intersz = pz + t * vz;
 
-		vec3d intersection = viewRay.dir * mindist;
-		intersection += viewRay.start;
+                vec3d intersection = viewRay.dir * mindist;
+                intersection += viewRay.start;
 
                 //double l2px = intersx - px, l2py = intersy - py, l2pz = intersz - pz;
 
                 vec3d l2p = intersection - viewRay.start;
-		l2p.norm();
+                l2p.norm();
 
-		//double vNormalX = triangleHit.tnormalX, vNormalY = triangleHit.tnormalY, vNormalZ = triangleHit.tnormalZ;
+                //double vNormalX = triangleHit.tnormalX, vNormalY = triangleHit.tnormalY, vNormalZ = triangleHit.tnormalZ;
                 vec3d vNormal = myShapes[HitIndex].getNormal();
                 vNormal.norm();
 
                 float cost = dot(l2p, vNormal);
-	        if (cost < 0) cost = 0;
+                if (cost < 0) cost = 0;
 
-		//float reflx = myShapes[HitIndex].r;
+                //float reflx = myShapes[HitIndex].r;
                 //vec3d vRefl(reflx, reflx, reflx);
 
                 vec3d vRefl = reflect(l2p, vNormal);
-		vRefl.norm();
-	
-		vec3d vEye2Inters = intersection - viewRay.start;
+                vRefl.norm();
+            
+                vec3d vEye2Inters = intersection - viewRay.start;
                 vEye2Inters.norm();
 
                 float cosf = dot(vRefl, vEye2Inters);
@@ -186,18 +178,24 @@ void PixelChare::normalWork()
                 float result1 = cost * 255.0;
                 float result2 = pow(cosf, myShapes[HitIndex].r) * 255.0;;
 
-                pixelArray[index].r = (myShapes[HitIndex].c_Amb.x * 255.0) + (myShapes[HitIndex].c_Dif.x * result1) +(myShapes[HitIndex].c_Spk.x * result2);
-                pixelArray[index].g = (myShapes[HitIndex].c_Amb.y * 255.0) + (myShapes[HitIndex].c_Dif.y * result1) +(myShapes[HitIndex].c_Spk.y * result2);
-                pixelArray[index].b = (myShapes[HitIndex].c_Amb.z * 255.0) + (myShapes[HitIndex].c_Dif.z * result1) +(myShapes[HitIndex].c_Spk.z * result2);
+                pixelArray[index].r = (myShapes[HitIndex].c_Amb.x * 255.0) + 
+                                        (myShapes[HitIndex].c_Dif.x * result1) +
+                                        (myShapes[HitIndex].c_Spk.x * result2);
+                pixelArray[index].g = (myShapes[HitIndex].c_Amb.y * 255.0) + 
+                                        (myShapes[HitIndex].c_Dif.y * result1) +
+                                        (myShapes[HitIndex].c_Spk.y * result2);
+                pixelArray[index].b = (myShapes[HitIndex].c_Amb.z * 255.0) + 
+                                        (myShapes[HitIndex].c_Dif.z * result1) +
+                                        (myShapes[HitIndex].c_Spk.z * result2);
 
-                
+
                 pixelArray[index].r = MIN(pixelArray[index].r, 255);
                 pixelArray[index].g = MIN(pixelArray[index].g, 255);
                 pixelArray[index].b = MIN(pixelArray[index].b, 255);
                 pixelArray[index].r = MAX(pixelArray[index].r, 0);
                 pixelArray[index].g = MAX(pixelArray[index].g, 0); 
                 pixelArray[index].b = MAX(pixelArray[index].b, 0);
-             }
+            }
 
         }
 
@@ -237,18 +235,6 @@ void PixelChare::runStep(vector<Shape> shapes, vector<lightSrc> lights)
     run();
 }
 
-//returns index of closest hit, NEGINF otherwise
-int PixelChare::shoot(ray theRay, float &dist)
-{
-    
-}
-
-bool PixelChare::hit(int index, ray theRay, float &n)
-{
-    
-}
-
-
 bool PixelChare::triHit(int index, ray r, float &t)
 {
     
@@ -269,11 +255,6 @@ bool PixelChare::triHit(int index, ray r, float &t)
     //CkPrintf("in tri-hit returned t is %f\n dot(e2,qvec) was %f, and invdet was %f", t, dot(edge2, qvec), invDet);
     return true;
 
-}
-
-void PixelChare::draw(int index, ray &theRay, int hitIndex, float ti, float &coef, int &level)
-{
-    
 }
 
 void PixelChare::liveVizFunc(liveVizRequestMsg *m) 
