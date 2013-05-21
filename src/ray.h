@@ -34,13 +34,17 @@ class ray
         {
 	    //float mag = dir.mag();
             //dir = vec3d(dir.x/mag, dir.y/mag, dir.z/mag);
-            dir.norm();    
+            dir.norm();
         }
 
         void reset(float cx, float cy, float cz, float vx, float vy, float vz)
         {
-            start = vec3d(cx, cy, cx);
-	    dir = vec3d(vx, vy, vz);
+            /*start.x = cx; 
+            start.y = cy; 
+            start.z = cz;*/
+            start = vec3d(cx, cy, cz);
+	        dir = vec3d(vx, vy, vz);
+            CkAssert(start == vec3d(cx, cy, cz));
             
         }
 

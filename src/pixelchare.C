@@ -133,14 +133,16 @@ void PixelChare::doWork()
             //ray viewRay(float(pixel_x), float(pixel_y), 10.0f, 0.0f, 0.0f, -10.0f);
             
             //make sense because our view comes from a point not form a plane
-            viewRay.reset(0.0f, 0.0f, 10.0f, pixel_x - 0.0f, pixel_y - 0.0f, -10.0f); 
+            viewRay.reset(0.0f, 0.0f, 10.0f, (float)pixel_x, (float)pixel_y, -10.0f); 
+            vec3d tvec(0,0,10);
+            CkAssert(viewRay.start == tvec);
 
             //gets the unit vector of the direction 
             //viewRay.modv();
 
             for(int s = 0; s < myShapes.size(); s++)
             {
-		CkPrintf("viewRay start is(%f,%f,%f)\n", viewRay.start.x, viewRay.start.y, viewRay.start.z);
+		//CkPrintf("viewRay start is(%f,%f,%f)\n", viewRay.start.x, viewRay.start.y, viewRay.start.z);
                 float taux = myShapes[s].GetInterSect(viewRay.start, vec3d(pixel_x, pixel_y, 0.0));
                 if (taux < 0) continue;
                 if (taux > 0 && taux < mindist)
