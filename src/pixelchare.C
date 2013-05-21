@@ -28,6 +28,7 @@ PixelChare::PixelChare(int width, int height)
     iteration = 0;
     w = width;
     h = height;
+   
     for(int i = 0; i < width * height; i++)
     {
         rgb p;
@@ -72,6 +73,12 @@ void PixelChare::pup(PUP::er &p)
     p|y;
     p|w;
     p|h;
+    p|viewRay;
+    p|pixel_x;
+    p|pixel_y;
+    p|HitIndex;
+    p|mindist;
+    p|index;
     if (p.isUnpacking()) tmpBuffer = new double[w*h];
     p(tmpBuffer,w*h); 
 }
@@ -99,7 +106,7 @@ void PixelChare::exposePixel(int index)
 
 void PixelChare::doWork()
 {
-    int pixel_x, pixel_y, hitIndex, level, index;
+    //int pixel_x, pixel_y, hitIndex, level, index;
     int position_x = thisIndex.x * w;
     int position_y = thisIndex.y * h; 
     
@@ -108,17 +115,17 @@ void PixelChare::doWork()
     for(int i = 0; i < w; i++)
     {
         pixel_x = GetCoord(0, w, -2.5, 2.5, i);
+	//pixel_x = GetCoord(0, i, -2.5, 2.5, w);
+	//pixel_x = position_x + i;
         for(int j = 0; j < h; j++)
         {
             index = (j * w) + i;
             pixel_y = GetCoord(0, h, 2.5, -2.5, j);
-            //pixel_x = position_x + i;
+	    //pixel_y = GetCoord(0, j, 2.5, -2.5, h);
             //pixel_y = position_y + j;
 
-            
-
-            float mindist = 1.0E10;
-            int HitIndex = -1;
+            mindist = 1.0E10;
+            HitIndex = -1;
 
             //we dont use getcoordinates I dont think we need to 
 
@@ -126,13 +133,14 @@ void PixelChare::doWork()
             //ray viewRay(float(pixel_x), float(pixel_y), 10.0f, 0.0f, 0.0f, -10.0f);
             
             //make sense because our view comes from a point not form a plane
-            ray viewRay(0.0f, 0.0f, 100.0f, 0.0f, 0.0f, -100.0f); 
+            viewRay.reset(0.0f, 0.0f, 10.0f, pixel_x - 0.0f, pixel_y - 0.0f, -10.0f); 
 
             //gets the unit vector of the direction 
-            viewRay.modv();
+            //viewRay.modv();
 
             for(int s = 0; s < myShapes.size(); s++)
             {
+		CkPrintf("viewRay start is(%f,%f,%f)\n", viewRay.start.x, viewRay.start.y, viewRay.start.z);
                 float taux = myShapes[s].GetInterSect(viewRay.start, vec3d(pixel_x, pixel_y, 0.0));
                 if (taux < 0) continue;
                 if (taux > 0 && taux < mindist)
@@ -176,7 +184,7 @@ void PixelChare::doWork()
                 if (cosf < 0) cosf = 0;
 
                 float result1 = cost * 255.0;
-                float result2 = pow(cosf, myShapes[HitIndex].r) * 255.0;;
+                float result2 = pow(cosf, myShapes[HitIndex].r) * 255.0;
 
                 pixelArray[index].r = (myShapes[HitIndex].c_Amb.x * 255.0) + 
                                         (myShapes[HitIndex].c_Dif.x * result1) +
@@ -195,6 +203,13 @@ void PixelChare::doWork()
                 pixelArray[index].r = MAX(pixelArray[index].r, 0);
                 pixelArray[index].g = MAX(pixelArray[index].g, 0); 
                 pixelArray[index].b = MAX(pixelArray[index].b, 0);
+
+		//makes everything white
+                pixelArray[index].r = 255;
+                pixelArray[index].g = 255;
+                pixelArray[index].b = 255;
+
+
             }
 
         }

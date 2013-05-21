@@ -29,7 +29,10 @@ class PixelChare : public CBase_PixelChare
         vector<lightSrc> myLights;
         double *tmpBuffer;
         int x, y, w, h;
+        int pixel_x, pixel_y, index, HitIndex;
+	ray viewRay;
         int iteration;
+	float mindist;
         void doWork();
         void clearPixel(int index);
         void exposePixel(int index);

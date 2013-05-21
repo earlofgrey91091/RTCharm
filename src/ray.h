@@ -37,6 +37,13 @@ class ray
             dir.norm();    
         }
 
+        void reset(float cx, float cy, float cz, float vx, float vy, float vz)
+        {
+            start = vec3d(cx, cy, cx);
+	    dir = vec3d(vx, vy, vz);
+            
+        }
+
         void pup(PUP::er &p)
         {
             p | start;
@@ -163,7 +170,7 @@ class Shape
             if (abs(dot2) < EPISILON) return -1; // division by 0 means parallel
             float u = dot1 / dot2;
             //CkPrintf("ray (%f,%f,%f) hit triangle with vertices v0 (%f,%f,%f), v1 (%f,%f,%f), v2(%f,%f,%f)\n but isnt within the screen\n",
-                       // ray.x, ray.y, ray.z, v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
+              //          ray.x, ray.y, ray.z, v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
 
             if(!PointInTriangle(ray + u*(ray-scr))) //am i in the triangle may be unnecessary
                 return -1;
